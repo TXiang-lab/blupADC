@@ -92,7 +92,6 @@ In addition, `blupADC` provides several files which are saved in `~/blupADC/extd
 ``` {.r}
 system.file("extdata", package = "blupADC") # path of provided files
 ```
-
 #### Feature 1. Convert genotype data format ([see more details](https://qsmei.netlify.app/post/blupadc/))
 
 ``` R
