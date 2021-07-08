@@ -40,28 +40,28 @@ install.packages(c("Rcpp", "RcppArmadillo","data.table"))
 #### Install blupADC on Linux 
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/raw/main/blupADC_1.0.1_linux.tar.gz"
+packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.1_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 For Chinese users, we recommend to use the following code(**installation would be  faster**):
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/751023/download/blupADC_1.0.1_linux.tar.gz"
+packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/765578/download/blupADC_1.0.1_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 #### Install blupADC on Windows
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/raw/main/blupADC_1.0.1.zip"
+packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.1.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
 For Chinese users, we recommend to use the following code(**installation would be  faster**):
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/751003/download/blupADC_1.0.1.zip"
+packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/765574/download/blupADC_1.0.1.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
