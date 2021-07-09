@@ -61,7 +61,7 @@ install.packages(packageurl,repos=NULL)
 For Chinese users, we recommend to use the following code(**installation would be  faster**):
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/765574/download/blupADC_1.0.1.zip"
+packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/766536/download/blupADC_1.0.2.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
