@@ -21,7 +21,7 @@
 
 Finally, we kindly provides an easier way of applying `blupADC`, which is a free  website([see more details](https://qsmei.netlify.app/post/2021-04-22-blupadc-online-dmu/online_dmu/)).  Most functions of  package`blupADC`  can be found in this website. Thus, for user who has little code experience, we recommend  to use this website(**only need to click and type, that's enough**).  But the pitfall of this website is that it can't handle big data. 
 
-😊 Good Luck Charlie ! 
+😊 Good Luck ! 
 
 ## GETTING STARTED
 
@@ -32,7 +32,8 @@ Finally, we kindly provides an easier way of applying `blupADC`, which is a free
 ```R
 install.packages(c("Rcpp", "RcppArmadillo","data.table"))
 ```
-**👉 Note: In order to interface with DMU and BLUPF90 , we need to download software DMU  ([DMU download website](https://dmu.ghpc.au.dk/dmu/))  and BLUPF90 previously ([BLUPF90 download website](http://nce.ads.uga.edu/html/projects/programs/)). For convenience, we have encapsulated  the basic module of DMU and BLUPF90 in package `blupADC`. Thus user don't need to repeat download these two softwares**  
+
+**👉 Note: In the analysis of DMU  and BLUPF90 , we need to download software DMU  ([DMU download website](https://dmu.ghpc.au.dk/dmu/))  and BLUPF90 previously ([BLUPF90 download website](http://nce.ads.uga.edu/html/projects/programs/)). For convenience, we have encapsulated  the basic module of DMU and BLUPF90 in package `blupADC`.**  
 
  **For commercial use of DMU and BLUPF90,  user must contact the author of DMU and BLUPF90 !!!** 
 
@@ -118,7 +119,7 @@ genotype_data_QC_Imputation(
             )                       
 ```
 
-#### Feature 3. Breed composition analysis and duplication detection of genomic data ([see more details](https://qsmei.netlify.app/post/2021-04-17-r-package-blup-adc-overlap-genotype/blupadc/))
+#### Feature 3. Breed composition analysis and duplication detection of genomic data ([see more details](https://qsmei.netlify.app/post/feature-3-overlap_pca/blupadc/))
 
 ``` R
 library(blupADC)
@@ -132,7 +133,7 @@ check_result=genotype_data_check(
                   )
 ```
 
-#### Feature 4. Pedigree tracing, analysis and visualization ([see more details](https://qsmei.netlify.app/post/2021-04-17-r-package-blup-adc-pedigree/pedigree/))
+#### Feature 4. Pedigree tracing, analysis ([see more details](https://qsmei.netlify.app/post/feature-4-trace_pedigree/pedigree/))
 
 ``` R
 library(blupADC)
