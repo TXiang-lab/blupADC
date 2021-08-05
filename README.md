@@ -32,7 +32,6 @@ Finally, we kindly provides an easier way of applying `blupADC`, which is a free
 ```R
 install.packages(c("Rcpp", "RcppArmadillo","data.table"))
 ```
-
 **👉 Note: In order to interface with DMU and BLUPF90 , we need to download software DMU  ([DMU download website](https://dmu.ghpc.au.dk/dmu/))  and BLUPF90 previously ([BLUPF90 download website](http://nce.ads.uga.edu/html/projects/programs/)). For convenience, we have encapsulated  the basic module of DMU and BLUPF90 in package `blupADC`. Thus user don't need to repeat download these two softwares**  
 
  **For commercial use of DMU and BLUPF90,  user must contact the author of DMU and BLUPF90 !!!** 
@@ -40,28 +39,28 @@ install.packages(c("Rcpp", "RcppArmadillo","data.table"))
 #### Install blupADC on Linux 
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.1_R_x86_64-pc-linux-gnu.tar.gz"
+packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.2_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 For Chinese users, we recommend to use the following code(**installation would be  faster**):
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/765578/download/blupADC_1.0.1_R_x86_64-pc-linux-gnu.tar.gz"
+packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/793573/download/blupADC_1.0.2.zip"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 #### Install blupADC on Windows
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.1.zip"
+packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.2_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL)
 ```
 
 For Chinese users, we recommend to use the following code(**installation would be  faster**):
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/766536/download/blupADC_1.0.2.zip"
+packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/793574/download/blupADC_1.0.2_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL)
 ```
 
@@ -191,3 +190,22 @@ run_DMU(
 ```
 
 #### Feature 8. Genetic evaluation with BLUPF90 ([see more details](https://qsmei.netlify.app/post/feature-8-run_blupf90/blupf90/))
+
+``` R
+library(blupADC)
+data_path=system.file("extdata", package = "blupADC")  #  path of provided files 
+  
+run_BLUPF90(
+        phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
+        target_trait_name=c("Trait1"),                           #trait name 
+        fixed_effect_name=list(c("Sex","Herd_Year_Season")),     #fixed effect name
+        random_effect_name=list(c("Id","Litter")),               #random effect name
+        covariate_effect_name=NULL,                              #covariate effect name
+        phe_path=data_path,                          #path of phenotype file
+        phe_name="phenotype.txt",                    #name of phenotype file
+        analysis_model="PBLUP_A",                    #model of genetic evaluation
+        relationship_path=data_path,                 #path of relationship file 
+        relationship_name="pedigree.txt",            #name of relationship file 
+        output_result_path="/root"                   # output path 
+        )   
+```
