@@ -120,7 +120,6 @@ genotype_data_QC_Imputation(
 ```
 
 #### Feature 3. Breed composition analysis and duplication detection of genomic data ([see more details](https://qsmei.netlify.app/post/feature-3-overlap_pca/blupadc/))
-
 ``` R
 library(blupADC)
 check_result=genotype_data_check(
