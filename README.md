@@ -53,14 +53,14 @@ install.packages(packageurl,repos=NULL,method="libcurl")
 #### Install blupADC on Windows
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.2_R_x86_64-pc-linux-gnu.tar.gz"
+packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.2.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
 For Chinese users, we recommend to use the following code(**installation would be  faster**):
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/793574/download/blupADC_1.0.2_R_x86_64-pc-linux-gnu.tar.gz"
+packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/793573/download/blupADC_1.0.2.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
