@@ -73,26 +73,28 @@ library(blupADC)
 
 ### 🙊Features
 
--   Feature 1. Convert genotype data format
--   Feature 2. Detect genotype data error
--   Feature 3. Trace, rename, correct, and visualize pedigree
--   Feature 4. Quality control and imputation
--   Feature 5. Construct kinship matrix(A, G, and H)
--   Feature 6. Interface with DMU
--   Feature 7. Interface with BLUPF90
+-   Feature 1. Genomic data format conversion
+-   Feature 2. Genomic data quality control and genotype imputation
+-   Feature 3. Breed composition analysis and duplication detection of genomic data
+-   Feature 4. Pedigree tracing, and analysis
+-   Feature 5. Pedigree visualization
+-   Feature 6. Relationship matrix construction(A,G, and H) 
+-   Feature 7. Genetic evaluation with DMU
+-   Feature 8. Genetic  evaluation with BLUPF90
 
 ## Usage
 
 **For convenience, all documents support two-language([English](https://qsmei.netlify.app/post/2021-04-21-r-package-rblupadc-overview/overview/) and [Chinese](https://qsmei.netlify.app/zh/post/2021-04-21-r-package-rblupadc-overview/overview/)).** 
 
-`blupADC` provides several dataset objects, including `data_hmp`, `origin_pedigree`.
+`blupADC` provides several datasets objects, including `data_hmp`, `origin_pedigree`.
 
 In addition, `blupADC` provides several files which are saved in `~/blupADC/extdata`. We can get the path of these files by typing
 
 ``` {.r}
 system.file("extdata", package = "blupADC") # path of provided files
 ```
-#### Feature 1. Convert genotype data format ([see more details](https://qsmei.netlify.app/post/blupadc/))
+
+#### Feature 1. Genomic data format conversion ([see more details](https://qsmei.netlify.app/post/blupadc/))
 
 ``` R
 library(blupADC)
@@ -104,29 +106,7 @@ sum_data=genotype_data_format_conversion(
                   )
 ```
 
-#### Feature 2. Detect duplicated genotype data ([see more details](https://qsmei.netlify.app/post/2021-04-17-r-package-blup-adc-overlap-genotype/blupadc/))
-
-``` R
-library(blupADC)
-overlap_result=genotype_data_overlap(
-                  input_data_hmp=data_hmp,   #provided hapmap data object
-                  overlap_threshold=0.95,    # threshold of duplicate 
-                  return_result=TRUE         #return result 
-                  )
-```
-
-#### Feature 3. Trace, rename and correct pedigree ([see more details](https://qsmei.netlify.app/post/2021-04-17-r-package-blup-adc-pedigree/pedigree/))
-
-``` R
-library(blupADC)
-pedigree_result=trace_pedigree(
-                input_pedigree=origin_pedigree,   #provided pedigree data object
-                trace_generation=3,       # trace generation
-                output_pedigree_tree=TRUE  # output pedigree tree
-                )                 
-```
-
-#### Feature 4. Quality control and imputation ([see more details](https://qsmei.netlify.app/post/2021-04-17-r-package-blup-adc-qc-imputaion/qc_imputation/))
+#### Feature 2. Genomic data quality control and genotype imputation ([see more details](https://qsmei.netlify.app/post/feature-2-qc_imputation/qc_imputation/))
 
 ``` R
 library(blupADC)
@@ -139,7 +119,43 @@ genotype_data_QC_Imputation(
             )                       
 ```
 
-#### Feature 5. Construct kinship matrix ([see more details](https://qsmei.netlify.app/post/2021-04-17-r-package-blup-adc-calculate-relationship-matrix/relationship_matrix/))
+#### Feature 3. Breed composition analysis and duplication detection of genomic data ([see more details](https://qsmei.netlify.app/post/2021-04-17-r-package-blup-adc-overlap-genotype/blupadc/))
+
+``` R
+library(blupADC)
+check_result=genotype_data_check(
+                  input_data_hmp=PCA_data_hmp,   #provided hapmap data object
+                  duplication_check=FALSE,       #whether check the duplication of genotype
+                  breed_check=TRUE,              # whether check the record of breed
+                  breed_record=PCA_Breed,           # provided breed record
+                  output_data_path="/root",      #output path
+                  return_result=TRUE             #return result 
+                  )
+```
+
+#### Feature 4. Pedigree tracing, analysis and visualization ([see more details](https://qsmei.netlify.app/post/2021-04-17-r-package-blup-adc-pedigree/pedigree/))
+
+``` R
+library(blupADC)
+pedigree_result=trace_pedigree(
+                input_pedigree=origin_pedigree,   #provided pedigree data object
+                trace_generation=3,       # trace generation
+                output_pedigree_tree=TRUE  # output pedigree tree
+                )  
+```
+
+#### Feature 5. Pedigree visualization ([see more details](https://qsmei.netlify.app/post/feature-5-visualize_pedigree/pedigree/))
+
+``` R
+library(blupADC)
+plot=ggped(
+       input_pedigree=plot_pedigree,
+       trace_id=c("121"),
+       trace_sibs=TRUE   #whether plot the sibs of subset-id  
+        ) 
+```
+
+#### Feature 6. Relationship matrix construction(A,G, and H)  ([see more details](https://qsmei.netlify.app/post/feature-6-kinship_matrix/relationship_matrix/))
 
 ``` R
 library(blupADC)
@@ -151,7 +167,7 @@ kinship_result=cal_kinship(
                 return_result=TRUE)               #return result              
 ```
 
-#### Feature 6. Interface with DMU ([see more details](https://qsmei.netlify.app/post/2021-04-20-r-package-blup-adc-run-dmu/run_dmu/))
+#### Feature 7. Genetic evaluation with DMU ([see more details](https://qsmei.netlify.app/post/feature-7-run_dmu/run_dmu/))
 
 ``` R
 library(blupADC)
@@ -174,23 +190,4 @@ run_DMU(
         )
 ```
 
-#### Feature 7. Interface with BLUPF90 ([see more details](https://qsmei.netlify.app/post/2021-04-20-r-package-blup-adc-run-blupf90/blupf90/))
-
-``` R
-library(blupADC)
-data_path=system.file("extdata", package = "blupADC")  #  path of provided files 
-  
-run_BLUPF90(
-        phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
-        target_trait_name=c("Trait1"),                           #trait name 
-        fixed_effect_name=list(c("Sex","Herd_Year_Season")),     #fixed effect name
-        random_effect_name=list(c("Id","Litter")),               #random effect name
-        covariate_effect_name=NULL,                              #covariate effect name
-        phe_path=data_path,                          #path of phenotype file
-        phe_name="phenotype.txt",                    #name of phenotype file
-        analysis_model="PBLUP_A",                    #model of genetic evaluation
-        relationship_path=data_path,                 #path of relationship file 
-        relationship_name="pedigree.txt",            #name of relationship file 
-        output_result_path="/root"                   # output path 
-        )   
-```
+#### Feature 8. Genetic evaluation with BLUPF90 ([see more details](https://qsmei.netlify.app/post/feature-8-run_blupf90/blupf90/))
