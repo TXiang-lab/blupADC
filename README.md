@@ -23,6 +23,12 @@ Finally, we kindly provides an easier way of applying `blupADC`, which is a free
 
 😊 Good Luck ! 
 
+## New features 
+
+### 1.0.3
+
+- Incorporate  maternal effect, permanent effect, random regression effect, and social genetic  effect models in  the genetic evaluation by DMU (2021.8.24)
+
 ## GETTING STARTED
 
 ### 🙊Installation
@@ -40,28 +46,28 @@ install.packages(c("Rcpp", "RcppArmadillo","data.table"))
 #### Install blupADC on Linux 
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.2_R_x86_64-pc-linux-gnu.tar.gz"
+packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.3/blupADC_1.0.3_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 For Chinese users, we recommend to use the following code(**installation would be  faster**):
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/798138/download/blupADC_1.0.2_R_x86_64-pc-linux-gnu.tar.gz"
+packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/811381/download/blupADC_1.0.3_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 #### Install blupADC on Windows
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/raw/master/blupADC_1.0.2.zip"
+packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.3/blupADC_1.0.3.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
 For Chinese users, we recommend to use the following code(**installation would be  faster**):
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/798137/download/blupADC_1.0.2.zip"
+packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/811380/download/blupADC_1.0.3.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
@@ -84,7 +90,7 @@ library(blupADC)
 
 ## Usage
 
-**For convenience, all documents support two-language(([English](https://qsmei.netlify.app/post/feature-0-overview/overview/) and [Chinese](https://qsmei.netlify.app/zh/post/feature-0-overview/overview/))).** 
+**For convenience, all documents support two-language([English](https://qsmei.netlify.app/post/2021-04-21-r-package-rblupadc-overview/overview/) and [Chinese](https://qsmei.netlify.app/zh/post/2021-04-21-r-package-rblupadc-overview/overview/)).** 
 
 `blupADC` provides several datasets objects, including `data_hmp`, `origin_pedigree`.
 
@@ -120,6 +126,7 @@ genotype_data_QC_Imputation(
 ```
 
 #### Feature 3. Breed composition analysis and duplication detection of genomic data ([see more details](https://qsmei.netlify.app/post/feature-3-overlap_pca/blupadc/))
+
 ``` R
 library(blupADC)
 check_result=genotype_data_check(
@@ -174,7 +181,7 @@ data_path=system.file("extdata", package = "blupADC")  #  path of provided files
   
 run_DMU(
         phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
-        target_trait_name=c("Trait1"),                           #trait name 
+        target_trait_name=list(c("Trait1")),                     #trait name 
         fixed_effect_name=list(c("Sex","Herd_Year_Season")),     #fixed effect name
         random_effect_name=list(c("Id","Litter")),               #random effect name
         covariate_effect_name=NULL,                              #covariate effect name
@@ -197,7 +204,7 @@ data_path=system.file("extdata", package = "blupADC")  #  path of provided files
   
 run_BLUPF90(
         phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
-        target_trait_name=c("Trait1"),                           #trait name 
+        target_trait_name=list(c("Trait1")),                     #trait name 
         fixed_effect_name=list(c("Sex","Herd_Year_Season")),     #fixed effect name
         random_effect_name=list(c("Id","Litter")),               #random effect name
         covariate_effect_name=NULL,                              #covariate effect name
