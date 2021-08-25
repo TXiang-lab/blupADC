@@ -19,9 +19,9 @@
 
 `blupADC` provides many useful functions for the whole steps for animal and plant breeding, including pedigree analysis(**trace pedigree, rename pedigree, and correct pedigree errors**), genotype data format conversion(supports **Hapmap, Plink, Blupf90, Numeric, and VCF** format), genotype data quality control and imputation, construction of kinship matrix(**pedigree, genomic  and single-step**),and genetic evaluation( by interfacing with two famous breeding softwares, **DMU** and **BLUPF90**  in an easy way). 
 
-Finally, we kindly provides an easier way of applying `blupADC`, which is a free  website([see more details](https://qsmei.netlify.app/post/2021-04-22-blupadc-online-dmu/online_dmu/)).  Most functions of  package`blupADC`  can be found in this website. Thus, for user who has little code experience, we recommend  to use this website(**only need to click and type, that's enough**).  But the pitfall of this website is that it can't handle big data. 
+Finally, we kindly provides an easier way of applying `blupADC`, which is a free  website([shinyapp](http://47.95.251.15:443/blupADC/)).  Several functions are still under development.  But the pitfall of this website is that it can't handle big data. 
 
-😊 Good Luck ! 
+😊 Good Luck Charlie ! 
 
 ## New features 
 
@@ -50,24 +50,10 @@ packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.3/bl
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
-For Chinese users, we recommend to use the following code(**installation would be  faster**):
-
-```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/811381/download/blupADC_1.0.3_R_x86_64-pc-linux-gnu.tar.gz"
-install.packages(packageurl,repos=NULL,method="libcurl")
-```
-
 #### Install blupADC on Windows
 
 ```R
 packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.3/blupADC_1.0.3.zip"
-install.packages(packageurl,repos=NULL)
-```
-
-For Chinese users, we recommend to use the following code(**installation would be  faster**):
-
-```R
-packageurl <- "https://gitee.com/qsmei/blup-adc/attach_files/811380/download/blupADC_1.0.3.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
