@@ -63,9 +63,7 @@ packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.4/bl
 install.packages(packageurl,repos=NULL)
 ```
 
-👉 **Note:** For county which can't connect with github,  user can download install the package as follow:
-
-**If the connection with github is not good(such as in China), user can download as below:**  
+👉 **Note:If the connection with github is not good(such as in China), user can download as below:**  
 
 #### Install blupADC on Linux 
 
