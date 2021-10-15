@@ -104,8 +104,6 @@ library(blupADC)
 
 ## Usage
 
-**For convenience, all documents support two-language([English](https://qsmei.netlify.app/post/2021-04-21-r-package-rblupadc-overview/overview/) and [Chinese](https://qsmei.netlify.app/zh/post/2021-04-21-r-package-rblupadc-overview/overview/)).** 
-
 `blupADC` provides several datasets objects, including `data_hmp`, `origin_pedigree`.
 
 In addition, `blupADC` provides several files which are saved in `~/blupADC/extdata`. We can get the path of these files by typing
