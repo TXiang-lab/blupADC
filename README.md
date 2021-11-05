@@ -55,14 +55,14 @@ install.packages(c("Rcpp", "RcppArmadillo","data.table","bigmemory"))
 #### Install blupADC on Linux 
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.4/blupADC_1.0.4_R_x86_64-pc-linux-gnu.tar.gz"
+packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.5/blupADC_1.0.5_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 #### Install blupADC on Windows
 
 ```R
-packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.4/blupADC_1.0.4.zip"
+packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.5/blupADC_1.0.5.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
