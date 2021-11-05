@@ -38,6 +38,11 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 - Incorporate  haplotype format conversion ,haplotype-based numeric matrix construction and haplotype-based additive relationship matrix construction (2021.10.8)
 - Import  bigmemory object in matrix save and calculation  for handling big data(2021.10.8)
 
+### 1.0.5
+
+- Incorporate  format conversion from blupf90 and numeric(0,1,2) format to hapmap format (2021.11.5)
+- Support LR method to evaluate prediction accuracy and Hotelling_test to test significance between predictive abilities(by cross-validation method)
+
 ## GETTING STARTED
 
 ### 🙊Installation
