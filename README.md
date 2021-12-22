@@ -42,6 +42,7 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 
 - Incorporate  format conversion from blupf90 and numeric(0,1,2) format to hapmap format (2021.11.5)
 - Support LR method to evaluate prediction accuracy and Hotelling_test to test significance between predictive abilities(by cross-validation method)
+- Fix dEBV(2021.12.22)
 
 ## GETTING STARTED
 
