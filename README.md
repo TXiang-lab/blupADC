@@ -77,14 +77,14 @@ install.packages(packageurl,repos=NULL)
 #### Install blupADC on Linux 
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blupADC/attach_files/921825/download/blupADC_1.0.5_R_x86_64-pc-linux-gnu.tar.gz"
+packageurl <- "https://gitee.com/qsmei/blupADC/attach_files/923144/download/blupADC_1.0.5_R_x86_64-pc-linux-gnu.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 #### Install blupADC on Windows
 
 ```R
-packageurl<-"https://gitee.com/qsmei/blupADC/attach_files/921809/download/blupADC_1.0.5.zip"
+packageurl<-"https://gitee.com/qsmei/blupADC/attach_files/923143/download/blupADC_1.0.5.zip"
 install.packages(packageurl,repos=NULL)
 ```
 
