@@ -1,0 +1,3 @@
+#effect record
+Trait1	*	Sex	Herd_Year_Season	*	Id	Litter	*	*
+Trait2	*	Sex	*	Id	*	Age	*
