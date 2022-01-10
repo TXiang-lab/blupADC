@@ -58,6 +58,11 @@ install.packages(c("Rcpp", "RcppArmadillo","data.table","bigmemory"))
 
  **For commercial use of DMU and BLUPF90,  user must contact the author of DMU and BLUPF90 !!!** 
 
+#### Install blupADC via devtools
+```R
+devtools::install_github("TXiang-lab/blupADC")
+```
+
 #### Install blupADC  
 
 ```R
