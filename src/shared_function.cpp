@@ -482,7 +482,7 @@ arma::Mat<int> get_allele(arma::Mat<int> Pedigree){
 // convert matrix into three column format
 // IND_geno must be integer format for accelerating
 // [[Rcpp::export]]
-arma::Mat<double> matrix_col3(arma::Mat<double> & G,arma::Col<int> IND_geno, bool det, 
+arma::Mat<double> matrix_col3_old(arma::Mat<double> & G,arma::Col<int> IND_geno, bool det, 
                               int cpu_cores, double threshold) { 
 
 	omp_set_num_threads(cpu_cores);
@@ -520,7 +520,7 @@ arma::Mat<double> matrix_col3(arma::Mat<double> & G,arma::Col<int> IND_geno, boo
 // convert matrix into three column format
 // IND_geno must be integer format for accelerating
 // [[Rcpp::export]]
-void matrix_col3_memory(SEXP pBigMat,std::string bigmemory_data_name,std::string bigmemory_data_path,
+SEXP matrix_col3_memory_old(SEXP pBigMat,std::string bigmemory_data_name,std::string bigmemory_data_path,
 						arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold) { 
 
 //Rcout<<"Save bigmemory-col_3 matrix as "<<bigmemory_data_path+"/"+bigmemory_data_name+"_col3"+" ......"<<endl;
@@ -577,12 +577,13 @@ void matrix_col3_memory(SEXP pBigMat,std::string bigmemory_data_name,std::string
 	}		
 		
 	}
+	return pBigMat_col3;
 }
 
 
 
 // [[Rcpp::export]]
-void matrix_col3_memory_alt(arma::Mat<double> G,std::string bigmemory_data_name,std::string bigmemory_data_path,
+SEXP matrix_col3_memory_alt(arma::Mat<double> G,std::string bigmemory_data_name,std::string bigmemory_data_path,
 						arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold) { 
 	omp_set_num_threads(cpu_cores);
 
@@ -634,4 +635,103 @@ void matrix_col3_memory_alt(arma::Mat<double> G,std::string bigmemory_data_name,
 	}		
 		
 	}
+	return pBigMat_col3;
+}
+
+
+
+// [[Rcpp::export]]
+arma::Mat<double> matrix_col3(arma::Mat<double> & G,arma::Col<int> IND_geno,bool det=false,int cpu_cores=1,double threshold=0) { 
+
+	Rcout<<"Output col3  matrix type......"<<endl;
+	omp_set_num_threads(cpu_cores);	
+	uvec upper_indices = trimatl_ind(size(G));
+	vec upper_part = G(upper_indices);
+	long ind_n=G.n_rows;
+	long max_row=ind_n*(ind_n+1)/2,ele_size=upper_part.size();
+
+	vec ind_row(ele_size),ind_col(ele_size);
+	arma::uvec row_condition=find(abs(upper_part)>threshold);  //矩阵元素小于0.0001,，可以视作无贡献，可删除
+	arma::Mat<double> col3_matrix;
+
+	col3_matrix=arma::mat(row_condition.size(),3,fill::zeros);
+	long i,j,pos;
+	#pragma omp parallel for private(i,j,pos)
+	////不需要指定 private
+	for(i=0;i<ind_n;i++){	
+		for( j=i;j<ind_n;j++){		
+			pos=max_row-(((ind_n-i)*(ind_n-i-1)/2+ind_n-j-1)+1);
+			ind_row[pos]=IND_geno[i];
+			ind_col[pos]=IND_geno[j];
+		}
+	}	
+	col3_matrix.col(0)=ind_row(row_condition);
+	col3_matrix.col(1)=ind_col(row_condition);
+	col3_matrix.col(2)=upper_part(row_condition);
+
+	if(det==true){
+	double det_value=log_det(G).real(); 
+	arma::mat det_mat(1,3,fill::zeros);
+	det_mat(0,2)=det_value;
+	col3_matrix=join_cols(det_mat,col3_matrix);
+	}
+	return col3_matrix;
+}
+
+
+
+// convert matrix into three column format
+// IND_geno must be integer format for accelerating
+// [[Rcpp::export]]
+SEXP matrix_col3_memory(SEXP pBigMat,std::string bigmemory_data_name,std::string bigmemory_data_path,
+						arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold) { 
+
+	omp_set_num_threads(cpu_cores);	
+	Rcpp::XPtr<BigMatrix> pMat(pBigMat); 
+	arma::Mat<double> G((double*) pMat->matrix(), pMat -> nrow(), pMat -> ncol(), false); 
+
+	uvec upper_indices = trimatl_ind(size(G));
+	vec upper_part = G(upper_indices);
+	long ind_n=G.n_rows;
+	long max_row=ind_n*(ind_n+1)/2,ele_size=upper_part.size();
+
+	vec ind_row(ele_size),ind_col(ele_size);
+	arma::uvec row_condition=find(abs(upper_part)>threshold);  //矩阵元素小于0.0001,，可以视作无贡献，可删除
+	arma::Mat<double> col3_matrix;
+
+	col3_matrix=arma::mat(row_condition.size(),3,fill::zeros);
+	long i,j,pos;
+	#pragma omp parallel for private(i,j,pos)
+	////不需要指定 private
+	for(i=0;i<ind_n;i++){	
+		for( j=i;j<ind_n;j++){		
+			pos=max_row-(((ind_n-i)*(ind_n-i-1)/2+ind_n-j-1)+1);
+			ind_row[pos]=IND_geno[i];
+			ind_col[pos]=IND_geno[j];
+		}
+	}	
+	col3_matrix.col(0)=ind_row(row_condition);
+	col3_matrix.col(1)=ind_col(row_condition);
+	col3_matrix.col(2)=upper_part(row_condition);
+
+	if(det==true){
+	double det_value=log_det(G).real(); 
+	arma::mat det_mat(1,3,fill::zeros);
+	det_mat(0,2)=det_value;
+	col3_matrix=join_cols(det_mat,col3_matrix);
+	}
+
+	
+	delete_bigmemory_file_cpp("col3",bigmemory_data_name,bigmemory_data_path,true);	
+			
+	SEXP pBigMat_col3;	
+	pBigMat_col3=make_bigmemory_object_address_cpp(col3_matrix.n_rows,3,bigmemory_data_name+"_col3",bigmemory_data_path,"double");			
+	Rcpp::XPtr<BigMatrix> pMat_col3(pBigMat_col3);
+	arma::Mat<double> col3_matrix_memory((double*) pMat_col3->matrix(), pMat_col3 -> nrow(), pMat_col3 -> ncol(), false);
+	col3_matrix_memory=col3_matrix;
+	
+	
+	SEXP pBigMat_col3_bigmemory_object=make_bigmemory_object_cpp(col3_matrix.n_rows,3,bigmemory_data_name+"_col3",bigmemory_data_path,"double");	
+	
+	return pBigMat_col3_bigmemory_object;
 }
