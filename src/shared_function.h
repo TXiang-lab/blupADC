@@ -64,10 +64,15 @@ void delete_bigmemory_file_cpp(std::string  matrix_type,
 
 arma::Mat<int> get_allele(arma::Mat<int> Pedigree);
 
-arma::Mat<double> matrix_col3(arma::Mat<double> & G,arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
+arma::Mat<double> matrix_col3_old(arma::Mat<double> & G,arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
 
-void matrix_col3_memory(SEXP pBigMat,std::string bigmemory_data_name,std::string bigmemory_data_path,
+SEXP matrix_col3_memory_old(SEXP pBigMat,std::string bigmemory_data_name,std::string bigmemory_data_path,
 						arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
 
-void matrix_col3_memory_alt(arma::Mat<double> G,std::string bigmemory_data_name,std::string bigmemory_data_path,
+SEXP matrix_col3_memory_alt(arma::Mat<double> G,std::string bigmemory_data_name,std::string bigmemory_data_path,
+						arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
+
+arma::Mat<double> matrix_col3(arma::Mat<double> & G,arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
+
+SEXP matrix_col3_memory(SEXP pBigMat,std::string bigmemory_data_name,std::string bigmemory_data_path,
 						arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);

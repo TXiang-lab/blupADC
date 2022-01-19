@@ -1382,52 +1382,45 @@ P_A=NULL
 }
 
 
-#输出矩阵文件-start
-if((!is.null(output_matrix_path)&!is.null(output_matrix_name))|(!is.null(col3_bigmemory_data_name)&!is.null(col3_bigmemory_data_path))){
-
 if(!is.null(P_A)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
+
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(P_A,IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"P_A_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-P_A_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_P_A_col_three ......\n"))
-matrix_col3_memory_alt(P_A,paste0(col3_bigmemory_data_name,"_P_A"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+P_A_three=matrix_col3(P_A,IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(P_A_three),paste0(output_matrix_name,"P_A_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(P_A_three);gc();}
 }
+
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(P_A),paste0(output_matrix_name,"P_A_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(P_A);gc();}
 }
 
-if(!is.null(P_Ainv)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
-if("col_three" %in% output_matrix_type){
-
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(P_Ainv,IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"P_Ainv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-P_Ainv_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_P_Ainv_col_three ......\n"))
-matrix_col3_memory_alt(P_Ainv,paste0(col3_bigmemory_data_name,"_P_Ainv"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
+
+
+if(!is.null(P_Ainv)){
+
+if("col_three" %in% output_matrix_type){
+P_Ainv_three=matrix_col3(P_Ainv,IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(P_Ainv_three),paste0(output_matrix_name,"P_Ainv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
+}
+if(return_result==FALSE){rm(P_Ainv_three);gc();}
 }
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(P_Ainv),paste0(output_matrix_name,"P_Ainv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(P_Ainv);gc();}
 }
+
 }
 #输出矩阵文件-end
 
@@ -1465,54 +1458,45 @@ P_D=NULL
 }
 
 #输出矩阵文件-start
-if((!is.null(output_matrix_path)&!is.null(output_matrix_name))|(!is.null(col3_bigmemory_data_name)&!is.null(col3_bigmemory_data_path))){
-
 if(!is.null(P_D)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(P_D,IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"P_D_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-P_D_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_P_D_col_three ......\n"))
-matrix_col3_memory_alt(P_D,paste0(col3_bigmemory_data_name,"_P_D"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+P_D_three=matrix_col3(P_D,IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(P_D_three),paste0(output_matrix_name,"P_D_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(P_D_three);gc();}
 }
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(P_D),paste0(output_matrix_name,"P_D_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(P_D);gc();}
 }
 
+}
+
+
 if(!is.null(P_Dinv)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(P_Dinv,IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"P_Dinv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-P_Dinv_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_P_Dinv_col_three ......\n"))
-matrix_col3_memory_alt(P_Dinv,paste0(col3_bigmemory_data_name,"_P_Dinv"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+P_Dinv_three=matrix_col3(P_Dinv,IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(P_Dinv_three),paste0(output_matrix_name,"P_Dinv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(P_Dinv_three);gc();}
 }
-
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(P_Dinv),paste0(output_matrix_name,"P_Dinv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(P_Dinv);gc();}
 }
+
 }
 #输出矩阵文件-end
 
@@ -1550,58 +1534,45 @@ G_A=NULL
 }
 }
 
-
-#输出矩阵文件-start
-if((!is.null(output_matrix_path)&!is.null(output_matrix_name))|(!is.null(col3_bigmemory_data_name)&!is.null(col3_bigmemory_data_path))){
-
 if(!is.null(G_A)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(G_A,IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"G_A_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-G_A_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_G_A_col_three ......\n"))
-matrix_col3_memory_alt(G_A,paste0(col3_bigmemory_data_name,"_G_A"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+G_A_three=matrix_col3(G_A,IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(G_A_three),paste0(output_matrix_name,"G_A_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(G_A_three);gc();}
 }
-
-
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(G_A),paste0(output_matrix_name,"G_A_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(G_A);gc();}
 }
 
+}
+
+
 if(!is.null(G_Ainv)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(G_Ainv,IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"G_Ainv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-G_Ainv_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_G_Ainv_col_three ......\n"))
-matrix_col3_memory_alt(G_Ainv,paste0(col3_bigmemory_data_name,"_G_Ainv"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+G_Ainv_three=matrix_col3(G_Ainv,IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(G_Ainv_three),paste0(output_matrix_name,"G_Ainv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(G_Ainv_three);gc();}
 }
-
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(G_Ainv),paste0(output_matrix_name,"G_Ainv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(G_Ainv);gc();}
 }
+
 }
 #输出矩阵文件-end
 
@@ -1635,56 +1606,45 @@ G_D=NULL
 }
 }
 
-
-#输出矩阵文件-start
-if((!is.null(output_matrix_path)&!is.null(output_matrix_name))|(!is.null(col3_bigmemory_data_name)&!is.null(col3_bigmemory_data_path))){
-
 if(!is.null(G_D)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(G_D,IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"G_D_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-G_D_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_G_D_col_three ......\n"))
-matrix_col3_memory_alt(G_D,paste0(col3_bigmemory_data_name,"_G_D"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+G_D_three=matrix_col3(G_D,IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(G_D_three),paste0(output_matrix_name,"G_D_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(G_D_three);gc();}
 }
-
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(G_D),paste0(output_matrix_name,"G_D_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(G_D);gc();}
 }
 
+}
+
+
 if(!is.null(G_Dinv)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(G_Dinv,IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"G_Dinv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-G_Dinv_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_G_Dinv_col_three ......\n"))
-matrix_col3_memory_alt(G_Dinv,paste0(col3_bigmemory_data_name,"_G_Dinv"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+G_Dinv_three=matrix_col3(G_Dinv,IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(G_Dinv_three),paste0(output_matrix_name,"G_Dinv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(G_Dinv_three);gc();}
 }
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(G_Dinv),paste0(output_matrix_name,"G_Dinv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(G_Dinv);gc();}
 }
+
 }
 #输出矩阵文件-end
 
@@ -1753,55 +1713,45 @@ H_A_inbred=NULL
 
 }
 
-
-#输出矩阵文件-start
-if((!is.null(output_matrix_path)&!is.null(output_matrix_name))|(!is.null(col3_bigmemory_data_name)&!is.null(col3_bigmemory_data_path))){
-
 if(!is.null(H_A)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(H_A,IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"H_A_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-G_A_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_H_A_col_three ......\n"))
-matrix_col3_memory_alt(H_A,paste0(col3_bigmemory_data_name,"_H_A"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+H_A_three=matrix_col3(H_A,IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(H_A_three),paste0(output_matrix_name,"H_A_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(H_A_three);gc();}
 }
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(H_A),paste0(output_matrix_name,"H_A_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(H_A);gc();}
 }
 
+}
+
+
 if(!is.null(H_Ainv)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(H_Ainv,IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"H_Ainv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-H_Ainv_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_H_Ainv_col_three ......\n"))
-matrix_col3_memory_alt(H_Ainv,paste0(col3_bigmemory_data_name,"_H_Ainv"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+H_Ainv_three=matrix_col3(H_Ainv,IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(H_Ainv_three),paste0(output_matrix_name,"H_Ainv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(H_Ainv_three);gc();}
 }
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(H_Ainv),paste0(output_matrix_name,"H_Ainv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(H_Ainv);gc();}
 }
+
 }
 
 
@@ -1842,54 +1792,45 @@ H_D=NULL
 
 }
 
-#输出矩阵文件-start
-if((!is.null(output_matrix_path)&!is.null(output_matrix_name))|(!is.null(col3_bigmemory_data_name)&!is.null(col3_bigmemory_data_path))){
-
 if(!is.null(H_D)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(H_D,IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"H_D_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-H_D_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_H_D_col_three ......\n"))
-matrix_col3_memory_alt(H_D,paste0(col3_bigmemory_data_name,"_H_D"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+H_D_three=matrix_col3(H_D,IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(H_D_three),paste0(output_matrix_name,"H_D_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(H_D_three);gc();}
 }
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(H_D),paste0(output_matrix_name,"H_D_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(H_D);gc();}
 }
 
+}
+
+
 if(!is.null(H_Dinv)){
-if(!is.null(output_matrix_path)){setwd(output_matrix_path)}
-if(!is.null(col3_bigmemory_data_path)){setwd(col3_bigmemory_data_path)}
-fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
 
 if("col_three" %in% output_matrix_type){
-if(col3_bigmemory==FALSE){
-O0O0OOO0O0OOOOOOOOOO=matrix_col3(H_Dinv,IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
-fwrite(data.table(O0O0OOO0O0OOOOOOOOOO),paste0(output_matrix_name,"H_Dinv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
-rm(O0O0OOO0O0OOOOOOOOOO);gc();
-}else{
-cat(paste0("Save bigmemory-H_Dinv_col_three matrix as ",col3_bigmemory_data_path,"/",col3_bigmemory_data_name,"_H_Dinv_col_three ......\n"))
-matrix_col3_memory_alt(H_Dinv,paste0(col3_bigmemory_data_name,"_H_Dinv"),col3_bigmemory_data_path,
-						   IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+H_Dinv_three=matrix_col3(H_Dinv,IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
+fwrite(data.table(H_Dinv_three),paste0(output_matrix_name,"H_Dinv_col_three.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
+if(return_result==FALSE){rm(H_Dinv_three);gc();}
 }
 
 if("col_all" %in% output_matrix_type){
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
 fwrite(data.frame(H_Dinv),paste0(output_matrix_name,"H_Dinv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(H_Dinv);gc();}
 }
+
 }
 
 
@@ -1953,6 +1894,15 @@ if(!exists("G_D")){G_D=NULL};if(!exists("G_Dinv")){G_Dinv=NULL};
 if(!exists("P_A")){P_A=NULL};if(!exists("P_Ainv")){P_Ainv=NULL};
 if(!exists("P_D")){P_D=NULL};if(!exists("P_Dinv")){P_Dinv=NULL};
 if(!exists("H_A")){H_A=NULL};if(!exists("H_Ainv")){H_Ainv=NULL};
+if(!exists("H_D")){H_D=NULL};if(!exists("H_Dinv")){H_Dinv=NULL};
+
+if(!exists("G_A_three")){G_A_three=NULL};if(!exists("G_Ainv_three")){G_Ainv_three=NULL};
+if(!exists("G_D_three")){G_D_three=NULL};if(!exists("G_Dinv_three")){G_Dinv_three=NULL};
+if(!exists("P_A_three")){P_A_three=NULL};if(!exists("P_Ainv_three")){P_Ainv_three=NULL};
+if(!exists("P_D_three")){P_D_three=NULL};if(!exists("P_Dinv_three")){P_Dinv_three=NULL};
+if(!exists("H_A_three")){H_A_three=NULL};if(!exists("H_Ainv_three")){H_Ainv_three=NULL};
+if(!exists("H_D_three")){H_D_three=NULL};if(!exists("H_Dinv_three")){H_Dinv_three=NULL};
+
 
 if(!is.null(G_A)){rownames(G_A)=colnames(G_A)=IND_geno}
 if(!is.null(G_Ainv)){rownames(G_Ainv)=colnames(G_Ainv)=IND_geno}
@@ -1964,11 +1914,17 @@ if(!is.null(P_D)){rownames(P_D)=colnames(P_D)=IND_pedigree}
 if(!is.null(P_Dinv)){rownames(P_Dinv)=colnames(P_Dinv)=IND_pedigree}
 if(!is.null(H_A)){rownames(H_A)=colnames(H_A)=IND_Additive}
 if(!is.null(H_Ainv)){rownames(H_Ainv)=colnames(H_Ainv)=IND_Additive}
+if(!is.null(H_D)){rownames(H_D)=colnames(H_D)=IND_Additive}
+if(!is.null(H_Dinv)){rownames(H_Dinv)=colnames(H_Dinv)=IND_Additive}
 
 
 if(return_result==TRUE){
-return(list(G_A=list(A=G_A,Ainv=G_Ainv),G_D=list(D=G_D,Dinv=G_Dinv),P_A=list(A=P_A,Ainv=P_Ainv),P_D=list(D=P_D,Dinv=P_Dinv),
-		  H_A=list(A=H_A,Ainv=H_Ainv),
+return(list(G_A=list(A=G_A,Ainv=G_Ainv,A_col3=G_A_three,Ainv_col3=G_Ainv_three),
+			G_D=list(D=G_D,Dinv=G_Dinv,D_col3=G_D_three,Dinv_col3=G_Dinv_three),
+			P_A=list(A=P_A,Ainv=P_Ainv,A_col3=P_A_three,Ainv_col3=P_Ainv_three),
+			P_D=list(D=P_D,Dinv=P_Dinv,D_col3=P_D_three,Dinv_col3=P_Dinv_three),
+		    H_A=list(A=H_A,Ainv=H_Ainv,A_col3=H_A_three,Ainv_col3=H_Ainv_three),
+			H_D=list(D=H_D,Dinv=H_Dinv,D_col3=H_D_three,Dinv_col3=H_Dinv_three),
 		    Inbred=list(Homozygous=homo_inbred,G_diag=diag_inbred,Pedigree=pedigree_inbred,H_diag=O0O0OOOOO0OOOOO0O0OO),
 			phased_block=data_block))
 }
@@ -2024,7 +1980,7 @@ setwd(output_matrix_path)
 fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-P_A_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_P_A_col_three ......\n"))
-matrix_col3_memory(P_A@address,paste0(bigmemory_data_name,"_P_A"),bigmemory_data_path,
+P_A_three=matrix_col3_memory(P_A@address,paste0(bigmemory_data_name,"_P_A"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2037,7 +1993,7 @@ setwd(output_matrix_path)
 fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-P_Ainv_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_P_Ainv_col_three ......\n"))
-matrix_col3_memory(pBigMat=P_Ainv@address,paste0(bigmemory_data_name,"_P_Ainv"),bigmemory_data_path,
+P_Ainv_three=matrix_col3_memory(pBigMat=P_Ainv@address,paste0(bigmemory_data_name,"_P_Ainv"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2131,7 +2087,7 @@ setwd(output_matrix_path)
 fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-P_D_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_P_D_col_three ......\n"))
-matrix_col3_memory(pBigMat=P_D@address,paste0(bigmemory_data_name,"_P_D"),bigmemory_data_path,
+P_D_three=matrix_col3_memory(pBigMat=P_D@address,paste0(bigmemory_data_name,"_P_D"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2144,7 +2100,7 @@ setwd(output_matrix_path)
 fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-P_Dinv_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_P_Dinv_col_three ......\n"))
-matrix_col3_memory(pBigMat=P_Dinv@address,paste0(bigmemory_data_name,"_P_Dinv"),bigmemory_data_path,
+P_Dinv_three=matrix_col3_memory(pBigMat=P_Dinv@address,paste0(bigmemory_data_name,"_P_Dinv"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2243,7 +2199,7 @@ fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="
 
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-G_A_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_G_A_col_three ......\n"))
-matrix_col3_memory(pBigMat=G_A@address,paste0(bigmemory_data_name,"_G_A"),bigmemory_data_path,
+G_A_three=matrix_col3_memory(pBigMat=G_A@address,paste0(bigmemory_data_name,"_G_A"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2257,7 +2213,7 @@ fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="
 
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-G_Ainv_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_G_Ainv_col_three ......\n"))
-matrix_col3_memory(pBigMat=G_Ainv@address,paste0(bigmemory_data_name,"_G_Ainv"),bigmemory_data_path,
+G_Ainv_three=matrix_col3_memory(pBigMat=G_Ainv@address,paste0(bigmemory_data_name,"_G_Ainv"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_geno),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2345,7 +2301,7 @@ fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="
 
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-G_D_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_G_D_col_three ......\n"))
-matrix_col3_memory(pBigMat=G_D@address,paste0(bigmemory_data_name,"_G_D"),bigmemory_data_path,
+G_D_three=matrix_col3_memory(pBigMat=G_D@address,paste0(bigmemory_data_name,"_G_D"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2359,7 +2315,7 @@ fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="
 
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-G_Dinv_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_G_Dinv_col_three ......\n"))
-matrix_col3_memory(pBigMat=G_Dinv@address,paste0(bigmemory_data_name,"_G_Dinv"),bigmemory_data_path,
+G_Dinv_three=matrix_col3_memory(pBigMat=G_Dinv@address,paste0(bigmemory_data_name,"_G_Dinv"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_pedigree),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2544,7 +2500,7 @@ fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F
 
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-H_A_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_H_A_col_three ......\n"))
-matrix_col3_memory(pBigMat=H_A@address,bigmemory_data_name=paste0(bigmemory_data_name,"_H_A"),bigmemory_data_path,
+H_A_three=matrix_col3_memory(pBigMat=H_A@address,bigmemory_data_name=paste0(bigmemory_data_name,"_H_A"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2558,7 +2514,7 @@ fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F
 
 if("col_three" %in% output_matrix_type){
 cat(paste0("Save bigmemory-H_Ainv_col_three matrix as ",bigmemory_data_path,"/",bigmemory_data_name,"_H_Ainv_col_three ......\n"))
-matrix_col3_memory(pBigMat=H_Ainv@address,bigmemory_data_name=paste0(bigmemory_data_name,"_H_Ainv"),bigmemory_data_path,
+H_Ainv_three=matrix_col3_memory(pBigMat=H_Ainv@address,bigmemory_data_name=paste0(bigmemory_data_name,"_H_Ainv"),bigmemory_data_path,
 						   IND_geno=as.numeric(IND_Additive),det=matrix_log_det,cpu_cores=cpu_cores,threshold=col3_threshold) 
 }
 if("col_all" %in% output_matrix_type){
@@ -2629,6 +2585,14 @@ if(!exists("P_D")){P_D=NULL};if(!exists("P_Dinv")){P_Dinv=NULL};
 if(!exists("H_A")){H_A=NULL};if(!exists("H_Ainv")){H_Ainv=NULL};
 if(!exists("H_D")){H_D=NULL};if(!exists("H_Dinv")){H_Dinv=NULL};
 
+if(!exists("G_A_three")){G_A_three=NULL};if(!exists("G_Ainv_three")){G_Ainv_three=NULL};
+if(!exists("G_D_three")){G_D_three=NULL};if(!exists("G_Dinv_three")){G_Dinv_three=NULL};
+if(!exists("P_A_three")){P_A_three=NULL};if(!exists("P_Ainv_three")){P_Ainv_three=NULL};
+if(!exists("P_D_three")){P_D_three=NULL};if(!exists("P_Dinv_three")){P_Dinv_three=NULL};
+if(!exists("H_A_three")){H_A_three=NULL};if(!exists("H_Ainv_three")){H_Ainv_three=NULL};
+if(!exists("H_D_three")){H_D_three=NULL};if(!exists("H_Dinv_three")){H_Dinv_three=NULL};
+
+
 if(!is.null(G_A)){rownames(G_A)=colnames(G_A)=as.character(IND_geno)}
 if(!is.null(G_Ainv)){rownames(G_Ainv)=colnames(G_Ainv)=as.character(IND_geno)}
 if(!is.null(G_D)){rownames(G_D)=colnames(G_D)=as.character(IND_geno)}
@@ -2644,8 +2608,12 @@ if(!is.null(H_Dinv)){rownames(H_Dinv)=colnames(H_Dinv)=as.character(IND_Additive
 
 
 if(return_result==TRUE){
-return(list(G_A=list(A=G_A,Ainv=G_Ainv),G_D=list(D=G_D,Dinv=G_Dinv),P_A=list(A=P_A,Ainv=P_Ainv),P_D=list(D=P_D,Dinv=P_Dinv),
-		  H_A=list(A=H_A,Ainv=H_Ainv),H_D=list(D=H_D,Dinv=H_Dinv),
+return(list(G_A=list(A=G_A,Ainv=G_Ainv,A_col3=G_A_three,Ainv_col3=G_Ainv_three),
+			G_D=list(D=G_D,Dinv=G_Dinv,D_col3=G_D_three,Dinv_col3=G_Dinv_three),
+			P_A=list(A=P_A,Ainv=P_Ainv,A_col3=P_A_three,Ainv_col3=P_Ainv_three),
+			P_D=list(D=P_D,Dinv=P_Dinv,D_col3=P_D_three,Dinv_col3=P_Dinv_three),
+		    H_A=list(A=H_A,Ainv=H_Ainv,A_col3=H_A_three,Ainv_col3=H_Ainv_three),
+			H_D=list(D=H_D,Dinv=H_Dinv,D_col3=H_D_three,Dinv_col3=H_Dinv_three),
 		    Inbred=list(Homozygous=homo_inbred,G_diag=diag_inbred,Pedigree=pedigree_inbred,H_diag=O0O0OOOOO0OOOOO0O0OO),
 			phased_block=data_block))
 }
@@ -2863,7 +2831,7 @@ prior=OOO0OOOOO0OOOOO0OOO0(target_trait_name=target_trait_name,
 
 OOOOOOO0O0O0OOOOOOO0=as.matrix(prior)
 
-provided_BLUPF90_prior_effect_name=c(do.call(c,random_effect_name),"Residual")
+provided_BLUPF90_prior_effect_name=c(do.call(c,random_effect_name),rep("Residual",length(target_trait_name)))
 
 }
 
@@ -2908,8 +2876,10 @@ OOOOOOO0OOOOO0O0OOOO=rbind("DATAFILE",phe_name,
 ####################       #################################
 ########construct  Residual Part                   #########
 O0OOOOO0O0O0OOOOOOOO="Residual"
-OOOOO0O0O0OOO0O0OOOO=match(O0OOOOO0O0O0OOOOOOOO,provided_BLUPF90_prior_effect_name)
-O0O0OOO0OOO0O0OOO0OO_pos=(O0O0OOO0O0O0OOOOO0OO*(OOOOO0O0O0OOO0O0OOOO-1)+1):(O0O0OOO0O0O0OOOOO0OO*OOOOO0O0O0OOO0O0OOOO)
+#OOOOO0O0O0OOO0O0OOOO=match(O0OOOOO0O0O0OOOOOOOO,provided_BLUPF90_prior_effect_name)
+#O0O0OOO0OOO0O0OOO0OO_pos=(O0O0OOO0O0O0OOOOO0OO*(OOOOO0O0O0OOO0O0OOOO-1)+1):(O0O0OOO0O0O0OOOOO0OO*OOOOO0O0O0OOO0O0OOOO)
+OOOOO0O0O0OOO0O0OOOO=which(provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO)
+O0O0OOO0OOO0O0OOO0OO_pos=OOOOO0O0O0OOO0O0OOOO
 O0O0OOO0OOO0O0OOO0OO=OOOOOOO0O0O0OOOOOOO0[O0O0OOO0OOO0O0OOO0OO_pos,O0O0OOO0OOO0O0OOO0OO_pos]
 O0O0OOO0OOO0O0OOO0OO=OOO0OOO0OOOOO0OOOOOO(O0O0OOO0OOO0O0OOO0OO)
 
@@ -2997,8 +2967,10 @@ random_effect_pos_matrix=do.call(rbind,random_effect_pos) #pos的矩阵格式
 for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(O0OOOOOOOOO0O0O0O0O0)){
 
 	O0OOOOO0O0O0OOOOOOOO=O0OOOOOOOOO0O0O0O0O0[OOO0OOO0O0OOO0O0OOO0OOOO]
-	OOOOO0O0O0OOO0O0OOOO=match(O0OOOOO0O0O0OOOOOOOO,provided_BLUPF90_prior_effect_name)
-	O0O0OOO0OOO0O0OOO0OO_pos=(O0O0OOO0O0O0OOOOO0OO*(OOOOO0O0O0OOO0O0OOOO-1)+1):(O0O0OOO0O0O0OOOOO0OO*OOOOO0O0O0OOO0O0OOOO)
+	#OOOOO0O0O0OOO0O0OOOO=match(O0OOOOO0O0O0OOOOOOOO,provided_BLUPF90_prior_effect_name)
+	#O0O0OOO0OOO0O0OOO0OO_pos=(O0O0OOO0O0O0OOOOO0OO*(OOOOO0O0O0OOO0O0OOOO-1)+1):(O0O0OOO0O0O0OOOOO0OO*OOOOO0O0O0OOO0O0OOOO)
+	OOOOO0O0O0OOO0O0OOOO=which(provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO)
+	O0O0OOO0OOO0O0OOO0OO_pos=OOOOO0O0O0OOO0O0OOOO
 	O0O0OOO0OOO0O0OOO0OO=OOOOOOO0O0O0OOOOOOO0[O0O0OOO0OOO0O0OOO0OO_pos,O0O0OOO0OOO0O0OOO0OO_pos]
 	O0O0OOO0OOO0O0OOO0OO=OOO0OOO0OOOOO0OOOOOO(O0O0OOO0OOO0O0OOO0OO)
 
@@ -3064,11 +3036,14 @@ if(analysis_model=="GBLUP_A"){
 	write.table(data.frame(Offspring=user_file_id,Sire=0,Dam=0),"dummy_pedigree.txt",sep=" ",quote=F,row.names=F,col.names=F)
 	#write.table(user_define_ped,"dummy_pedigree.txt",sep=" ",quote=F,row.names=F,col.names=F) 
 	effect_pos=(1:length(provided_BLUPF90_prior_effect_name))
+
 	for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(relationship_name)){ 
 	O0OOOOO0O0O0OOOOOOOO=genetic_effect_name
 	#OOOOO0O0O0OOO0O0OOOO=match(O0OOOOO0O0O0OOOOOOOO,provided_BLUPF90_prior_effect_name)
-	OOOOO0O0O0OOO0O0OOOO=effect_pos[provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO][OOO0OOO0O0OOO0O0OOO0OOOO]
-	O0O0OOO0OOO0O0OOO0OO_pos=(O0O0OOO0O0O0OOOOO0OO*(OOOOO0O0O0OOO0O0OOOO-1)+1):(O0O0OOO0O0O0OOOOO0OO*OOOOO0O0O0OOO0O0OOOO)
+	#OOOOO0O0O0OOO0O0OOOO=effect_pos[provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO][OOO0OOO0O0OOO0O0OOO0OOOO]
+	OOOOO0O0O0OOO0O0OOOO=which(provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO)
+	O0O0OOO0OOO0O0OOO0OO_pos=OOOOO0O0O0OOO0O0OOOO
+	#O0O0OOO0OOO0O0OOO0OO_pos=(O0O0OOO0O0O0OOOOO0OO*(OOOOO0O0O0OOO0O0OOOO-1)+1):(O0O0OOO0O0O0OOOOO0OO*OOOOO0O0O0OOO0O0OOOO)
 	O0O0OOO0OOO0O0OOO0OO=OOOOOOO0O0O0OOOOOOO0[O0O0OOO0OOO0O0OOO0OO_pos,O0O0OOO0OOO0O0OOO0OO_pos]
 	O0O0OOO0OOO0O0OOO0OO=OOO0OOO0OOOOO0OOOOOO(O0O0OOO0OOO0O0OOO0OO)
 
@@ -3077,6 +3052,7 @@ if(analysis_model=="GBLUP_A"){
 							 "PED_DEPTH","0",
 						     "(CO)VARIANCES",O0O0OOO0OOO0O0OOO0OO,O0O0OOO0OOOOO0OOOOOO)
 	}
+	
 	
 }else if(analysis_model=="SSBLUP_A"){
 
@@ -3162,7 +3138,7 @@ OOO0OOOOO0OOOOO0OOO0<-function(target_trait_name=NULL,
 
 
 prior=diag(10+length(target_trait_name)+length(do.call(c,random_effect_name))+included_permanent_effect)
-
+prior[prior==0]=0.5
 
 return(prior)
 }
@@ -4574,7 +4550,18 @@ output_type_number=get_output_type_number(input_data_type=input_data_type,
 
 if(length(output_type_number)==0){stop("Please provided standard output data type!")}
 
+
 if(!is.null(input_data_numeric_map)){
+if(ncol(input_data_numeric_map)==3){
+cat("Provided input_data_numeric_map constains 3 columns, please make sure the format is: SNP_name, Chromosome, Position \n")
+input_data_numeric_map=input_data_numeric_map[,c(2,1,3)]
+input_data_numeric_map=cbind(input_data_numeric_map,"A","T")
+}else if(ncol(input_data_numeric_map)==5){
+cat("Provided input_data_numeric_map constains 5 columns, please make sure the format is: Chromosome,SNP_name, Position, Ref, Alt")
+}else{
+stop("Provided input_data_numeric_map didn't meet the requirement format, it should be 3 columns or 5 columns!")
+}
+
 input_data_numeric_map=as.matrix(input_data_numeric_map)
 input_data_numeric_map[,1]=as.numeric(input_data_numeric_map[,1])
 input_data_numeric_map[,3]=as.numeric(input_data_numeric_map[,3])
@@ -4652,6 +4639,16 @@ output_type_number=get_output_type_number(input_data_type=input_data_type,
 if(length(output_type_number)==0){stop("Please provided standard output data type!")}
 
 if(!is.null(input_data_blupf90_map)){
+if(ncol(input_data_blupf90_map)==3){
+cat("Provided input_data_blupf90_map constains 3 columns(identical to BLUPF90 map format), please make sure the format is: SNP_name, Chromosome, Position \n")
+input_data_blupf90_map=input_data_blupf90_map[,c(2,1,3)]
+input_data_blupf90_map=cbind(input_data_blupf90_map,"A","T")
+}else if(ncol(input_data_blupf90_map)==5){
+cat("Provided input_data_blupf90_map constains 5 columns, please make sure the format is: Chromosome,SNP_name, Position, Ref, Alt")
+}else{
+stop("Provided input_data_blupf90_map didn't meet the requirement format, it should be 3 columns or 5 columns!")
+}
+
 input_data_blupf90_map=as.matrix(input_data_blupf90_map)
 input_data_blupf90_map[,1]=as.numeric(input_data_blupf90_map[,1])
 input_data_blupf90_map[,3]=as.numeric(input_data_blupf90_map[,3])
@@ -4907,6 +4904,13 @@ if(input_data_type=="Plink"){
    
 }else if(input_data_type=="Numeric"){
 
+
+		if("Plink"%in%output_data_type|"Hapmap"%in%output_data_type|"VCF"%in%output_data_type){
+	
+		cat("Please provide input_data_numeric_map, which should be 3 columns(SNP_name, Chromosome, Position) or 5 columns(Chromosome,SNP_name, Position, Ref, Alt) \n")
+
+		}
+
    if(bigmemory_cal==FALSE){
 		if("BLUPF90"%in%output_data_type){type_number=c(type_number,1)}
 		if("Plink"%in%output_data_type){type_number=c(type_number,2)}
@@ -4922,6 +4926,12 @@ if(input_data_type=="Plink"){
    }
    
 }else if(input_data_type=="BLUPF90"){
+
+		if("Plink"%in%output_data_type|"Hapmap"%in%output_data_type|"VCF"%in%output_data_type){
+	
+		cat("Please provide input_data_blupf90_map, which should be 3 columns(SNP_name, Chromosome, Position) or 5 columns(Chromosome,SNP_name, Position, Ref, Alt) \n")
+
+		}
 
    if(bigmemory_cal==FALSE){
 		if("Numeric"%in%output_data_type){type_number=c(type_number,1)}
@@ -6627,6 +6637,7 @@ run_BLUPF90<-function(
 								   provided_BLUPF90_prior_effect_name=NULL, #随机效应的名称, 包括Residual
 					                 provided_renf90_par_file_path=NULL,
 					                 provided_renf90_par_file_name=NULL,
+								  BLUPF90_alt_option=NULL,
 								   BLUPF90_genumeric_name=NULL,
 								   BLUPF90_map_name=NULL,
 								   plot_variance=FALSE,
@@ -6682,6 +6693,7 @@ generate_renum(
 			    provided_BLUPF90_prior_file_path=provided_BLUPF90_prior_file_path,
 			    provided_BLUPF90_prior_file_name=provided_BLUPF90_prior_file_name,
 			    provided_BLUPF90_prior_effect_name=provided_BLUPF90_prior_effect_name, #随机效应的名称, 包括Residual
+				BLUPF90_alt_option=BLUPF90_alt_option,
 			    BLUPF90_genumeric_name=BLUPF90_genumeric_name,
 			    BLUPF90_map_name=BLUPF90_map_name)
 
@@ -6690,10 +6702,10 @@ system2(paste0(BLUPF90_software_path,"/renumf90"),"renum.par",stdout="renumf90.l
 
 if(analysis_model=="User_define"){
 #rename renf90.dat 
-#phe=read.table(phe_name,header=F);colnames(phe)=phe_col_names
-#renf90.phe=read.table("renf90.dat",header=F)
-#renf90.phe[,ncol(renf90.phe)]=phe[,genetic_effect_name]
-#write.table(renf90.phe,"renf90.dat",quote=F,row.names=F,sep=" ",col.names=F)
+phe=read.table(phe_name,header=F);colnames(phe)=phe_col_names
+renf90.phe=read.table("renf90.dat",header=F)
+renf90.phe[,ncol(renf90.phe)]=phe[,genetic_effect_name]
+write.table(renf90.phe,"renf90.dat",quote=F,row.names=F,sep=" ",col.names=F)
 
 #modify renf90.par
 
