@@ -1294,6 +1294,55 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// matrix_col3_old
+arma::Mat<double> matrix_col3_old(arma::Mat<double>& G, arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
+RcppExport SEXP _blupADC_matrix_col3_old(SEXP GSEXP, SEXP IND_genoSEXP, SEXP detSEXP, SEXP cpu_coresSEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::Mat<double>& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< arma::Col<int> >::type IND_geno(IND_genoSEXP);
+    Rcpp::traits::input_parameter< bool >::type det(detSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(matrix_col3_old(G, IND_geno, det, cpu_cores, threshold));
+    return rcpp_result_gen;
+END_RCPP
+}
+// matrix_col3_memory_old
+SEXP matrix_col3_memory_old(SEXP pBigMat, std::string bigmemory_data_name, std::string bigmemory_data_path, arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
+RcppExport SEXP _blupADC_matrix_col3_memory_old(SEXP pBigMatSEXP, SEXP bigmemory_data_nameSEXP, SEXP bigmemory_data_pathSEXP, SEXP IND_genoSEXP, SEXP detSEXP, SEXP cpu_coresSEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
+    Rcpp::traits::input_parameter< std::string >::type bigmemory_data_name(bigmemory_data_nameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type bigmemory_data_path(bigmemory_data_pathSEXP);
+    Rcpp::traits::input_parameter< arma::Col<int> >::type IND_geno(IND_genoSEXP);
+    Rcpp::traits::input_parameter< bool >::type det(detSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(matrix_col3_memory_old(pBigMat, bigmemory_data_name, bigmemory_data_path, IND_geno, det, cpu_cores, threshold));
+    return rcpp_result_gen;
+END_RCPP
+}
+// matrix_col3_memory_alt
+SEXP matrix_col3_memory_alt(arma::Mat<double> G, std::string bigmemory_data_name, std::string bigmemory_data_path, arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
+RcppExport SEXP _blupADC_matrix_col3_memory_alt(SEXP GSEXP, SEXP bigmemory_data_nameSEXP, SEXP bigmemory_data_pathSEXP, SEXP IND_genoSEXP, SEXP detSEXP, SEXP cpu_coresSEXP, SEXP thresholdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::Mat<double> >::type G(GSEXP);
+    Rcpp::traits::input_parameter< std::string >::type bigmemory_data_name(bigmemory_data_nameSEXP);
+    Rcpp::traits::input_parameter< std::string >::type bigmemory_data_path(bigmemory_data_pathSEXP);
+    Rcpp::traits::input_parameter< arma::Col<int> >::type IND_geno(IND_genoSEXP);
+    Rcpp::traits::input_parameter< bool >::type det(detSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
+    rcpp_result_gen = Rcpp::wrap(matrix_col3_memory_alt(G, bigmemory_data_name, bigmemory_data_path, IND_geno, det, cpu_cores, threshold));
+    return rcpp_result_gen;
+END_RCPP
+}
 // matrix_col3
 arma::Mat<double> matrix_col3(arma::Mat<double>& G, arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
 RcppExport SEXP _blupADC_matrix_col3(SEXP GSEXP, SEXP IND_genoSEXP, SEXP detSEXP, SEXP cpu_coresSEXP, SEXP thresholdSEXP) {
@@ -1310,9 +1359,10 @@ BEGIN_RCPP
 END_RCPP
 }
 // matrix_col3_memory
-void matrix_col3_memory(SEXP pBigMat, std::string bigmemory_data_name, std::string bigmemory_data_path, arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
+SEXP matrix_col3_memory(SEXP pBigMat, std::string bigmemory_data_name, std::string bigmemory_data_path, arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
 RcppExport SEXP _blupADC_matrix_col3_memory(SEXP pBigMatSEXP, SEXP bigmemory_data_nameSEXP, SEXP bigmemory_data_pathSEXP, SEXP IND_genoSEXP, SEXP detSEXP, SEXP cpu_coresSEXP, SEXP thresholdSEXP) {
 BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type pBigMat(pBigMatSEXP);
     Rcpp::traits::input_parameter< std::string >::type bigmemory_data_name(bigmemory_data_nameSEXP);
@@ -1321,24 +1371,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< bool >::type det(detSEXP);
     Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
     Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
-    matrix_col3_memory(pBigMat, bigmemory_data_name, bigmemory_data_path, IND_geno, det, cpu_cores, threshold);
-    return R_NilValue;
-END_RCPP
-}
-// matrix_col3_memory_alt
-void matrix_col3_memory_alt(arma::Mat<double> G, std::string bigmemory_data_name, std::string bigmemory_data_path, arma::Col<int> IND_geno, bool det, int cpu_cores, double threshold);
-RcppExport SEXP _blupADC_matrix_col3_memory_alt(SEXP GSEXP, SEXP bigmemory_data_nameSEXP, SEXP bigmemory_data_pathSEXP, SEXP IND_genoSEXP, SEXP detSEXP, SEXP cpu_coresSEXP, SEXP thresholdSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::Mat<double> >::type G(GSEXP);
-    Rcpp::traits::input_parameter< std::string >::type bigmemory_data_name(bigmemory_data_nameSEXP);
-    Rcpp::traits::input_parameter< std::string >::type bigmemory_data_path(bigmemory_data_pathSEXP);
-    Rcpp::traits::input_parameter< arma::Col<int> >::type IND_geno(IND_genoSEXP);
-    Rcpp::traits::input_parameter< bool >::type det(detSEXP);
-    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
-    Rcpp::traits::input_parameter< double >::type threshold(thresholdSEXP);
-    matrix_col3_memory_alt(G, bigmemory_data_name, bigmemory_data_path, IND_geno, det, cpu_cores, threshold);
-    return R_NilValue;
+    rcpp_result_gen = Rcpp::wrap(matrix_col3_memory(pBigMat, bigmemory_data_name, bigmemory_data_path, IND_geno, det, cpu_cores, threshold));
+    return rcpp_result_gen;
 END_RCPP
 }
 // phased_vcf_to_haplotype_cpp
@@ -1646,9 +1680,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_blupADC_union_cpp", (DL_FUNC) &_blupADC_union_cpp, 2},
     {"_blupADC_delete_bigmemory_file_cpp", (DL_FUNC) &_blupADC_delete_bigmemory_file_cpp, 4},
     {"_blupADC_get_allele", (DL_FUNC) &_blupADC_get_allele, 1},
+    {"_blupADC_matrix_col3_old", (DL_FUNC) &_blupADC_matrix_col3_old, 5},
+    {"_blupADC_matrix_col3_memory_old", (DL_FUNC) &_blupADC_matrix_col3_memory_old, 7},
+    {"_blupADC_matrix_col3_memory_alt", (DL_FUNC) &_blupADC_matrix_col3_memory_alt, 7},
     {"_blupADC_matrix_col3", (DL_FUNC) &_blupADC_matrix_col3, 5},
     {"_blupADC_matrix_col3_memory", (DL_FUNC) &_blupADC_matrix_col3_memory, 7},
-    {"_blupADC_matrix_col3_memory_alt", (DL_FUNC) &_blupADC_matrix_col3_memory_alt, 7},
     {"_blupADC_phased_vcf_to_haplotype_cpp", (DL_FUNC) &_blupADC_phased_vcf_to_haplotype_cpp, 2},
     {"_blupADC_phased_vcf_to_numeric_cpp", (DL_FUNC) &_blupADC_phased_vcf_to_numeric_cpp, 5},
     {"_blupADC_phased_vcf_to_blupf90_cpp", (DL_FUNC) &_blupADC_phased_vcf_to_blupf90_cpp, 5},
