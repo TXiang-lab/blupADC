@@ -46,8 +46,8 @@ O0O0OOO0O0OOOOO0O0OO$V1=OOOOOOO0O0OOO0OOOOOO
 colnames(O0O0OOO0O0OOOOO0O0OO)[1]="Id"
 RESIDUAL=fread(paste0(dmu_result_path,"/RESIDUAL"),heade=F,data.table=F)
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
-residual=RESIDUAL[,c(1,1+OOO0OOO0O0OOO0O0OOO0OOOO+2*O0O0OOO0O0O0OOOOO0OO)];colnames(residual)=c("Pos","RESIDUAL")
+for(i in 1:length(target_trait_name)){
+residual=RESIDUAL[,c(1,1+i+2*O0O0OOO0O0O0OOOOO0OO)];colnames(residual)=c("Pos","RESIDUAL")
 residual[residual=="-9999"]=NA
 # ÖØ¸´¼ÇÂ¼µÄÐÔ×´£¬¶ÔÓ¦¶à¸ö²Ð²î£¬½«²Ð²îÈ¡Æ½¾ùÖµ
 if(sum(duplicated(residual[,1]))>=1){
@@ -60,21 +60,21 @@ detach(residual)
 residual[,1]=phe[as.numeric(residual[,"Pos"]),genetic_effect_name]
 OOOOO0OOOOOOOOOOO0OO=match(O0O0OOO0O0OOOOO0O0OO[,1],residual[,1])
 
-for(OOO0OOO0O0OOO0O0OOO0OOOOO in 1:length(relationship_name)){
-additive=SOL[(SOL$OOO0O0OOOOOOOOO0O0OO%in%genetic_effect_number)&(SOL$Trait%in%OOO0OOO0O0OOO0O0OOO0OOOO)&(SOL$Random_number%in%OOO0OOO0O0OOO0O0OOO0OOOOO),c("Id","EBV")]
+for(j in 1:length(relationship_name)){
+additive=SOL[(SOL$OOO0O0OOOOOOOOO0O0OO%in%genetic_effect_number)&(SOL$Trait%in%i)&(SOL$Random_number%in%j),c("Id","EBV")]
 OOOOOOOOOOO0O0OOO0OO=match(O0O0OOO0O0OOOOO0O0OO[,1],additive[,1])
-O0O0OOO0O0OOOOO0O0OO[,(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+1]=additive[OOOOOOOOOOO0O0OOO0OO,"EBV"]
-O0O0OOO0O0OOOOO0O0OO[,(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+2]=residual[OOOOO0OOOOOOOOOOO0OO,"RESIDUAL"]
-O0O0OOO0O0OOOOO0O0OO[,(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+3]=O0O0OOO0O0OOOOO0O0OO[,(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+2]+O0O0OOO0O0OOOOO0O0OO[,(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+1]
-colnames(O0O0OOO0O0OOOOO0O0OO)[(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+1]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_R",OOO0OOO0O0OOO0O0OOO0OOOOO,"_Value")
-colnames(O0O0OOO0O0OOOOO0O0OO)[(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+2]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_Residual")
-colnames(O0O0OOO0O0OOOOO0O0OO)[(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+3]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_R",OOO0OOO0O0OOO0O0OOO0OOOOO,"_Value_Plus_Residual")
+O0O0OOO0O0OOOOO0O0OO[,(i-1)*(length(relationship_name)+2)+j+1]=additive[OOOOOOOOOOO0O0OOO0OO,"EBV"]
+O0O0OOO0O0OOOOO0O0OO[,(i-1)*(length(relationship_name)+2)+j+2]=residual[OOOOO0OOOOOOOOOOO0OO,"RESIDUAL"]
+O0O0OOO0O0OOOOO0O0OO[,(i-1)*(length(relationship_name)+2)+j+3]=O0O0OOO0O0OOOOO0O0OO[,(i-1)*(length(relationship_name)+2)+j+2]+O0O0OOO0O0OOOOO0O0OO[,(i-1)*(length(relationship_name)+2)+j+1]
+colnames(O0O0OOO0O0OOOOO0O0OO)[(i-1)*(length(relationship_name)+2)+j+1]=paste0(target_trait_name[i],"_R",j,"_Value")
+colnames(O0O0OOO0O0OOOOO0O0OO)[(i-1)*(length(relationship_name)+2)+j+2]=paste0(target_trait_name[i],"_Residual")
+colnames(O0O0OOO0O0OOOOO0O0OO)[(i-1)*(length(relationship_name)+2)+j+3]=paste0(target_trait_name[i],"_R",j,"_Value_Plus_Residual")
 
 }
-#O0O0OOO0O0OOOOO0O0OO[,OOO0OOO0O0OOO0O0OOO0OOOO*(length(relationship_name)+2)+1]= residual[OOOOO0OOOOOOOOOOO0OO,"RESIDUAL"]
-#O0O0OOO0O0OOOOO0O0OO[,OOO0OOO0O0OOO0O0OOO0OOOO*(length(relationship_name)+2)+2]= O0O0OOO0O0OOOOO0O0OO[,OOO0OOO0O0OOO0O0OOO0OOOO*(length(relationship_name)+2)+0]+O0O0OOO0O0OOOOO0O0OO[,OOO0OOO0O0OOO0O0OOO0OOOO*(length(relationship_name)+2)+1]
-#colnames(O0O0OOO0O0OOOOO0O0OO)[OOO0OOO0O0OOO0O0OOO0OOOO*(length(relationship_name)+2)+1]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_Residual")
-#colnames(O0O0OOO0O0OOOOO0O0OO)[(OOO0OOO0O0OOO0O0OOO0OOOO-1)*(length(relationship_name)+2)+OOO0OOO0O0OOO0O0OOO0OOOOO+2]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_R",OOO0OOO0O0OOO0O0OOO0OOOOO,"_Value_Plus_Residual")
+#O0O0OOO0O0OOOOO0O0OO[,i*(length(relationship_name)+2)+1]= residual[OOOOO0OOOOOOOOOOO0OO,"RESIDUAL"]
+#O0O0OOO0O0OOOOO0O0OO[,i*(length(relationship_name)+2)+2]= O0O0OOO0O0OOOOO0O0OO[,i*(length(relationship_name)+2)+0]+O0O0OOO0O0OOOOO0O0OO[,i*(length(relationship_name)+2)+1]
+#colnames(O0O0OOO0O0OOOOO0O0OO)[i*(length(relationship_name)+2)+1]=paste0(target_trait_name[i],"_Residual")
+#colnames(O0O0OOO0O0OOOOO0O0OO)[(i-1)*(length(relationship_name)+2)+j+2]=paste0(target_trait_name[i],"_R",j,"_Value_Plus_Residual")
 }
 
 
@@ -96,10 +96,10 @@ RESIDUAL=fread(paste0(dmu_result_path,"/RESIDUAL"),heade=F,data.table=F)
 
 
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-additive=SOL[(SOL$OOO0O0OOOOOOOOO0O0OO%in%genetic_effect_number)&(SOL$Trait%in%OOO0OOO0O0OOO0O0OOO0OOOO),c("Id","EBV")]
-residual=RESIDUAL[,c(1,1+OOO0OOO0O0OOO0O0OOO0OOOO+2*O0O0OOO0O0O0OOOOO0OO)];colnames(residual)=c("Pos","RESIDUAL")
+additive=SOL[(SOL$OOO0O0OOOOOOOOO0O0OO%in%genetic_effect_number)&(SOL$Trait%in%i),c("Id","EBV")]
+residual=RESIDUAL[,c(1,1+i+2*O0O0OOO0O0O0OOOOO0OO)];colnames(residual)=c("Pos","RESIDUAL")
 residual[residual=="-9999"]=NA
 # ÖØ¸´¼ÇÂ¼µÄÐÔ×´£¬¶ÔÓ¦¶à¸ö²Ð²î£¬½«²Ð²îÈ¡Æ½¾ùÖµ
 if(sum(duplicated(residual[,1]))>=1){
@@ -114,21 +114,21 @@ residual[,1]=phe[as.numeric(residual[,"Pos"]),genetic_effect_name]
 OOOOOOOOOOO0O0OOO0OO=match(O0O0OOO0O0OOOOO0O0OO[,1],additive[,1])
 OOOOO0OOOOOOOOOOO0OO=match(O0O0OOO0O0OOOOO0O0OO[,1],residual[,1])
 
-O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+1]=   additive[OOOOOOOOOOO0O0OOO0OO,"EBV"]
-O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+2]= residual[OOOOO0OOOOOOOOOOO0OO,"RESIDUAL"]
-O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+3]=O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*3+OOO0OOO0O0OOO0O0OOO0OOOO]+O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*3+OOO0OOO0O0OOO0O0OOO0OOOO+1]
+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+1]=   additive[OOOOOOOOOOO0O0OOO0OO,"EBV"]
+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+2]= residual[OOOOO0OOOOOOOOOOO0OO,"RESIDUAL"]
+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+3]=O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*3+i]+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*3+i+1]
 
-colnames(O0O0OOO0O0OOOOO0O0OO)[1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+1]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_EBV")
-colnames(O0O0OOO0O0OOOOO0O0OO)[1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+2]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_Res")
-colnames(O0O0OOO0O0OOOOO0O0OO)[1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+3]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_EBV_Plus_Residual")
-colnames(O0O0OOO0O0OOOOO0O0OO)[1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+4]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_dEBV")
+colnames(O0O0OOO0O0OOOOO0O0OO)[1+(i-1)*4+1]=paste0(target_trait_name[i],"_EBV")
+colnames(O0O0OOO0O0OOOOO0O0OO)[1+(i-1)*4+2]=paste0(target_trait_name[i],"_Res")
+colnames(O0O0OOO0O0OOOOO0O0OO)[1+(i-1)*4+3]=paste0(target_trait_name[i],"_EBV_Plus_Residual")
+colnames(O0O0OOO0O0OOOOO0O0OO)[1+(i-1)*4+4]=paste0(target_trait_name[i],"_dEBV")
 }
 
 
 #¼ÆËãdebv 
 if(cal_debv==TRUE){
 if(is.null(pedigree_path)&is.null(pedigree_name)){
-stop("Please provide OOO0OOO0O0OOO0O0OOO0OOOOOO path and name for calculating dEBV!")
+stop("Please provide pedigree path and name for calculating dEBV!")
 }
 cat("Output dEBV......\n")
 debv_result=OOO0O0OOO0OOOOOOOOO0(target_trait_name=target_trait_name,
@@ -142,8 +142,8 @@ debv_result=OOO0O0OOO0OOOOOOOOO0(target_trait_name=target_trait_name,
 				   debv_id=debv_id #¼ÆËãÓÐ»ùÒòÐÍ¸öÌåµÄdebv
 				   )
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
-O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+OOO0OOO0O0OOO0O0OOO0OOOO+3]=as.numeric(debv_result[match(O0O0OOO0O0OOOOO0O0OO[,1],debv_result[,1]),OOO0OOO0O0OOO0O0OOO0OOOO+1])
+for(i in 1:length(target_trait_name)){
+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+i+3]=as.numeric(debv_result[match(O0O0OOO0O0OOOOO0O0OO[,1],debv_result[,1]),i+1])
 }
 original_O0O0OOO0O0OOOOO0O0OO=O0O0OOO0O0OOOOO0O0OO #´øÓÐNAµÄ
 }
@@ -161,11 +161,11 @@ se=tmp_SOL[tmp_SOL[,1]%in%genetic_effect_number,]
 se=se[,c("Id","Trait","EBV","SE")]
 se=se[!se[,4]%in%0,]  #È¥³ýÎª0µÄSE
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
-trait_se=se[se[,2]%in%OOO0OOO0O0OOO0O0OOO0OOOO,]
-trait_var_Additive=O0O0O0OOOOO0OOOOO0O0[O0O0O0OOOOO0OOOOO0O0[,1]%in%1&O0O0O0OOOOO0OOOOO0O0[,2]%in%OOO0OOO0O0OOO0O0OOO0OOOO&O0O0O0OOOOO0OOOOO0O0[,3]%in%OOO0OOO0O0OOO0O0OOO0OOOO,4]
+for(i in 1:length(target_trait_name)){
+trait_se=se[se[,2]%in%i,]
+trait_var_Additive=O0O0O0OOOOO0OOOOO0O0[O0O0O0OOOOO0OOOOO0O0[,1]%in%1&O0O0O0OOOOO0OOOOO0O0[,2]%in%i&O0O0O0OOOOO0OOOOO0O0[,3]%in%i,4]
 reliability=round(mean(1-(trait_se[,"SE"]^2)/trait_var_Additive),4)
-Sum_reliability=rbind(Sum_reliability,c(target_trait_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],reliability))
+Sum_reliability=rbind(Sum_reliability,c(target_trait_name[[i]],reliability))
 }
 
 colnames(Sum_reliability)=c("Trait","Reliability")
@@ -209,21 +209,21 @@ OOOOOOO0OOOOO0O0OOO0=matrix(nrow=length(debv_id),ncol=length(target_trait_name)+
 OOOOOOO0OOOOO0O0OOO0=as.data.frame(OOOOOOO0OOOOO0O0OOO0,stringsAsFactors=F)
 OOOOOOO0OOOOO0O0OOO0[,1]=debv_id
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-ebv_r2=O0OOO0O0OOO0OOOOO0O0$ebv_r2[[OOO0OOO0O0OOO0O0OOO0OOOO]]
-h2=O0OOO0O0OOO0OOOOO0O0$h2[[OOO0OOO0O0OOO0O0OOO0OOOO]]
-OOO0OOO0O0OOO0O0OOO0OOOOOO=fread(paste0(pedigree_path,"/",pedigree_name),header=F,data.table=F)
+ebv_r2=O0OOO0O0OOO0OOOOO0O0$ebv_r2[[i]]
+h2=O0OOO0O0OOO0OOOOO0O0$h2[[i]]
+pedigree=fread(paste0(pedigree_path,"/",pedigree_name),header=F,data.table=F)
 
-OOO0OOO0O0OOO0O0OOO0OOOOOO=OOO0OOO0O0OOO0O0OOO0OOOOOO[,1:3]
-colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)=c("ID","Sire","Dam")
+pedigree=pedigree[,1:3]
+colnames(pedigree)=c("ID","Sire","Dam")
 p.varSNP=0.5
 
 debv_id=data.frame(debv_id,stringsAsFactors=F);
 
 colnames(debv_id)[1]="Id"
 
-OOOOO0O0OOOOO0OOO0OO <- merge(x=ebv_r2,y=OOO0OOO0O0OOO0O0OOO0OOOOOO,by.x=1,by.y=1)
+OOOOO0O0OOOOO0OOO0OO <- merge(x=ebv_r2,y=pedigree,by.x=1,by.y=1)
   OOOOO0OOO0OOOOO0O0O0 <- merge(x=OOOOO0O0OOOOO0OOO0OO,y=debv_id,by.x=1,by.y=1)
   colnames(x=OOOOO0OOO0OOOOO0O0O0) <- c("ID","ID_EBV","ID_Rel","SireID","DamID") 
   Rel.sire <- merge(x=OOOOO0O0OOOOO0OOO0OO,y=OOOOO0OOO0OOOOO0O0O0,by.x=1,by.y=4)
@@ -241,7 +241,7 @@ OOOOO0O0OOOOO0OOO0OO <- merge(x=ebv_r2,y=OOO0OOO0O0OOO0O0OOO0OOOOOO,by.x=1,by.y=
   Deregress <- t(apply(X=dEBV,MARGIN=1,FUN=OOOOOOO0O0OOOOOOOOOO))
   Deregress <- cbind.data.frame(Id=data[,1],Deregress)
 
-  OOOOOOO0OOOOO0O0OOO0[na.omit(match(OOOOOOO0OOOOO0O0OOO0[,1],Deregress[,1])),OOO0OOO0O0OOO0O0OOO0OOOO+1]=Deregress[na.omit(match(OOOOOOO0OOOOO0O0OOO0[,1],Deregress[,1])),"dEBV"]
+  OOOOOOO0OOOOO0O0OOO0[na.omit(match(OOOOOOO0OOOOO0O0OOO0[,1],Deregress[,1])),i+1]=Deregress[na.omit(match(OOOOOOO0OOOOO0O0OOO0[,1],Deregress[,1])),"dEBV"]
 }
 
 colnames(OOOOOOO0OOOOO0O0OOO0)=c("Id",paste0(target_trait_name,"_dEBV"))
@@ -270,9 +270,9 @@ O0OOO0O0OOO0OOOOO0O0=calculate_reliability(return_individual_result=TRUE,
 						dmu_result_path=dmu_result_path,
 						debv_id=NULL)
 
-OOO0OOO0O0OOO0O0OOO0OOOOOO=fread(paste0(pedigree_path,"/",pedigree_name),header=F,data.table=F)
-OOO0OOO0O0OOO0O0OOO0OOOOOO=OOO0OOO0O0OOO0O0OOO0OOOOOO[,1:3]
-colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)=c("ID","Sire","Dam")
+pedigree=fread(paste0(pedigree_path,"/",pedigree_name),header=F,data.table=F)
+pedigree=pedigree[,1:3]
+colnames(pedigree)=c("ID","Sire","Dam")
 p_var=p_var
 
 
@@ -280,15 +280,15 @@ ebv_r2=data.frame(O0OOO0O0OOO0OOOOO0O0$ebv_r2[[1]],stringsAsFactors=F)
 
 h2=O0OOO0O0OOO0OOOOO0O0$h2[[1]]
 
-debv=debv_method1(ebv=ebv_r2,ped=OOO0OOO0O0OOO0O0OOO0OOOOOO,h2=h2,p_var=p_var,debv_id=debv_id)[,c("Id","dEBV")]
+debv=debv_method1(ebv=ebv_r2,ped=pedigree,h2=h2,p_var=p_var,debv_id=debv_id)[,c("Id","dEBV")]
 
 if(length(target_trait_name)>=2){
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 2:length(target_trait_name)){
+for(i in 2:length(target_trait_name)){
 
-ebv_r2=data.frame(O0OOO0O0OOO0OOOOO0O0$ebv_r2[[OOO0OOO0O0OOO0O0OOO0OOOO]],stringsAsFactors=F)
-h2=O0OOO0O0OOO0OOOOO0O0$h2[[OOO0OOO0O0OOO0O0OOO0OOOO]]
+ebv_r2=data.frame(O0OOO0O0OOO0OOOOO0O0$ebv_r2[[i]],stringsAsFactors=F)
+h2=O0OOO0O0OOO0OOOOO0O0$h2[[i]]
 
-debv_trait=debv_method1(ebv=ebv_r2,ped=OOO0OOO0O0OOO0O0OOO0OOOOOO,h2=h2,p_var=p_var,debv_id=debv_id)[,c("Id","dEBV")]
+debv_trait=debv_method1(ebv=ebv_r2,ped=pedigree,h2=h2,p_var=p_var,debv_id=debv_id)[,c("Id","dEBV")]
 
 debv=cbind(debv,debv_trait[match(debv[,1],debv_trait[,1]),2])
 
@@ -382,14 +382,14 @@ O0O0O0OOOOO0OOOOO0O0<-data.frame(read.table("PAROUT",header=F),stringsAsFactors=
 
 O0O0O0OOOOO0OOOOO0O0<-data.frame(read.table(paste0(provided_prior_file_path,"/",provided_prior_file_name),header=F),stringsAsFactors=F)}
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-trait_se=SOL[SOL$Trait%in%OOO0OOO0O0OOO0O0OOO0OOOO,]
-trait_var_Additive=as.numeric(O0O0O0OOOOO0OOOOO0O0[(O0O0O0OOOOO0OOOOO0O0[,1]%in%1)&(O0O0O0OOOOO0OOOOO0O0[,2]%in%OOO0OOO0O0OOO0O0OOO0OOOO)&(O0O0O0OOOOO0OOOOO0O0[,3]%in%OOO0OOO0O0OOO0O0OOO0OOOO),4])
+trait_se=SOL[SOL$Trait%in%i,]
+trait_var_Additive=as.numeric(O0O0O0OOOOO0OOOOO0O0[(O0O0O0OOOOO0OOOOO0O0[,1]%in%1)&(O0O0O0OOOOO0OOOOO0O0[,2]%in%i)&(O0O0O0OOOOO0OOOOO0O0[,3]%in%i),4])
 
 reliability=mean(1-(trait_se[,"SE"]^2)/trait_var_Additive)
 r2=c(r2,list(reliability))
-write.table(reliability,paste0("The_reliability_of_",target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],".txt"),row.names=F,col.names=F,quote=F)
+write.table(reliability,paste0("The_reliability_of_",target_trait_name[i],".txt"),row.names=F,col.names=F,quote=F)
 
 ebv_r2=cbind(SOL[,"Id"],SOL[,"EBV"],(1-(trait_se[,"SE"]^2)/trait_var_Additive))
 h2=c(h2,list(trait_var_Additive/sum(O0O0O0OOOOO0OOOOO0O0[,4])))
@@ -494,8 +494,8 @@ OOOOOOOOOOOOO0O0O0O0=OOOOOOOOOOOOO0O0O0O0[OOOOOOOOOOOOO0O0O0O0[,3]>duplication_t
 #¸ù¾ÝOOOOOOOOOOOOO0O0O0O0µÄ³õ²½½á¹û£¬ÀûÓÃËùÓÐSNPÊý¾Ý,ÔÙÖØÐÂ½øÐÐoverlap¼ÆËã
 if(nrow(OOOOOOOOOOOOO0O0O0O0)>500){stop("Plesase select appropriate numbers of selected snps in detecting overlap ")}
 if(nrow(OOOOOOOOOOOOO0O0O0O0)>=1){
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(OOOOOOOOOOOOO0O0O0O0)){
-OOOOOOOOOOOOO0O0O0O0[OOO0OOO0O0OOO0O0OOO0OOOO,3]=sum(data_numeric[OOOOOOOOOOOOO0O0O0O0[OOO0OOO0O0OOO0O0OOO0OOOO,1],]==data_numeric[OOOOOOOOOOOOO0O0O0O0[OOO0OOO0O0OOO0O0OOO0OOOO,2],])/ncol(data_numeric)
+for(i in 1:nrow(OOOOOOOOOOOOO0O0O0O0)){
+OOOOOOOOOOOOO0O0O0O0[i,3]=sum(data_numeric[OOOOOOOOOOOOO0O0O0O0[i,1],]==data_numeric[OOOOOOOOOOOOO0O0O0O0[i,2],])/ncol(data_numeric)
 }}
 
 OOOOOOOOOOOOO0O0O0O0=OOOOOOOOOOOOO0O0O0O0[as.numeric(OOOOOOOOOOOOO0O0O0O0[,3])>=duplication_threshold,]
@@ -594,8 +594,8 @@ input_plink_data_name=try(list.files(getwd(),pattern = '.ped$'),silent=T)
 #####¶ÁÈ¡plinkÊý¾Ý
 if(length(input_plink_data_name)!=0){
 input_data_name=unique(unlist(strsplit(input_plink_data_name,split = ".ped")))
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(input_data_name)){
-data_map=fread(paste0(path,"/",input_data_name[OOO0OOO0O0OOO0O0OOO0OOOO],".map"),data.table=F,header=F)
+for(i in 1:length(input_data_name)){
+data_map=fread(paste0(path,"/",input_data_name[i],".map"),data.table=F,header=F)
 data_map_list=c(data_map_list,list(data_map))	
 }}}
 
@@ -617,11 +617,11 @@ input_hapmap_data_name=try(list.files(getwd(),pattern = '.hmp.txt$'),silent=T)
 #####¶ÁÈ¡plinkÊý¾Ý
 if(length(input_plink_data_name)!=0){
 input_data_name=unique(unlist(strsplit(input_plink_data_name,split = ".ped")))
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(input_data_name)){
+for(i in 1:length(input_data_name)){
 cat("Reading plink data......\n")
-data_ped_subset=fread(paste0(path,"/",input_data_name[OOO0OOO0O0OOO0O0OOO0OOOO],".ped"),data.table=F,header=F,nThread=cpu_cores)
-data_map_subset=fread(paste0(path,"/",input_data_name[OOO0OOO0O0OOO0O0OOO0OOOO],".map"),data.table=F,header=F)
-cat(paste0("Plink data file path",plink_iter,": ",path," ;\nPlink data file name",plink_iter,": ",input_data_name[OOO0OOO0O0OOO0O0OOO0OOOO],"\n"))
+data_ped_subset=fread(paste0(path,"/",input_data_name[i],".ped"),data.table=F,header=F,nThread=cpu_cores)
+data_map_subset=fread(paste0(path,"/",input_data_name[i],".map"),data.table=F,header=F)
+cat(paste0("Plink data file path",plink_iter,": ",path," ;\nPlink data file name",plink_iter,": ",input_data_name[i],"\n"))
 plink_iter=plink_iter+1
 if(combine_type=="intersect"){
 pos=plink_index(match(data_map[,2],data_map_subset[,2]))[,1]
@@ -639,10 +639,10 @@ rm(data_ped_subset,data_ped);gc();
 #####¶ÁÈ¡hapmapÊý¾Ý
 if(length(input_hapmap_data_name)!=0){
 input_data_name=unique(unlist(strsplit(input_hapmap_data_name,split = ".hmp.txt")))
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(input_data_name)){
+for(i in 1:length(input_data_name)){
 cat("Reading hapmap data......\n")
-data_hmp=fread(paste0(path,"/",input_data_name[OOO0OOO0O0OOO0O0OOO0OOOO],".hmp.txt"),data.table=F,header=T)
-cat(paste0("Hapmap data file path",hmp_iter,": ",path," ;\nHapmap data file name",hmp_iter,": ",input_data_name[OOO0OOO0O0OOO0O0OOO0OOOO],"\n"))
+data_hmp=fread(paste0(path,"/",input_data_name[i],".hmp.txt"),data.table=F,header=T)
+cat(paste0("Hapmap data file path",hmp_iter,": ",path," ;\nHapmap data file name",hmp_iter,": ",input_data_name[i],"\n"))
 colnames(data_hmp)[1]="rs#"
 hmp_iter=hmp_iter+1
 if(!is.null(data_hmp_list)){data_hmp=data_hmp[,-c(2:11)]}
@@ -851,7 +851,7 @@ geno_qc_impute<-function(
 	 beagle_ref_data_path=NULL, #Using Reference For Inputaion
 	 beagle_ref_data_name=NULL,
 	 Java_Space=NULL,	 
-	 sigle_duo_trio=NULL  # becuase if you want to use OOO0OOO0O0OOO0O0OOO0OOOOOO, trio and duos would make your computation more slowly , the standard_format is  sigle_duo_trio=c(" singlescale=20  duoscale=20  trioscale=20 ")	
+	 sigle_duo_trio=NULL  # becuase if you want to use pedigree, trio and duos would make your computation more slowly , the standard_format is  sigle_duo_trio=c(" singlescale=20  duoscale=20  trioscale=20 ")	
 ){  # determin whether output the hmp.file 
 	#author:  Quanshun Mei 
 	#date: 2019.09.09
@@ -860,7 +860,7 @@ geno_qc_impute<-function(
 	#missing: the symbols for the missing genotype
 	#SNPcall, INDcall, maf, hwe: the conditions that will be used during using Plink
 	#pathÄ¬ÈÏµÄ¸ñÊ½Îª  £º  eg£º beaglepath_4.1="/home/qsmei/beagle_4.1"
-	# the version of beagle include beagle.4.0.jar ¡¢beagle.4.1.jar ¡¢beagle.5.1.jar£¬   only beagle.4.0.jar can add OOO0OOO0O0OOO0O0OOO0OOOOOO into imputation 
+	# the version of beagle include beagle.4.0.jar ¡¢beagle.4.1.jar ¡¢beagle.5.1.jar£¬   only beagle.4.0.jar can add pedigree into imputation 
 
 if(is.null(output_data_name)){stop("Please specify your output data name!!!")}
 if(is.null(output_data_path)){stop("Please specify your output data path!!!")}
@@ -1323,7 +1323,7 @@ IND_pedigree=num_ped[,1]
 
 if("col_three"%in%output_matrix_type){
 if(NA %in% as.numeric(IND_pedigree)){
-stop("Error:In terms of constring col_three matrix, provided OOO0OOO0O0OOO0O0OOO0OOOOOO id include character, please set IND_rename=TRUE !")
+stop("Error:In terms of constring col_three matrix, provided pedigree id include character, please set IND_rename=TRUE !")
 }
 IND_pedigree=as.numeric(IND_pedigree)
 }
@@ -1336,7 +1336,7 @@ num_ped=as.matrix(rename_ped[,3:5]) #Êý×Ö»¯µÄ3ÁÐÏµÆ×
 num_ped=apply(num_ped,2,as.integer)
 IND_geno=rownames(input_data_numeric)
 
-if(sum(IND_geno%in%IND_pedigree)==0){stop("Provided genotype id is not accordance with the OOO0OOO0O0OOO0O0OOO0OOOOOO id!")}
+if(sum(IND_geno%in%IND_pedigree)==0){stop("Provided genotype id is not accordance with the pedigree id!")}
 if(IND_rename==TRUE){
 IND_geno=num_ped[match(IND_geno,IND_pedigree),1]
 IND_pedigree=num_ped[,1]
@@ -1344,7 +1344,7 @@ IND_pedigree=num_ped[,1]
 
 if("col_three"%in%output_matrix_type){
 if(NA %in% as.numeric(IND_geno)){
-stop("Error:In terms of constring col_three matrix,, provided genotype id include character, please set the genotype id as integer or provide OOO0OOO0O0OOO0O0OOO0OOOOOO for recoding the genotype id!")
+stop("Error:In terms of constring col_three matrix,, provided genotype id include character, please set the genotype id as integer or provide pedigree for recoding the genotype id!")
 }
 IND_geno=as.numeric(IND_geno)
 IND_pedigree=as.numeric(IND_pedigree)
@@ -1355,7 +1355,7 @@ IND_pedigree=as.numeric(IND_pedigree)
 IND_geno=rownames(input_data_numeric)
 if("col_three"%in%output_matrix_type){
 if(NA %in% as.numeric(IND_geno)){
-stop("Error:In terms of constring col_three matrix, provided genotype id include character, please set the genotype id as integer or provide OOO0OOO0O0OOO0O0OOO0OOOOOO for recoding the genotype id!")
+stop("Error:In terms of constring col_three matrix, provided genotype id include character, please set the genotype id as integer or provide pedigree for recoding the genotype id!")
 }
 IND_geno=as.numeric(IND_geno)
 }
@@ -2740,16 +2740,16 @@ cat("Off-digonal is p-value \n")
    gen_name <- colnames(gen_value)
    results <- matrix(ncol=ncol(gen_value),nrow=ncol(gen_value))
    rownames(results)=colnames(results)=gen_name
-   for (OOO0OOO0O0OOO0O0OOO0OOOO in 1:ncol(gen_value)){
-     for (OOO0OOO0O0OOO0O0OOO0OOOOO in 1:ncol(gen_value)){
-       y <- gen_value[,OOO0OOO0O0OOO0O0OOO0OOOO]
-       z <- gen_value[,OOO0OOO0O0OOO0O0OOO0OOOOO]
-       if(OOO0OOO0O0OOO0O0OOO0OOOO==OOO0OOO0O0OOO0O0OOO0OOOOO){next}
+   for (i in 1:ncol(gen_value)){
+     for (j in 1:ncol(gen_value)){
+       y <- gen_value[,i]
+       z <- gen_value[,j]
+       if(i==j){next}
        xy <- cor(phe,y)
        xz <- cor(phe,z)
        yz <- cor(y,z)
        n <- length(y)
-       results [OOO0OOO0O0OOO0O0OOO0OOOO,OOO0OOO0O0OOO0O0OOO0OOOOO] <- psych::paired.r(xy, xz, yz, n,twotailed=two_tailed)$p
+       results [i,j] <- psych::paired.r(xy, xz, yz, n,twotailed=two_tailed)$p
      }
    }
    return(results)
@@ -2841,11 +2841,11 @@ if(!is.null(provided_effect_file_path)&!is.null(provided_effect_file_name)){
 model=data.table::fread(paste0(provided_effect_file_path,"/",provided_effect_file_name),data.table=F,fill=TRUE,header = F)
 
 fixed_effect_name=NULL;random_effect_name=NULL;covariate_effect_name=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-n=match(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],model[,1]) # which line  is  the trait
+n=match(target_trait_name[i],model[,1]) # which line  is  the trait
 
-if(is.na(n)){stop(paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO]," couldn't find in provided effect_file"))}
+if(is.na(n)){stop(paste0(target_trait_name[i]," couldn't find in provided effect_file"))}
 
 OOO0OOOOOOO0O0OOOOOO=grep(pattern="*",as.character(model[n,]),fixed=T)
 fixed_effect=as.character(model[n,c((OOO0OOOOOOO0O0OOOOOO[1]+1):(OOO0OOOOOOO0O0OOOOOO[2]-1))])
@@ -2897,15 +2897,15 @@ total_O0O0OOO0OOO0OOO0OOO0=match(O0O0OOOOOOOOO0O0OOO0,phe_col_names)
 O0OOOOO0OOO0OOO0O0O0=NULL
 O0O0OOO0OOO0OOO0OOO0=NULL
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:O0O0OOO0O0O0OOOOO0OO){  #Ã¿¸öÐÔ×´ÏÂ¹Ì¶¨Ð§Ó¦µÄ pos
+for(i in 1:O0O0OOO0O0O0OOOOO0OO){  #Ã¿¸öÐÔ×´ÏÂ¹Ì¶¨Ð§Ó¦µÄ pos
 	OOO0OOO0OOOOOOOOO0OO=total_O0O0OOO0OOO0OOO0OOO0
-	OOO0OOO0OOOOOOOOO0OO[!O0O0OOOOOOOOO0O0OOO0%in%fixed_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]]=0
+	OOO0OOO0OOOOOOOOO0OO[!O0O0OOOOOOOOO0O0OOO0%in%fixed_effect_name[[i]]]=0
 	O0O0OOO0OOO0OOO0OOO0=c(O0O0OOO0OOO0OOO0OOO0,list(OOO0OOO0OOOOOOOOO0OO))
 }
 O0O0OOO0OOO0OOO0OOO0_matrix=do.call(rbind,O0O0OOO0OOO0OOO0OOO0) #posµÄ¾ØÕó¸ñÊ½
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(O0O0OOOOOOOOO0O0OOO0)){
-	O0OOOOO0OOO0OOO0O0O0=rbind(O0OOOOO0OOO0OOO0O0O0,"EFFECT",paste0(paste(O0O0OOO0OOO0OOO0OOO0_matrix[,OOO0OOO0O0OOO0O0OOO0OOOO],collapse=" ")," cross alpha "))
+for(i in 1:length(O0O0OOOOOOOOO0O0OOO0)){
+	O0OOOOO0OOO0OOO0O0O0=rbind(O0OOOOO0OOO0OOO0O0O0,"EFFECT",paste0(paste(O0O0OOO0OOO0OOO0OOO0_matrix[,i],collapse=" ")," cross alpha "))
 }
 }else{
 O0OOOOO0OOO0OOO0O0O0=data.frame(NULL)}
@@ -2919,16 +2919,16 @@ O0OOOOO0O0OOO0O0O0OO=match(OOOOOOO0O0O0OOOOOOOO,phe_col_names)
 OOO0OOO0O0O0O0OOOOO0=NULL
 covariate_effect_pos=NULL
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:O0O0OOO0O0O0OOOOO0OO){  #Ã¿¸öÐÔ×´ÏÂ¹Ì¶¨Ð§Ó¦µÄ pos
+for(i in 1:O0O0OOO0O0O0OOOOO0OO){  #Ã¿¸öÐÔ×´ÏÂ¹Ì¶¨Ð§Ó¦µÄ pos
 	O0OOO0OOOOO0O0OOOOO0=O0OOOOO0O0OOO0O0O0OO
-	O0OOO0OOOOO0O0OOOOO0[!OOOOOOO0O0O0OOOOOOOO%in%covariate_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]]=0
+	O0OOO0OOOOO0O0OOOOO0[!OOOOOOO0O0O0OOOOOOOO%in%covariate_effect_name[[i]]]=0
 	covariate_effect_pos=c(covariate_effect_pos,list(O0OOO0OOOOO0O0OOOOO0))
 }
 covariate_effect_pos_matrix=do.call(rbind,covariate_effect_pos) #posµÄ¾ØÕó¸ñÊ½
 
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(OOOOOOO0O0O0OOOOOOOO)){
-	OOO0OOO0O0O0O0OOOOO0=rbind(OOO0OOO0O0O0O0OOOOO0,"EFFECT",paste0(paste(covariate_effect_pos_matrix[,OOO0OOO0O0OOO0O0OOO0OOOO],collapse=" ")," cov "))
+for(i in 1:length(OOOOOOO0O0O0OOOOOOOO)){
+	OOO0OOO0O0O0O0OOOOO0=rbind(OOO0OOO0O0O0O0OOOOO0,"EFFECT",paste0(paste(covariate_effect_pos_matrix[,i],collapse=" ")," cov "))
 }
 }else{
 OOO0OOO0O0O0O0OOOOO0=data.frame(NULL)}
@@ -2937,11 +2937,11 @@ OOO0OOO0O0O0O0OOOOO0=data.frame(NULL)}
 ####################       #################################
 ########construct  Non_genetic-random effect Part  #########
 
-#for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(random_effect_name)){   #remove genetic effect name
-#temp_random=random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]
+#for(i in 1:length(random_effect_name)){   #remove genetic effect name
+#temp_random=random_effect_name[[i]]
 #temp_random=temp_random[!temp_random%in%genetic_effect_name]
 #if(length(temp_random)==0){temp_random=NULL}
-#random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=temp_random
+#random_effect_name[[i]]=temp_random
 #}
 
 O0OOOOOOOOO0O0O0O0O0=unique(do.call(c,random_effect_name))
@@ -2956,17 +2956,17 @@ if(length(O0OOOOOOOOO0O0O0O0O0)>0&(!identical(random_effect_name,rep(list(NULL),
 OOOOOOO0OOO0O0O0OOOO=NULL
 random_effect_pos=NULL
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:O0O0OOO0O0O0OOOOO0OO){  #Ã¿¸öÐÔ×´ÏÂ¹Ì¶¨Ð§Ó¦µÄ pos
+for(i in 1:O0O0OOO0O0O0OOOOO0OO){  #Ã¿¸öÐÔ×´ÏÂ¹Ì¶¨Ð§Ó¦µÄ pos
 	temp_random_pos=OOOOO0OOO0OOOOOOO0OO
-	temp_random_pos[!O0OOOOOOOOO0O0O0O0O0%in%random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]]=0
+	temp_random_pos[!O0OOOOOOOOO0O0O0O0O0%in%random_effect_name[[i]]]=0
 	random_effect_pos=c(random_effect_pos,list(temp_random_pos))
 }
 
 random_effect_pos_matrix=do.call(rbind,random_effect_pos) #posµÄ¾ØÕó¸ñÊ½
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(O0OOOOOOOOO0O0O0O0O0)){
+for(i in 1:length(O0OOOOOOOOO0O0O0O0O0)){
 
-	O0OOOOO0O0O0OOOOOOOO=O0OOOOOOOOO0O0O0O0O0[OOO0OOO0O0OOO0O0OOO0OOOO]
+	O0OOOOO0O0O0OOOOOOOO=O0OOOOOOOOO0O0O0O0O0[i]
 	#OOOOO0O0O0OOO0O0OOOO=match(O0OOOOO0O0O0OOOOOOOO,provided_BLUPF90_prior_effect_name)
 	#O0O0OOO0OOO0O0OOO0OO_pos=(O0O0OOO0O0O0OOOOO0OO*(OOOOO0O0O0OOO0O0OOOO-1)+1):(O0O0OOO0O0O0OOOOO0OO*OOOOO0O0O0OOO0O0OOOO)
 	OOOOO0O0O0OOO0O0OOOO=which(provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO)
@@ -2974,7 +2974,7 @@ for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(O0OOOOOOOOO0O0O0O0O0)){
 	O0O0OOO0OOO0O0OOO0OO=OOOOOOO0O0O0OOOOOOO0[O0O0OOO0OOO0O0OOO0OO_pos,O0O0OOO0OOO0O0OOO0OO_pos]
 	O0O0OOO0OOO0O0OOO0OO=OOO0OOO0OOOOO0OOOOOO(O0O0OOO0OOO0O0OOO0OO)
 
-	OOOOOOO0OOO0O0O0OOOO=rbind(OOOOOOO0OOO0O0O0OOOO,"EFFECT",paste0(paste(random_effect_pos_matrix[,OOO0OOO0O0OOO0O0OOO0OOOO],collapse=" ")," cross alpha "),
+	OOOOOOO0OOO0O0O0OOOO=rbind(OOOOOOO0OOO0O0O0OOOO,"EFFECT",paste0(paste(random_effect_pos_matrix[,i],collapse=" ")," cross alpha "),
 	                              "RANDOM","diagonal","(CO)VARIANCES",O0O0OOO0OOO0O0OOO0OO)
 }
 }else{
@@ -3037,10 +3037,10 @@ if(analysis_model=="GBLUP_A"){
 	#write.table(user_define_ped,"dummy_pedigree.txt",sep=" ",quote=F,row.names=F,col.names=F) 
 	effect_pos=(1:length(provided_BLUPF90_prior_effect_name))
 
-	for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(relationship_name)){ 
+	for(i in 1:length(relationship_name)){ 
 	O0OOOOO0O0O0OOOOOOOO=genetic_effect_name
 	#OOOOO0O0O0OOO0O0OOOO=match(O0OOOOO0O0O0OOOOOOOO,provided_BLUPF90_prior_effect_name)
-	#OOOOO0O0O0OOO0O0OOOO=effect_pos[provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO][OOO0OOO0O0OOO0O0OOO0OOOO]
+	#OOOOO0O0O0OOO0O0OOOO=effect_pos[provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO][i]
 	OOOOO0O0O0OOO0O0OOOO=which(provided_BLUPF90_prior_effect_name%in%O0OOOOO0O0O0OOOOOOOO)
 	O0O0OOO0OOO0O0OOO0OO_pos=OOOOO0O0O0OOO0O0OOOO
 	#O0O0OOO0OOO0O0OOO0OO_pos=(O0O0OOO0O0O0OOOOO0OO*(OOOOO0O0O0OOO0O0OOOO-1)+1):(O0O0OOO0O0O0OOOOO0OO*OOOOO0O0O0OOO0O0OOOO)
@@ -3125,8 +3125,8 @@ utils::write.table(renum_par_file,"renum.par",quote=F,row.names=F,col.names=F)
 OOO0OOO0OOOOO0OOOOOO<-function(data){
 data=as.matrix(data)
 OOOOOOO0OOO0O0O0OOO0=matrix(NA,nrow=nrow(data),ncol=1)
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(OOOOOOO0OOO0O0O0OOO0)){
-OOOOOOO0OOO0O0O0OOO0[OOO0OOO0O0OOO0O0OOO0OOOO,]=paste(data[OOO0OOO0O0OOO0O0OOO0OOOO,],collapse=" ")
+for(i in 1:nrow(OOOOOOO0OOO0O0O0OOO0)){
+OOOOOOO0OOO0O0O0OOO0[i,]=paste(data[i,],collapse=" ")
 }
 return(OOOOOOO0OOO0O0O0OOO0)
 }
@@ -3215,8 +3215,8 @@ fwrite(phe,paste0(phe_path,"/",phe_name),quote=F,sep=" ",row.names=F,col.names=F
 random_regression_effect_name=rep(list(paste0(real_group_names,"&",integer_group_names)),
                                           length(target_trait_name)) #µ¥ÐÔ×´
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],integer_group_names)  # µ¥ÐÔ×´
+for(i in 1:length(target_trait_name)){
+random_effect_name[[i]]=c(random_effect_name[[i]],integer_group_names)  # µ¥ÐÔ×´
 }
 
 }else{
@@ -3231,8 +3231,8 @@ real_group_names=real_group_names
 random_regression_effect_name=rep(list(paste0(real_group_names,"&",integer_group_names)),
                                           length(target_trait_name)) #µ¥ÐÔ×´
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],integer_group_names)  # µ¥ÐÔ×´
+for(i in 1:length(target_trait_name)){
+random_effect_name[[i]]=c(random_effect_name[[i]],integer_group_names)  # µ¥ÐÔ×´
 }
 
 }
@@ -3259,11 +3259,11 @@ if(!is.null(provided_effect_file_path)&!is.null(provided_effect_file_name)){
 model=fread(paste0(provided_effect_file_path,"/",provided_effect_file_name),data.table=F,fill=TRUE,header = F)
 
 fixed_effect_name=NULL;random_effect_name=NULL;covariate_effect_name=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-n=match(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],model[,1]) # which line  is  the trait
+n=match(target_trait_name[i],model[,1]) # which line  is  the trait
 
-if(is.na(n)){stop(paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO]," couldn't find in provided effect_file; "))}
+if(is.na(n)){stop(paste0(target_trait_name[i]," couldn't find in provided effect_file; "))}
 
 OOO0OOOOOOO0O0OOOOOO=grep(pattern="*",as.character(model[n,]),fixed=T)
 fixed_effect=as.character(model[n,c((OOO0OOOOOOO0O0OOOOOO[1]+1):(OOO0OOOOOOO0O0OOOOOO[2]-1))])
@@ -3336,11 +3336,11 @@ VARIABLE[3,1]="#I1";VARIABLE[6,1]="#R1";
 
 
 #½« I1.... R1.... ºÍ±äÁ¿Ãû³Æ¶ÔÆë
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:ncol(VARIABLE)){
-integer_space=nchar(VARIABLE[4,OOO0OOO0O0OOO0O0OOO0OOOO])
-VARIABLE[3,OOO0OOO0O0OOO0O0OOO0OOOO]=sprintf(paste0("%-",integer_space,"s"),VARIABLE[3,OOO0OOO0O0OOO0O0OOO0OOOO])
-real_space=nchar(VARIABLE[7,OOO0OOO0O0OOO0O0OOO0OOOO])
-VARIABLE[6,OOO0OOO0O0OOO0O0OOO0OOOO]=sprintf(paste0("%-",real_space,"s"),VARIABLE[6,OOO0OOO0O0OOO0O0OOO0OOOO])
+for(i in 1:ncol(VARIABLE)){
+integer_space=nchar(VARIABLE[4,i])
+VARIABLE[3,i]=sprintf(paste0("%-",integer_space,"s"),VARIABLE[3,i])
+real_space=nchar(VARIABLE[7,i])
+VARIABLE[6,i]=sprintf(paste0("%-",real_space,"s"),VARIABLE[6,i])
 }
 
 
@@ -3358,9 +3358,9 @@ if(!is.null(covariate_effect_name)){if(length(covariate_effect_name)!=O0O0OOO0O0
 #User_defineÄ£ÐÍÏÂ£¬Ìí¼Ó¶à¸öÒÅ´«Ð§Ó¦ ·ÅÈë random_effect_name, ºóÐøÖ»ÐèÒªÔÚ OOO0O0O0OOOOO0O0O0O0 ÖÐ£¬°ÑÒÅ´«Ð§Ó¦µÄÎ»ÖÃÌæ»»³É IdµÄÎ»ÖÃ£¬ÆäÓà²»±ä
 if(("User_define"%in%analysis_model)&length(relationship_name)>=2){
 User_define_effect=paste0("User_define",1:(length(relationship_name)-1))
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(random_effect_name)){
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],User_define_effect)
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(genetic_effect_name,User_define_effect,setdiff(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],c(genetic_effect_name,User_define_effect)))
+for(i in 1:length(random_effect_name)){
+random_effect_name[[i]]=c(random_effect_name[[i]],User_define_effect)
+random_effect_name[[i]]=c(genetic_effect_name,User_define_effect,setdiff(random_effect_name[[i]],c(genetic_effect_name,User_define_effect)))
 }
 OOOOO0O0O0O0O0OOO0O0=c(OOOOO0O0O0O0O0OOO0O0,User_define_effect)
 }
@@ -3369,9 +3369,9 @@ OOOOO0O0O0O0O0OOO0O0=c(OOOOO0O0O0O0O0OOO0O0,User_define_effect)
 #Ìí¼ÓÏÔÐÔÐ§Ó¦ ·ÅÈë random_effect_name, ºóÐøÖ»ÐèÒªÔÚ OOO0O0O0OOOOO0O0O0O0 ÖÐ£¬°ÑdominanceÐ§Ó¦µÄÎ»ÖÃÌæ»»³É IdµÄÎ»ÖÃ£¬ÆäÓà²»±ä
 if(included_dominance_effect==TRUE){
 dominance_effect="Added_dominance_effect"
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(random_effect_name)){
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],dominance_effect)
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(genetic_effect_name,dominance_effect,setdiff(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],c(genetic_effect_name,dominance_effect)))
+for(i in 1:length(random_effect_name)){
+random_effect_name[[i]]=c(random_effect_name[[i]],dominance_effect)
+random_effect_name[[i]]=c(genetic_effect_name,dominance_effect,setdiff(random_effect_name[[i]],c(genetic_effect_name,dominance_effect)))
 }
 OOOOO0O0O0O0O0OOO0O0=c(OOOOO0O0O0O0O0OOO0O0,dominance_effect)
 }
@@ -3383,12 +3383,12 @@ if(identical(included_permanent_effect,FALSE)){included_permanent_effect=rep(lis
 
 permanent_effect="pe_effect"
 if(permanent_effect%in%OOOOO0O0O0O0O0OOO0O0){stop("pe_effect already stands for permant effect,please change this effect name in the phe_col_name!!! ")}
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(random_effect_name)){
+for(i in 1:length(random_effect_name)){
 
-if(included_permanent_effect[[OOO0OOO0O0OOO0O0OOO0OOOO]]==TRUE){
+if(included_permanent_effect[[i]]==TRUE){
 
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],permanent_effect)
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(genetic_effect_name,permanent_effect,setdiff(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],c(genetic_effect_name,permanent_effect)))
+random_effect_name[[i]]=c(random_effect_name[[i]],permanent_effect)
+random_effect_name[[i]]=c(genetic_effect_name,permanent_effect,setdiff(random_effect_name[[i]],c(genetic_effect_name,permanent_effect)))
 
 }
 }
@@ -3400,16 +3400,16 @@ if(TRUE %in% included_permanent_effect)OOOOO0O0O0O0O0OOO0O0=c(OOOOO0O0O0O0O0OOO0
 
 if(!is.null(maternal_effect_name)){
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(random_effect_name)){
+for(i in 1:length(random_effect_name)){
 
-maternal=maternal_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]] #ÁÐ±í
+maternal=maternal_effect_name[[i]] #ÁÐ±í
 
 if(!is.null(maternal)){
 
 if(!maternal%in%OOOOO0O0O0O0O0OOO0O0){stop("Maternal effect name could not find in provided phe_col_names; ")}
 
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],maternal)
-random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(genetic_effect_name,maternal,setdiff(random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],c(genetic_effect_name,maternal)))
+random_effect_name[[i]]=c(random_effect_name[[i]],maternal)
+random_effect_name[[i]]=c(genetic_effect_name,maternal,setdiff(random_effect_name[[i]],c(genetic_effect_name,maternal)))
 
 
 }
@@ -3433,15 +3433,15 @@ OOO0OOO0O0OOOOOOO0O0=c(OOO0OOO0O0OOOOOOO0O0,rep(O0OOO0OOOOOOOOOOO0OO,O0O0OOO0O0O
 
 
 #¶à¸öÐÔ×´Ñ­»·
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:O0O0OOO0O0O0OOOOO0OO){
-trait=target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO]
-fixed=fixed_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]
-random=random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]
+for(i in 1:O0O0OOO0O0O0OOOOO0OO){
+trait=target_trait_name[i]
+fixed=fixed_effect_name[[i]]
+random=random_effect_name[[i]]
 if(!genetic_effect_name%in%random){stop("Genetic effect name could not find in provided random effect name! ")}
 random=c(genetic_effect_name,setdiff(random,c(genetic_effect_name)))#È·±£ genetic effect name ÎªËæ»úÐ§Ó¦µÚÒ»Î»
-covariate=covariate_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]
-regression=random_regression_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]
-maternal=maternal_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]] #ÁÐ±í
+covariate=covariate_effect_name[[i]]
+regression=random_regression_effect_name[[i]]
+maternal=maternal_effect_name[[i]] #ÁÐ±í
 
 #ÅÐ¶ÏÐÔ×´Ãû³Æ¡¢Ð§Ó¦Ãû³ÆÊÇ·ñ¶¼ÔÚ Ìá¹©µÄ phe_col_names ÖÐ
 if(is.na(match(trait,O0OOO0O0OOO0O0OOO0OO))){
@@ -3488,17 +3488,17 @@ if(TRUE %in% included_permanent_effect){cat("Permanent effect name in random reg
 #regression_split=strsplit(regression,split = "&")
 #regression_name_effect_set=as.list(rep(NA,n_regre))
 ##È·¶¨Ã¿¸ö»Ø¹éÏµÊýÆ¥ÅäµÄÐ§Ó¦
-#for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:n_regre){
+#for(i in 1:n_regre){
 #
-#for(OOO0OOO0O0OOO0O0OOO0OOOOO in 1:length(regression_split)){
-#regression_name_coef=regression_split[[OOO0OOO0O0OOO0O0OOO0OOOOO]][1]       # µÚÒ»¸öÃû³ÆÊÇ ¶àÏîÊ½»Ø¹éÏµÊýµÄÃû³Æ
-#regression_name_effect=regression_split[[OOO0OOO0O0OOO0O0OOO0OOOOO]][-1]    # ·ÇµÚÒ»¸ö£¬Ê£ÓàµÄÊÇ ¸Ã¶àÏîÊ½»Ø¹éÏµÊýÇ¶Ì×µÄËùÓÐËæ»úÐ§Ó¦
+#for(j in 1:length(regression_split)){
+#regression_name_coef=regression_split[[j]][1]       # µÚÒ»¸öÃû³ÆÊÇ ¶àÏîÊ½»Ø¹éÏµÊýµÄÃû³Æ
+#regression_name_effect=regression_split[[j]][-1]    # ·ÇµÚÒ»¸ö£¬Ê£ÓàµÄÊÇ ¸Ã¶àÏîÊ½»Ø¹éÏµÊýÇ¶Ì×µÄËùÓÐËæ»úÐ§Ó¦
 #
-#if(regression_name_coef==regression_name_coef_set[OOO0OOO0O0OOO0O0OOO0OOOO]){
-#regression_name_effect_set[[OOO0OOO0O0OOO0O0OOO0OOOO]]=c(regression_name_effect_set[[OOO0OOO0O0OOO0O0OOO0OOOO]],regression_name_effect)
+#if(regression_name_coef==regression_name_coef_set[i]){
+#regression_name_effect_set[[i]]=c(regression_name_effect_set[[i]],regression_name_effect)
 #}
 #}
-#tmp_reg=unique(as.character(na.omit(regression_name_effect_set[[OOO0OOO0O0OOO0O0OOO0OOOO]])))
+#tmp_reg=unique(as.character(na.omit(regression_name_effect_set[[i]])))
 #linked_number=linked_number+length(tmp_reg)
 #pos_In_blanket=match(match(tmp_reg,OOOOO0O0O0O0O0OOO0O0),
 #                                   c(OOO0O0O0O0OOOOO0O0OO,random_pos)) # Ç¶Ì×µÄ±äÁ¿ÔÚÀ¨ºÅÖÐµÄÎ»ÖÃ
@@ -3515,9 +3515,9 @@ if(TRUE %in% included_permanent_effect){cat("Permanent effect name in random reg
 
 reg_k=length(regression) #Ëæ»ú»Ø¹éÐ§Ó¦µÄ¸öÊý
 
-for(OOO0OOO0O0OOO0O0OOO0OOOOO in 1:reg_k){
+for(j in 1:reg_k){
 
-regression_name=unlist(strsplit(regression[OOO0OOO0O0OOO0O0OOO0OOOOO],split = "&"))
+regression_name=unlist(strsplit(regression[j],split = "&"))
   
 regression_name_coef=regression_name[1]       # µÚÒ»¸öÃû³ÆÊÇ ¶àÏîÊ½»Ø¹éÏµÊýµÄÃû³Æ
 regression_name_effect=regression_name[-1]             #·ÇµÚÒ»¸ö£¬Ê£ÓàµÄÊÇ ¸Ã¶àÏîÊ½»Ø¹éÏµÊýÇ¶Ì×µÄËùÓÐËæ»úÐ§Ó¦
@@ -3553,7 +3553,7 @@ OOO0O0O0O0O0OOO0O0OO=paste(c(length(OOOOOOO0O0OOOOOOOOO0)+linked_number,OOOOOOO0
 
 
 #¿¼ÂÇÓÀ¾Ã»·¾³Ð§Ó¦£¬½«  OOO0O0O0OOOOO0O0O0O0 ÖÐµÄ Added_permanent_effect µÄÎ»ÖÃÌæ»»³É Id Î»ÖÃ
-if(TRUE%in%included_permanent_effect[[OOO0OOO0O0OOO0O0OOO0OOOO]]){
+if(TRUE%in%included_permanent_effect[[i]]){
 O0OOO0O0OOO0O0OOOOOO=match(permanent_effect,OOOOO0O0O0O0O0OOO0O0)
 random_pos[random_pos%in%O0OOO0O0OOO0O0OOOOOO]=match(genetic_effect_name,OOOOO0O0O0O0O0OOO0O0)
 OOO0O0O0OOOOO0O0O0O0=paste0(trait_pos," 0 ",length(OOO0O0O0O0OOOOO0O0OO)+length(random_pos)," ",paste(c(OOO0O0O0O0OOOOO0O0OO,random_pos),collapse=" "))
@@ -3594,7 +3594,7 @@ random_line=paste(c(length(random),tmp_OOO0OOOOOOOOOOOOO0O0[match(random,OOOOOOO
 
 #¿¼ÂÇsocial genetic effect, ÐèÒª¶îÍâ¶ÔDIRÎÄ¼þÖÐ£¬¹Ì¶¨Ð§Ó¦-Ëæ»úÐ§Ó¦ÐÐ ºÍ Ëæ»úÐ§Ó¦±àºÅ ÐÐ½øÐÐÐÞ¸Ä
 if(TRUE%in%include_social_effect){
-if(TRUE%in%include_social_effect[[OOO0OOO0O0OOO0O0OOO0OOOO]]){
+if(TRUE%in%include_social_effect[[i]]){
 
 #ÐÞ¸Ä¹Ì¶¨Ð§Ó¦-Ëæ»úÐ§Ó¦ÐÐ£¬ ÔÚinteger_group_nameºóÌí¼Ó(0)
 
@@ -3614,9 +3614,9 @@ random_line=paste(c(length(random),temp1,temp2),collapse=" ")
 
 
 
-MODEL[OOO0OOO0O0OOO0O0OOO0OOOO+2+O0O0OOO0O0O0OOOOO0OO,1]=OOO0O0O0OOOOO0O0O0O0
-MODEL[(OOO0OOO0O0OOO0O0OOO0OOOO+2+O0O0OOO0O0O0OOOOO0OO)+O0O0OOO0O0O0OOOOO0OO,1]=random_line
-MODEL[(OOO0OOO0O0OOO0O0OOO0OOOO+2+O0O0OOO0O0O0OOOOO0OO)+2*O0O0OOO0O0O0OOOOO0OO,1]=OOO0O0O0O0O0OOO0O0OO
+MODEL[i+2+O0O0OOO0O0O0OOOOO0OO,1]=OOO0O0O0OOOOO0O0O0O0
+MODEL[(i+2+O0O0OOO0O0O0OOOOO0OO)+O0O0OOO0O0O0OOOOO0OO,1]=random_line
+MODEL[(i+2+O0O0OOO0O0O0OOOOO0OO)+2*O0O0OOO0O0O0OOOOO0OO,1]=OOO0O0O0O0O0OOO0O0OO
 
 }
 
@@ -3627,15 +3627,15 @@ MODEL[(O0O0OOO0O0O0OOOOO0OO+2+O0O0OOO0O0O0OOOOO0OO)+2*O0O0OOO0O0O0OOOOO0OO+1,1]=
 if(length(residual_cov_trait)>O0O0OOO0O0O0OOOOO0OO){stop("The number of residual covariance traits is larger than the number of analyse traits \n")}
 residual_cov_trait_n=0
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(residual_cov_trait)){
+for(i in 1:length(residual_cov_trait)){
 
-O0O0O0OOO0OOO0O0O0O0=residual_cov_trait[[OOO0OOO0O0OOO0O0OOO0OOOO]]
+O0O0O0OOO0OOO0O0O0O0=residual_cov_trait[[i]]
 
 if(!is.null(O0O0O0OOO0OOO0O0O0O0)){
 residual_cov_trait_n=residual_cov_trait_n+1
 trait1=O0O0O0OOO0OOO0O0O0O0[1]
 trait2=O0O0O0OOO0OOO0O0O0O0[2]
-MODEL[(O0O0OOO0O0O0OOOOO0OO+2+O0O0OOO0O0O0OOOOO0OO)+2*O0O0OOO0O0O0OOOOO0OO+1+OOO0OOO0O0OOO0O0OOO0OOOO,1]=paste0(match(trait1,target_trait_name)," ",match(trait2,target_trait_name))
+MODEL[(O0O0OOO0O0O0OOOOO0OO+2+O0O0OOO0O0O0OOOOO0OO)+2*O0O0OOO0O0O0OOOOO0OO+1+i,1]=paste0(match(trait1,target_trait_name)," ",match(trait2,target_trait_name))
 }
 }
 
@@ -3672,8 +3672,8 @@ VAR_STR[1,1]=paste0("$VAR_STR 1 PGMIX 1 ASCII  ",relationship_path,"/",addtive_r
 				   SSBLUP_omega,"  G-ADJUST")
 }else if (analysis_model=="User_define"){
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(relationship_name)){
-VAR_STR[OOO0OOO0O0OOO0O0OOO0OOOO,1]=paste0("$VAR_STR ",OOO0OOO0O0OOO0O0OOO0OOOO," COR ASCII     ",relationship_path,"/",relationship_name[OOO0OOO0O0OOO0O0OOO0OOOO])
+for(i in 1:length(relationship_name)){
+VAR_STR[i,1]=paste0("$VAR_STR ",i," COR ASCII     ",relationship_path,"/",relationship_name[i])
 }}
 
 
@@ -3693,16 +3693,16 @@ PRIOR[2:(nrow(OOOOOOO0O0O0OOOOOOO0)+1),1:ncol(OOOOOOO0O0O0OOOOOOO0)]=OOOOOOO0O0O
 }else{
 
 iteration_pos=1
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:(length(OOO0OOOOOOOOOOOOO0O0)+1)){  #Ëæ»úÐ§Ó¦µÄÊýÁ¿ 
+for(i in 1:(length(OOO0OOOOOOOOOOOOO0O0)+1)){  #Ëæ»úÐ§Ó¦µÄÊýÁ¿ 
 
-	for(OOO0OOO0O0OOO0O0OOO0OOOOO in 1:sum(OOO0OOO0O0OOOOOOO0O0%in%OOO0OOO0O0OOO0O0OOO0OOOO)){
+	for(j in 1:sum(OOO0OOO0O0OOOOOOO0O0%in%i)){
 	
-		for(k in 1:OOO0OOO0O0OOO0O0OOO0OOOOO){
+		for(k in 1:j){
 			iteration_pos=iteration_pos+1
-			PRIOR[iteration_pos,1]=OOO0OOO0O0OOO0O0OOO0OOOO
-			PRIOR[iteration_pos,2]=OOO0OOO0O0OOO0O0OOO0OOOOO
+			PRIOR[iteration_pos,1]=i
+			PRIOR[iteration_pos,2]=j
 			PRIOR[iteration_pos,3]=k
-			if(OOO0OOO0O0OOO0O0OOO0OOOOO!=k){
+			if(j!=k){
 			PRIOR[iteration_pos,4]=0.5
 			}else {PRIOR[iteration_pos,4]=1}
 	}}}
@@ -3711,9 +3711,9 @@ for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:(length(OOO0OOOOOOOOOOOOO0O0)+1)){  #Ëæ»úÐ§Ó¦µ
 
 #²Ð²îÏÞ¶¨
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(residual_cov_trait)){
+for(i in 1:length(residual_cov_trait)){
 
-O0O0O0OOO0OOO0O0O0O0=residual_cov_trait[[OOO0OOO0O0OOO0O0OOO0OOOO]]
+O0O0O0OOO0OOO0O0O0O0=residual_cov_trait[[i]]
 O0OOO0OOOOOOOOOOO0OO=O0OOO0OOOOOOOOOOO0OO
 
 if(!is.null(O0O0O0OOO0OOO0O0O0O0)){
@@ -3783,8 +3783,8 @@ return(list(DIR=OOO0O0OOO0O0O0OOOOO0(DIR),random_effect_name=random_effect_name)
 
 OOO0O0OOO0O0O0OOOOO0<-function(data){
 union_data=matrix(NA,nrow=nrow(data),ncol=1)
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(data)){
-union_data[OOO0OOO0O0OOO0O0OOO0OOOO,1]=paste(data[OOO0OOO0O0OOO0O0OOO0OOOO,],collapse=" ")
+for(i in 1:nrow(data)){
+union_data[i,1]=paste(data[i,],collapse=" ")
 }
 return(union_data)
 }
@@ -3823,8 +3823,8 @@ if(max_size==0){stop("The number of indivuals in each group is equal to 1, pleas
 #¹¹½¨group_ind_setºÍgroupµÄ¶ÔÓ¦ÁÐ±í
 group_ind_set <- vector(mode = "list", length = nrow(group_size))
 group_i_set=as.numeric(group_size$Group)
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(group_size)){
-group_ind_set[[OOO0OOO0O0OOO0O0OOO0OOOO]]=phe[phe[,social_effect_group_name]%in%group_i_set[OOO0OOO0O0OOO0O0OOO0OOOO],genetic_effect_name]
+for(i in 1:nrow(group_size)){
+group_ind_set[[i]]=phe[phe[,social_effect_group_name]%in%group_i_set[i],genetic_effect_name]
 }
 
 
@@ -4557,7 +4557,7 @@ cat("Provided input_data_numeric_map constains 3 columns, please make sure the f
 input_data_numeric_map=input_data_numeric_map[,c(2,1,3)]
 input_data_numeric_map=cbind(input_data_numeric_map,"A","T")
 }else if(ncol(input_data_numeric_map)==5){
-cat("Provided input_data_numeric_map constains 5 columns, please make sure the format is: Chromosome,SNP_name, Position, Ref, Alt")
+cat("Provided input_data_numeric_map constains 5 columns, please make sure the format is: Chromosome,SNP_name, Position, Ref, Alt\n")
 }else{
 stop("Provided input_data_numeric_map didn't meet the requirement format, it should be 3 columns or 5 columns!")
 }
@@ -4644,7 +4644,7 @@ cat("Provided input_data_blupf90_map constains 3 columns(identical to BLUPF90 ma
 input_data_blupf90_map=input_data_blupf90_map[,c(2,1,3)]
 input_data_blupf90_map=cbind(input_data_blupf90_map,"A","T")
 }else if(ncol(input_data_blupf90_map)==5){
-cat("Provided input_data_blupf90_map constains 5 columns, please make sure the format is: Chromosome,SNP_name, Position, Ref, Alt")
+cat("Provided input_data_blupf90_map constains 5 columns, please make sure the format is: Chromosome,SNP_name, Position, Ref, Alt\n")
 }else{
 stop("Provided input_data_blupf90_map didn't meet the requirement format, it should be 3 columns or 5 columns!")
 }
@@ -4907,7 +4907,7 @@ if(input_data_type=="Plink"){
 
 		if("Plink"%in%output_data_type|"Hapmap"%in%output_data_type|"VCF"%in%output_data_type){
 	
-		cat("Please provide input_data_numeric_map, which should be 3 columns(SNP_name, Chromosome, Position) or 5 columns(Chromosome,SNP_name, Position, Ref, Alt) \n")
+		cat("Please make sure provide input_data_numeric_map, which should be 3 columns(SNP_name, Chromosome, Position) or 5 columns(Chromosome,SNP_name, Position, Ref, Alt) \n")
 
 		}
 
@@ -4929,7 +4929,7 @@ if(input_data_type=="Plink"){
 
 		if("Plink"%in%output_data_type|"Hapmap"%in%output_data_type|"VCF"%in%output_data_type){
 	
-		cat("Please provide input_data_blupf90_map, which should be 3 columns(SNP_name, Chromosome, Position) or 5 columns(Chromosome,SNP_name, Position, Ref, Alt) \n")
+		cat("Please make sure  provide input_data_blupf90_map, which should be 3 columns(SNP_name, Chromosome, Position) or 5 columns(Chromosome,SNP_name, Position, Ref, Alt) \n")
 
 		}
 
@@ -4973,8 +4973,8 @@ data_map[,1]=as.numeric(data_map[,1])
 data_map[,3]=as.numeric(data_map[,3])
 chr_set=unique(data_map[,1])
 chr_set_snp_n=0
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(chr_set)){
-tmp_data_map=data_map[data_map[,1]==chr_set[OOO0OOO0O0OOO0O0OOO0OOOO],]
+for(i in 1:length(chr_set)){
+tmp_data_map=data_map[data_map[,1]==chr_set[i],]
 chr_set_snp_n=c(chr_set_snp_n,nrow(tmp_data_map))
 }
 chr_set_snp_n=cumsum(chr_set_snp_n)
@@ -4989,16 +4989,16 @@ block_end=haplotype_window_block[,2]-1
 
 block_start=NULL
 block_end=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(chr_set)){
-tmp_data_map=data_map[data_map[,1]==chr_set[OOO0OOO0O0OOO0O0OOO0OOOO],]
+for(i in 1:length(chr_set)){
+tmp_data_map=data_map[data_map[,1]==chr_set[i],]
 block_start_tmp=seq(1,nrow(tmp_data_map),haplotype_window_nSNP)-1
 block_end_tmp=seq(1,nrow(tmp_data_map),haplotype_window_nSNP)-2
 block_end_tmp=c(block_end_tmp,nrow(tmp_data_map)-1)
 block_end_tmp=block_end_tmp[-1]
 
 #Ìí¼ÓÎ»ÖÃÐÅÏ¢
-block_start_tmp=block_start_tmp+chr_set_snp_n[OOO0OOO0O0OOO0O0OOO0OOOO]
-block_end_tmp=block_end_tmp+chr_set_snp_n[OOO0OOO0O0OOO0O0OOO0OOOO]
+block_start_tmp=block_start_tmp+chr_set_snp_n[i]
+block_end_tmp=block_end_tmp+chr_set_snp_n[i]
 block_start=c(block_start,block_start_tmp)
 block_end=c(block_end,block_end_tmp)
 }
@@ -5007,8 +5007,8 @@ block_end=c(block_end,block_end_tmp)
 
 block_start=NULL
 block_end=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(chr_set)){
-tmp_data_map=data_map[data_map[,1]==chr_set[OOO0OOO0O0OOO0O0OOO0OOOO],]
+for(i in 1:length(chr_set)){
+tmp_data_map=data_map[data_map[,1]==chr_set[i],]
 block=seq(min(tmp_data_map[,3]),max(tmp_data_map[,3]),haplotype_window_kb*1000)
 
 block_1=block
@@ -5019,9 +5019,9 @@ block_2=c(block_2,max(tmp_data_map[,3]))
 #R-function too slow
 #block_start_tmp=NULL
 #block_end_tmp=NULL
-#for(OOO0OOO0O0OOO0O0OOO0OOOOO in 1:length(block)){
-#block_start_tmp=c(block_start_tmp,min(which(tmp_data_map[,3]>=block_1[OOO0OOO0O0OOO0O0OOO0OOOOO])))
-#block_end_tmp=c(block_end_tmp,max(which(tmp_data_map[,3]<=block_2[OOO0OOO0O0OOO0O0OOO0OOOOO])))
+#for(j in 1:length(block)){
+#block_start_tmp=c(block_start_tmp,min(which(tmp_data_map[,3]>=block_1[j])))
+#block_end_tmp=c(block_end_tmp,max(which(tmp_data_map[,3]<=block_2[j])))
 #}
 
 #Rcpp function 
@@ -5035,8 +5035,8 @@ block_end_tmp=block_end_tmp[pos_status]
 block_start_tmp=block_start_tmp-1
 block_end_tmp=block_end_tmp-1
 #Ìí¼ÓÎ»ÖÃÐÅÏ¢
-block_start_tmp=block_start_tmp+chr_set_snp_n[OOO0OOO0O0OOO0O0OOO0OOOO]
-block_end_tmp=block_end_tmp+chr_set_snp_n[OOO0OOO0O0OOO0O0OOO0OOOO]
+block_start_tmp=block_start_tmp+chr_set_snp_n[i]
+block_end_tmp=block_end_tmp+chr_set_snp_n[i]
 block_start=c(block_start,block_start_tmp)
 block_end=c(block_end,block_end_tmp)
 }
@@ -5122,40 +5122,40 @@ stop("Paramters:output_pedigree_path and output_pedigree_name couldn't be: the o
 
 #¼ì²éÊäÈëµÄÏµÆ×
 if(is.null(input_pedigree)){
-OOO0OOO0O0OOO0O0OOO0OOOOOO=data.table::fread(paste0(input_pedigree_path,"/",input_pedigree_name),data.table=F)
+pedigree=data.table::fread(paste0(input_pedigree_path,"/",input_pedigree_name),data.table=F)
 }else{
-OOO0OOO0O0OOO0O0OOO0OOOOOO=input_pedigree
+pedigree=input_pedigree
 }
 
-if(ncol(OOO0OOO0O0OOO0O0OOO0OOOOOO)==3){	
+if(ncol(pedigree)==3){	
 cat("Peidgree provided has three columns,please make sure the format of pedigree_data has three columns: Offspring Sire Dam  \n")
-}else if(ncol(OOO0OOO0O0OOO0O0OOO0OOOOOO)==4){
+}else if(ncol(pedigree)==4){
 cat("Peidgree provided has four columns,please make sure the format of pedigree_data has four columns: Offspring Sire Dam  Birth_Date \n")
 }else if(multi_col==TRUE){
 cat("Peidgree provided has multiple columns,please make sure the format of pedigree_data similar to: Offspring Sire Dam  SireSire SireDam ......  \n")
-OOO0OOO0O0OOO0O0OOO0OOOOOO=O0OOOOO0OOO0O0OOOOO0(OOO0OOO0O0OOO0O0OOO0OOOOOO)
+pedigree=O0OOOOO0OOO0O0OOOOO0(pedigree)
 }else{
 stop("Error:peidgree_provided is not standard format!")
 }
 
 #½«È±Ê§Öµ±äÎªNA
-OOO0OOO0O0OOO0O0OOO0OOOOOO[OOO0OOO0O0OOO0O0OOO0OOOOOO=="-9999"]=NA
-OOO0OOO0O0OOO0O0OOO0OOOOOO[OOO0OOO0O0OOO0O0OOO0OOOOOO=="0"]=NA
-OOO0OOO0O0OOO0O0OOO0OOOOOO[OOO0OOO0O0OOO0O0OOO0OOOOOO==""]=NA
+pedigree[pedigree=="-9999"]=NA
+pedigree[pedigree=="0"]=NA
+pedigree[pedigree==""]=NA
 
 ##½«ÏµÆ×±ä³É³¤ÏµÆ×£¬È·±£µÚÒ»ÁÐ°üº¬ËùÓÐ¸öÌå
-#id_F=na.omit(unique(OOO0OOO0O0OOO0O0OOO0OOOOOO[!OOO0OOO0O0OOO0O0OOO0OOOOOO[,2]%in%OOO0OOO0O0OOO0O0OOO0OOOOOO[,1],2]))
-#id_M=na.omit(unique(OOO0OOO0O0OOO0O0OOO0OOOOOO[!OOO0OOO0O0OOO0O0OOO0OOOOOO[,3]%in%OOO0OOO0O0OOO0O0OOO0OOOOOO[,1],3]))
+#id_F=na.omit(unique(pedigree[!pedigree[,2]%in%pedigree[,1],2]))
+#id_M=na.omit(unique(pedigree[!pedigree[,3]%in%pedigree[,1],3]))
 #if(length(id_F)==0){id_F=NA}
 #if(length(id_M)==0){id_M=NA}
 #
-#OOO0OOO0O0OOO0O0OOO0OOOOOO=rbind(as.matrix(OOO0OOO0O0OOO0O0OOO0OOOOOO[,1:3]),cbind(id_F,NA,NA),cbind(id_M,NA,NA))
+#pedigree=rbind(as.matrix(pedigree[,1:3]),cbind(id_F,NA,NA),cbind(id_M,NA,NA))
 #
 #if(ncol(input_pedigree)==4){
-#OOO0OOO0O0OOO0O0OOO0OOOOOO=cbind(OOO0OOO0O0OOO0O0OOO0OOOOOO,input_pedigree[match(OOO0OOO0O0OOO0O0OOO0OOOOOO[,1],input_pedigree[,1]),4])
-#colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)[4]="Birth_Date"}
+#pedigree=cbind(pedigree,input_pedigree[match(pedigree[,1],input_pedigree[,1]),4])
+#colnames(pedigree)[4]="Birth_Date"}
 
-ped=as.matrix(OOO0OOO0O0OOO0O0OOO0OOOOOO)
+ped=as.matrix(pedigree)
 if(!mode(ped)=="character"){ped=apply(ped,2,as.character)}
 colnames(ped)[1:3]=c("Offspring","Sire","Dam")
 ped=ped[!is.na(ped[,1]),]
@@ -5197,7 +5197,7 @@ ped[ped==0]=NA
 #Ö¸¶¨¸öÌå×·ËÝÏµÆ×
 if(!is.null(trace_id)){                     #¸ù¾Ý¸ø¶¨µÄ¸öÌåid, traceËùÓÐºÍÕâÐ©¸öÌåidÓÐÁªÏµµÄ¸öÌåµÄÏµÆ×(Ä¬ÈÏtraceÕâÐ©¸öÌåÒÔ¼°ËüÃÇµÄ¸¸Ä¸)
 cat("Tracing porvided id......\n")
-OOO0OOO0O0OOO0O0OOO0OOOO=0
+i=0
 trace_type="Match"
 trace_id_set=trace_id
 
@@ -5209,9 +5209,9 @@ trace_id_sibs=match_fullsibs(trace_id,ped,max_fullsibs)
 
 
 while(trace_type=="Match"){
-OOO0OOO0O0OOO0O0OOO0OOOO=OOO0OOO0O0OOO0O0OOO0OOOO+1
+i=i+1
 if(!is.null(trace_generation)){
-if(OOO0OOO0O0OOO0O0OOO0OOOO>=trace_generation)break
+if(i>=trace_generation)break
 }
 
 if(trace_fullsibs==TRUE){
@@ -5248,20 +5248,20 @@ OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%IND_offspring,2]=paste0("B",spr
 
 #½ÓÏÂÀ´µÄÄ¿µÄÊÇ½« IND_middle ÖÐµÄ¸öÌå»®·Ö³ö  ¸¸Ä¸Óë×Ó´ú
 tmp_ped=ped
-OOO0OOO0O0OOO0O0OOO0OOOO=0
+i=0
 IND_base_set=IND_base
 while(length(IND_middle)>0){
 
-if(OOO0OOO0O0OOO0O0OOO0OOOO>1000){stop("Found generations of provided OOO0OOO0O0OOO0O0OOO0OOOOOO larger than 1000, please check your OOO0OOO0O0OOO0O0OOO0OOOOOO carefully!")}
-OOO0OOO0O0OOO0O0OOO0OOOO=OOO0OOO0O0OOO0O0OOO0OOOO+1
+if(i>1000){stop("Found generations of provided pedigree larger than 1000, please check your pedigree carefully!")}
+i=i+1
 tmp_ped=tmp_ped[tmp_ped[,1]%in%IND_middle,]
 tmp_base_result=single_pedigree(tmp_ped)
 tmp_IND_base=setdiff(tmp_base_result[[1]],IND_base_set);IND_base_set=c(IND_base_set,tmp_IND_base)
 tmp_IND_middle=tmp_base_result[[2]]
 tmp_IND_offspring=tmp_base_result[[3]]
 
-OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%tmp_IND_base,2]=paste0("A",sprintf("%5s",OOO0OOO0O0OOO0O0OOO0OOOO))
-OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%tmp_IND_offspring,2]=paste0("B",sprintf("%5s",1000-OOO0OOO0O0OOO0O0OOO0OOOO))
+OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%tmp_IND_base,2]=paste0("A",sprintf("%5s",i))
+OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%tmp_IND_offspring,2]=paste0("B",sprintf("%5s",1000-i))
 
 IND_middle=tmp_IND_middle
 }
@@ -5273,14 +5273,14 @@ OOOOO0OOOOOOOOO0OOOO$Generation=OOOOO0OOOOOOOOO0OOOO$Generation-1
 
 #OOOOO0OOOOOOOOO0OOOO=data.frame(Offspring=c(IND_base,IND_middle,IND_offspring),Generation="NA",stringsAsFactors=F)
 #tmp_ped=ped
-#OOO0OOO0O0OOO0O0OOO0OOOO=0
+#i=0
 #IND_base_set=IND_base
-#OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%IND_base_set,2]=OOO0OOO0O0OOO0O0OOO0OOOO
+#OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%IND_base_set,2]=i
 #while(length(IND_base_set)>0){
-#OOO0OOO0O0OOO0O0OOO0OOOO=OOO0OOO0O0OOO0O0OOO0OOOO+1
+#i=i+1
 #IND_base_set=unique(na.omit(tmp_ped[tmp_ped[,2]%in%IND_base_set|tmp_ped[,3]%in%IND_base_set,1]))
-#OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%IND_base_set,2]=OOO0OOO0O0OOO0O0OOO0OOOO
-#if(OOO0OOO0O0OOO0O0OOO0OOOO>1000){stop("Found generations of provided OOO0OOO0O0OOO0O0OOO0OOOOOO larger than 1000, please check your OOO0OOO0O0OOO0O0OOO0OOOOOO carefully!")}
+#OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%IND_base_set,2]=i
+#if(i>1000){stop("Found generations of provided pedigree larger than 1000, please check your pedigree carefully!")}
 #}
 
 OOOOO0OOOOOOOOO0OOOO=data.frame(Offspring=c(IND_base,IND_middle,IND_offspring),stringsAsFactors=F)
@@ -5325,9 +5325,9 @@ OOOOO0OOOOOOOOO0OOOO=cbind(OOOOO0OOOOOOOOO0OOOO,1:nrow(OOOOO0OOOOOOOOO0OOOO));
 colnames(OOOOO0OOOOOOOOO0OOOO)[3]="Offspring_Id"
 
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:ncol(rename_pedigree)){
+for(i in 1:ncol(rename_pedigree)){
 
-rename_pedigree[,OOO0OOO0O0OOO0O0OOO0OOOO]=OOOOO0OOOOOOOOO0OOOO[match(rename_pedigree[,OOO0OOO0O0OOO0O0OOO0OOOO],OOOOO0OOOOOOOOO0OOOO[,"Offspring"]),"Offspring_Id"]
+rename_pedigree[,i]=OOOOO0OOOOOOOOO0OOOO[match(rename_pedigree[,i],OOOOO0OOOOOOOOO0OOOO[,"Offspring"]),"Offspring_Id"]
 
 }
 
@@ -5356,7 +5356,7 @@ tmp=OOOOO0OOOOOOOOO0OOOO[,c(1,3)]
 colnames(tmp)=c("Original_Id","Renamed_Id")
 data.table::fwrite(data.table(tmp),paste0(output_pedigree_name,"_renamed_key.txt"),col.names=T,quote=F,sep=" ",row.names=F)
 }else{
-cat("Output ordered but non-renamed OOO0OOO0O0OOO0O0OOO0OOOOOO! \n")
+cat("Output ordered but non-renamed pedigree! \n")
 tmp=O0OOOOO0O0OOO0OOO0O0
 tmp[is.na(tmp)]=0
 tmp[,4]=1:nrow(tmp)
@@ -5561,10 +5561,10 @@ generation_colnames=c("Sire","Dam")
 total=generation_colnames
 
 if(generation>=2){
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:(generation-1)){
+for(i in 1:(generation-1)){
 temp=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(generation_colnames)){
-temp=c(temp,paste0(generation_colnames[OOO0OOO0O0OOO0O0OOO0OOOO],c("Sire","Dam")))
+for(i in 1:length(generation_colnames)){
+temp=c(temp,paste0(generation_colnames[i],c("Sire","Dam")))
 }
 generation_colnames=temp
 total=c(total,generation_colnames)
@@ -5575,10 +5575,10 @@ return(total)
 
 
  
-O0OOOOO0OOO0O0OOOOO0<-function(OOO0OOO0O0OOO0O0OOO0OOOOOO){
+O0OOOOO0OOO0O0OOOOO0<-function(pedigree){
 
-#check OOO0OOO0O0OOO0O0OOO0OOOOOO names
-col=colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)
+#check pedigree names
+col=colnames(pedigree)
 O0O0OOO0O0O0O0OOO0OO=round(nchar(col[1])/3)
 O0O0OOO0O0O0O0OOO0OO_names=c("Offspring",O0OOO0O0OOO0OOO0O0OO_colnames(O0O0OOO0O0O0O0OOO0OO))
 
@@ -5588,31 +5588,31 @@ error_colnames=col[!col%in%O0O0OOO0O0O0O0OOO0OO_names]
 stop(paste0("Colnames of provided pedigree_data, including << ",error_colnames, ">> doesn't meet the requirement, please modify these columns names!"))
 }
 
-Total_result=list(OOO0OOO0O0OOO0O0OOO0OOOOOO[,1:3])
-O0O0OOO0OOO0O0O0O0OO<-function(name,OOO0OOO0O0OOO0O0OOO0OOOOOO){
-part=OOO0OOO0O0OOO0O0OOO0OOOOOO[,colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)%in%name]
+Total_result=list(pedigree[,1:3])
+O0O0OOO0OOO0O0O0O0OO<-function(name,pedigree){
+part=pedigree[,colnames(pedigree)%in%name]
 
-if(paste0(name,"Sire")%in%colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)){
-part=cbind(part,OOO0OOO0O0OOO0O0OOO0OOOOOO[,colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)%in%paste0(name,"Sire")])
+if(paste0(name,"Sire")%in%colnames(pedigree)){
+part=cbind(part,pedigree[,colnames(pedigree)%in%paste0(name,"Sire")])
 }else{part=cbind(part,NA)}
 
-if(paste0(name,"Dam")%in%colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)){
-part=cbind(part,OOO0OOO0O0OOO0O0OOO0OOOOOO[,colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)%in%paste0(name,"Dam")])
+if(paste0(name,"Dam")%in%colnames(pedigree)){
+part=cbind(part,pedigree[,colnames(pedigree)%in%paste0(name,"Dam")])
 }else{part=cbind(part,NA)}
 colnames(part)=c("Offspring","Sire","Dam")
 return(part)
 }
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)){
-if(paste0(OOO0OOO0O0OOO0O0OOO0OOOO,"Sire")%in%colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO) | paste0(OOO0OOO0O0OOO0O0OOO0OOOO,"Dam")%in%colnames(OOO0OOO0O0OOO0O0OOO0OOOOOO)){
-result=list(O0O0OOO0OOO0O0O0O0OO(OOO0OOO0O0OOO0O0OOO0OOOO,OOO0OOO0O0OOO0O0OOO0OOOOOO))
+for(i in colnames(pedigree)){
+if(paste0(i,"Sire")%in%colnames(pedigree) | paste0(i,"Dam")%in%colnames(pedigree)){
+result=list(O0O0OOO0OOO0O0O0O0OO(i,pedigree))
 Total_result=c(Total_result,result)
 }
 }
-OOO0OOO0O0OOO0O0OOO0OOOOOO=do.call(rbind,Total_result)
-OOO0OOO0O0OOO0O0OOO0OOOOOO=OOO0OOO0O0OOO0O0OOO0OOOOOO[!duplicated(paste0(OOO0OOO0O0OOO0O0OOO0OOOOOO[,1],OOO0OOO0O0OOO0O0OOO0OOOOOO[,2],OOO0OOO0O0OOO0O0OOO0OOOOOO[,3])),]
+pedigree=do.call(rbind,Total_result)
+pedigree=pedigree[!duplicated(paste0(pedigree[,1],pedigree[,2],pedigree[,3])),]
 message("Complete multi-coulums pedigree_data convert into standard 3 columns pedigree_data!")
-return(OOO0OOO0O0OOO0O0OOO0OOOOOO)
+return(pedigree)
 }
 
 
@@ -5629,7 +5629,7 @@ if(!is.null(max_fullsibs)){
 if(max_fullsibs<1){stop("Please provide valid max_fullsibs!")}
 sibs_MF=paste0(sibs_ped[,2],"_",sibs_ped[,3])
 pos=rep(FALSE,length(sibs_MF))
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:max_fullsibs){
+for(i in 1:max_fullsibs){
 pos_tmp=!duplicated(sibs_MF)
 sibs_MF[pos_tmp]=NA
 pos=pos|pos_tmp
@@ -5650,9 +5650,9 @@ unique_random=c(unique(do.call(c,random_effect_name)),"Residual")
 group_color=color_set[1:length(unique_random)]
 names(group_color)=unique_random
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-a=data.table::fread(paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_heritability_result.txt"),data.table=F)
+a=data.table::fread(paste0(target_trait_name[i],"_heritability_result.txt"),data.table=F)
 a[,-1]=round(a[,-1],2)
 
 a$prior_se_blanket=paste0(a$prior,"(",a$prior_se,")")
@@ -5694,11 +5694,11 @@ p=ggplot2::ggplot(data = b, aes(x=variable, y=value, fill = Random_effect_name))
 		guides(fill = guide_legend(reverse = TRUE))
 		
 
-if(OOO0OOO0O0OOO0O0OOO0OOOO==1){total=p}
-if(OOO0OOO0O0OOO0O0OOO0OOOO>=2){library(patchwork);total=total+p}
+if(i==1){total=p}
+if(i>=2){library(patchwork);total=total+p}
 }
 
-if(OOO0OOO0O0OOO0O0OOO0OOOO>=2){
+if(i>=2){
 final=total+ patchwork::plot_annotation(tag_levels = 'A')&theme(plot.tag = element_text(size = 10*length(target_trait_name),face="bold"))
 }else{
 final=total
@@ -5736,9 +5736,9 @@ km=kmeans(pca[,2:3],target_Breed_number)
 aaa <- data.frame(pca, km$cluster)
 
 Data=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:target_Breed_number){
+for(i in 1:target_Breed_number){
 
-tmp_Data <- pca[which(aaa$km.cluster == OOO0OOO0O0OOO0O0OOO0OOOO),]
+tmp_Data <- pca[which(aaa$km.cluster == i),]
 tmp_Data$Expeced_Breed=names(table(tmp_Data[,"Breed"]))[table(tmp_Data[,"Breed"]) == max(table(tmp_Data[,"Breed"]))]
 Data=rbind(Data,tmp_Data)
 }
@@ -5829,8 +5829,8 @@ return(related_ids)
 }
 
 k=0
-for(OOO0OOO0O0OOO0O0OOO0OOOOO in 1:length(Fn)){
-id=Fn[OOO0OOO0O0OOO0O0OOO0OOOOO]
+for(j in 1:length(Fn)){
+id=Fn[j]
 if(all(!is.na(data_set[,2]))){break} #µ±ËùÓÐ¸öÌå¶¼ÓÐfamily¼ÇÂ¼Ê±£¬ÍË³öforÑ­»·
 if(!is.na(data_set[data_set[,1]%in%id,2])){next} #µ±Ç°¸öÌåÓÐfamily¼ÇÂ¼Ê±£¬ÍË³öµ±Ç°Ñ­»·
 k=k+1
@@ -5838,8 +5838,8 @@ related_ids=get_related(id,ped)
 n=1
 while(length(related_ids)>n){
 n=length(related_ids)
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(related_ids)){
-related_ids=unique(na.omit(c(related_ids,get_related(related_ids[OOO0OOO0O0OOO0O0OOO0OOOO],ped))))
+for(i in 1:length(related_ids)){
+related_ids=unique(na.omit(c(related_ids,get_related(related_ids[i],ped))))
 }
 }
 data_set[data_set[,1]%in%related_ids,2]=k
@@ -5876,27 +5876,27 @@ Fn=OOO0O0OOO0O0O0O0OOOO[[3]] #ÎÞ¸¸Ä¸,  ´æÔÚ ¸öÌåÎÞºó´ú£¬µ«ÆäÈ«Í¬°ûÓÐºó´úµÄÇé¿ö£¬
 
 #È¥³ýFnÖÐ-È«Í¬°ûÓÐºó´úµÄ¸öÌå 
 fullsibs=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOO in Fn){
+for(i in Fn){
 #½«È«Í¬°ûÎª¸¸Ä¸µÄ¸öÌå£¬´Ó»ù´¡ÈºÖÐÈ¥³ý
-if(length(OOOOOOOOO0O0O0OOOOO0(OOO0OOO0O0OOO0O0OOO0OOOO,ped)$full_sibs)>0){
-if(sum(OOOOOOOOO0O0O0OOOOO0(OOO0OOO0O0OOO0O0OOO0OOOO,ped)$full_sibs%in%ped[,2])>0|sum(OOOOOOOOO0O0O0OOOOO0(OOO0OOO0O0OOO0O0OOO0OOOO,ped)$full_sibs%in%ped[,3])>0){
-Fn=setdiff(Fn,OOO0OOO0O0OOO0O0OOO0OOOO)
+if(length(OOOOOOOOO0O0O0OOOOO0(i,ped)$full_sibs)>0){
+if(sum(OOOOOOOOO0O0O0OOOOO0(i,ped)$full_sibs%in%ped[,2])>0|sum(OOOOOOOOO0O0O0OOOOO0(i,ped)$full_sibs%in%ped[,3])>0){
+Fn=setdiff(Fn,i)
 }
 }
 }
-OOO0OOO0O0OOO0O0OOO0OOOOO=0
-data=data.frame(Id=Fn,Generation=OOO0OOO0O0OOO0O0OOO0OOOOO,stringsAsFactors=F)
+j=0
+data=data.frame(Id=Fn,Generation=j,stringsAsFactors=F)
 
 while(length(Fn)>=1&match_parents(Fn,ped)[[2]]=="Match"){
 
-  OOO0OOO0O0OOO0O0OOO0OOOOO=OOO0OOO0O0OOO0O0OOO0OOOOO+1
+  j=j+1
   Fn=setdiff(na.omit(unique(as.vector(match_parents(Fn,ped)[[1]]))),Fn)
  
   for( tmp in Fn){
   Fn=unique(c(Fn,do.call(c,OOOOOOOOO0O0O0OOOOO0(tmp,ped))))
   }
   if(length(Fn)==0){break}
-  data=rbind(data,data.frame(Id=Fn,Generation=OOO0OOO0O0OOO0O0OOO0OOOOO))
+  data=rbind(data,data.frame(Id=Fn,Generation=j))
 }
 return(data)
 }
@@ -5910,11 +5910,11 @@ final_data=NULL
 #¸ù¾Ýnodes½« FnÅÅÐò
 Fn=Fn[order(OOOOOOOOO0O0O0O0OOO0(Fn,ped),decreasing = T)]
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(Fn)){
+for(i in 1:length(Fn)){
 Full_sibs_M=NULL
 Full_sibs_F=NULL
 
-id=Fn[OOO0OOO0O0OOO0O0OOO0OOOO]
+id=Fn[i]
 individual_data=data.frame(Id=id,
 		                       X_score=X_score,
 				             Y_score=Y_score,
@@ -5922,7 +5922,7 @@ individual_data=data.frame(Id=id,
 						   Y_score_end=Y_score+1,
 						   Type="Individual")
 
-if(OOO0OOO0O0OOO0O0OOO0OOOO>1){
+if(i>1){
 if(length(final_data[final_data[,1]%in%id,"Type"])>0){
 if(final_data[final_data[,1]%in%id,"Type"]=="Sibs"){
 next 
@@ -5991,7 +5991,7 @@ final_data=final_data[!is.na(final_data[,1]),]
 #return(final_data)
 }
 
-X_score=max(final_data$X_score,final_data$X_score_end)+2*OOOOOOOOO0O0O0O0OOO0(Fn[OOO0OOO0O0OOO0O0OOO0OOOO+1],ped)
+X_score=max(final_data$X_score,final_data$X_score_end)+2*OOOOOOOOO0O0O0O0OOO0(Fn[i+1],ped)
 Y_score=0
 
 #¿¼ÂÇÄ¸Ç×ÓÐ¶à¸öÈ«Í¬°û£¬ÐèÒª½«ÏÂÒ»¸ö¸öÌåµÄXÖáÍùÓÒÆ«ÒÆ
@@ -6009,11 +6009,11 @@ final_data=NULL
 
 Fn=Fn[order(OOOOOOOOO0O0O0O0OOO0(Fn,ped),decreasing = T)]
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(Fn)){
+for(i in 1:length(Fn)){
 Full_sibs_M=NULL
 Full_sibs_F=NULL
 
-id=Fn[OOO0OOO0O0OOO0O0OOO0OOOO]
+id=Fn[i]
 individual_data=data.frame(Id=id,
 		                       X_score=X_score,
 				             Y_score=Y_score,
@@ -6021,7 +6021,7 @@ individual_data=data.frame(Id=id,
 						   Y_score_end=Y_score+1,
 						   Type="Individual")
 
-if(OOO0OOO0O0OOO0O0OOO0OOOO>1){
+if(i>1){
 if(length(final_data[final_data[,1]%in%id,"Type"])>0){
 if(final_data[final_data[,1]%in%id,"Type"]=="Sibs"){
 next 
@@ -6097,12 +6097,12 @@ final_data=final_data[!is.na(final_data[,1]),]
 #return(final_data)
 }
 
-#X_score=max(final_data$X_score,final_data$X_score_end)+2*OOOOOOOOO0O0O0O0OOO0(Fn[OOO0OOO0O0OOO0O0OOO0OOOO+1],ped)
+#X_score=max(final_data$X_score,final_data$X_score_end)+2*OOOOOOOOO0O0O0O0OOO0(Fn[i+1],ped)
 #id_max_X_score=final_data[which.max(final_data$X_score),1][1]
 
-X_score=max(final_data$X_score,final_data$X_score_end)+4*OOOOOOOOO0O0O0O0OOO0(Fn[OOO0OOO0O0OOO0O0OOO0OOOO+1],ped)
-#X_score=max(final_data$X_score,final_data$X_score_end)+2*OOOOOOOOO0O0O0O0OOO0(id_max_X_score,ped)+2*OOOOOOOOO0O0O0O0OOO0(Fn[OOO0OOO0O0OOO0O0OOO0OOOO+1],ped)
-if(OOOOOOOOO0O0O0O0OOO0(Fn[OOO0OOO0O0OOO0O0OOO0OOOO+1],ped)==0){X_score=X_score+1}
+X_score=max(final_data$X_score,final_data$X_score_end)+4*OOOOOOOOO0O0O0O0OOO0(Fn[i+1],ped)
+#X_score=max(final_data$X_score,final_data$X_score_end)+2*OOOOOOOOO0O0O0O0OOO0(id_max_X_score,ped)+2*OOOOOOOOO0O0O0O0OOO0(Fn[i+1],ped)
+if(OOOOOOOOO0O0O0O0OOO0(Fn[i+1],ped)==0){X_score=X_score+1}
 Y_score=0
 
 #¿¼ÂÇÄ¸Ç×ÓÐ¶à¸öÈ«Í¬°û£¬ÐèÒª½«ÏÂÒ»¸ö¸öÌåµÄXÖáÍùÓÒÆ«ÒÆ
@@ -6116,11 +6116,11 @@ return(final_data)
 #»ñµÃ¸öÌåÉÏÃæµÄ´úÊý(µÈ¼ÛÓÚÏµÆ×Ê÷µÄ·ÖÖ§Êý)
 OOOOOOOOO0O0O0O0OOO0<-function(id,ped){
 total_nodes=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOO in id){
+for(i in id){
 nodes=0
-while(match_parents(OOO0OOO0O0OOO0O0OOO0OOOO,ped)[[2]]=="Match"){
+while(match_parents(i,ped)[[2]]=="Match"){
 nodes=nodes+1
-OOO0OOO0O0OOO0O0OOO0OOOO=na.omit(as.vector(match_parents(OOO0OOO0O0OOO0O0OOO0OOOO,ped)[[1]]))
+i=na.omit(as.vector(match_parents(i,ped)[[1]]))
 }
 total_nodes=c(total_nodes,nodes)
 }
@@ -6165,11 +6165,11 @@ sibs=unique(c(id,sibs_F,sibs_M))
 sibs=setdiff(sibs,id)
 
 if(!is.na(id_F)&!is.na(id_M)){ #µ±¸¸Ä¸ÆäÖÐÓÐÒ»·½ÎªÈ±Ê§ÖµµÄÊ±ºò£¬sibs±Ø¶¨Îª°ëÍ¬°û
-for(OOO0OOO0O0OOO0O0OOO0OOOO in sibs){
-if(ped[ped[,1]%in%OOO0OOO0O0OOO0O0OOO0OOOO,2]%in%id_F&ped[ped[,1]%in%OOO0OOO0O0OOO0O0OOO0OOOO,3]%in%id_M){
-full_sibs=c(full_sibs,OOO0OOO0O0OOO0O0OOO0OOOO)
+for(i in sibs){
+if(ped[ped[,1]%in%i,2]%in%id_F&ped[ped[,1]%in%i,3]%in%id_M){
+full_sibs=c(full_sibs,i)
 }else{
-half_sibs=c(half_sibs,OOO0OOO0O0OOO0O0OOO0OOOO)
+half_sibs=c(half_sibs,i)
 }
 }
 }else{
@@ -6254,9 +6254,9 @@ Fn=data_set[data_set$Generation==0,1]
 
 plot_pos=O0OOOOO0O0O0O0OOO0O0(X_score=0,Y_score=0,Fn=Fn,ped=ped) #ÆðÊ¼Î»ÖÃ
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(data_set)){
+for(i in 1:nrow(data_set)){
 
-Start_id=data_set[OOO0OOO0O0OOO0O0OOO0OOOO,1]
+Start_id=data_set[i,1]
 
 if(Start_id %in% plot_pos[,1]){
 if(match_parents(Start_id,ped)[[2]]=="Match"&all(plot_pos[plot_pos[,1]%in%Start_id,"Type"]!="Sibs")){
@@ -6294,8 +6294,8 @@ half_sibs_id=unique(half_sibs_id)
 #È«Í¬°û¸öÌåÓÃÐéÏßÁ¬½ÓÆðÀ´
 total_half_sibs=NULL
 if(length(half_sibs_id)>0){
-for(OOO0OOO0O0OOO0O0OOO0OOOO in half_sibs_id){
-half_sibs_score=plot_pos[plot_pos$Id%in%OOO0OOO0O0OOO0O0OOO0OOOO,]
+for(i in half_sibs_id){
+half_sibs_score=plot_pos[plot_pos$Id%in%i,]
 half_sibs_score[1:(nrow(half_sibs_score)-1),4:5]=half_sibs_score[-1,2:3]
 half_sibs_score=half_sibs_score[-nrow(half_sibs_score),]
 total_half_sibs=rbind(total_half_sibs,half_sibs_score)
@@ -6305,9 +6305,9 @@ total_half_sibs=rbind(total_half_sibs,half_sibs_score)
 status1=rep(NA,nrow(total_half_sibs))
 status2=rep(NA,nrow(total_half_sibs))
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(total_half_sibs)){
-status1[OOO0OOO0O0OOO0O0OOO0OOOO]=paste(total_half_sibs[OOO0OOO0O0OOO0O0OOO0OOOO,1:5],collapse = "_")
-status2[OOO0OOO0O0OOO0O0OOO0OOOO]=paste(total_half_sibs[OOO0OOO0O0OOO0O0OOO0OOOO,c(1,4,5,2,3)],collapse = "_")
+for(i in 1:nrow(total_half_sibs)){
+status1[i]=paste(total_half_sibs[i,1:5],collapse = "_")
+status2[i]=paste(total_half_sibs[i,c(1,4,5,2,3)],collapse = "_")
 }
 total_half_sibs=total_half_sibs[!duplicated(status1%in%status2),]
 }
@@ -6443,9 +6443,9 @@ p=p+geom_text(aes(label =Inbred_value),size=value_text_size,vjust = 0,family = "
 sum_p=p	   
 if(length(Family_value)>=2){
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 2:length(Family_value)){
+for(i in 2:length(Family_value)){
 
-tmp_plot_pos=plot_pos[plot_pos$Family%in%OOO0OOO0O0OOO0O0OOO0OOOO,]
+tmp_plot_pos=plot_pos[plot_pos$Family%in%i,]
 p=ggplot(tmp_plot_pos,aes(x=X_score,y=Y_score))+
         geom_segment(aes(x=X_score,
 		              xend=X_score_end,
@@ -6453,7 +6453,7 @@ p=ggplot(tmp_plot_pos,aes(x=X_score,y=Y_score))+
 				    yend=Y_score_end))
 
 if(length(half_sibs_id)>=1){
-tmp_total_half_sibs=total_half_sibs[total_half_sibs$Family%in%OOO0OOO0O0OOO0O0OOO0OOOO,]
+tmp_total_half_sibs=total_half_sibs[total_half_sibs$Family%in%i,]
 p=p+geom_curve(aes(x =X_score,
                  y =Y_score,
                  xend=X_score_end, 
@@ -6469,7 +6469,7 @@ p=p+geom_point(aes(x=X_score,y=Y_score,shape=Sex),size=shape_size)
 p=p+ggimage::geom_image(size =shape_size/150,aes(image=Image))
 }	
 	p=p+geom_text(aes(label =Id),size=ind_text_size,vjust = ind_text_vjust,family = "serif")+
-		xlab(paste0("Family ",OOO0OOO0O0OOO0O0OOO0OOOO))+
+		xlab(paste0("Family ",i))+
    theme(
 	   axis.title.x=element_text(face="bold",size=15, family = "serif"),
         axis.title.y=element_blank(), #È¥³ýyÖáÃû³Æ
@@ -6663,8 +6663,8 @@ output_result_path=getwd()
 cat(paste0("Results are saved in path: ",output_result_path,"\n"))
 file.copy(from=paste0(phe_path,"/",phe_name),to=output_result_path,overwrite=TRUE)
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(relationship_name)){
-file.copy(from=paste0(relationship_path,"/",relationship_name[OOO0OOO0O0OOO0O0OOO0OOOO]),to=output_result_path,overwrite=TRUE)
+for(i in 1:length(relationship_name)){
+file.copy(from=paste0(relationship_path,"/",relationship_name[i]),to=output_result_path,overwrite=TRUE)
 }
 
 if(!is.null(provided_renf90_par_file_path)&!is.null(provided_renf90_par_file_name)){ #ÓÃ»§Ìá¹© blupf90µÄ²ÎÊýÎÄ¼þ
@@ -6784,17 +6784,17 @@ O0O0OOO0O0OOOOO0O0OO=matrix(NA,nrow=length(unique(ebv[,"Id"])),ncol=1+4*length(t
 O0O0OOO0O0OOOOO0O0OO=as.data.frame(O0O0OOO0O0OOOOO0O0OO,stringsAsFactors=F)
 O0O0OOO0O0OOOOO0O0OO[,1]=sort(unique(ebv[,"Id"]));colnames(O0O0OOO0O0OOOOO0O0OO)[1]="Id"
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-trait_ebv=ebv[ebv$OOOOO0O0O0O0OOOOOOO0%in%OOO0OOO0O0OOO0O0OOO0OOOO,]
-O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+1]= trait_ebv[match(O0O0OOO0O0OOOOO0O0OO[,1],trait_ebv[,"Id"]),"EBV"]
-O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+2]= residual[match(O0O0OOO0O0OOOOO0O0OO[,1],residual[,"Id"]),length(target_trait_name)+OOO0OOO0O0OOO0O0OOO0OOOO]
-O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+3]=O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+1]+O0O0OOO0O0OOOOO0O0OO[,1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+2]
+trait_ebv=ebv[ebv$OOOOO0O0O0O0OOOOOOO0%in%i,]
+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+1]= trait_ebv[match(O0O0OOO0O0OOOOO0O0OO[,1],trait_ebv[,"Id"]),"EBV"]
+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+2]= residual[match(O0O0OOO0O0OOOOO0O0OO[,1],residual[,"Id"]),length(target_trait_name)+i]
+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+3]=O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+1]+O0O0OOO0O0OOOOO0O0OO[,1+(i-1)*4+2]
 
-colnames(O0O0OOO0O0OOOOO0O0OO)[1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+1]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_EBV")
-colnames(O0O0OOO0O0OOOOO0O0OO)[1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+2]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_Res")
-colnames(O0O0OOO0O0OOOOO0O0OO)[1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+3]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_EBV_Plus_Res")
-colnames(O0O0OOO0O0OOOOO0O0OO)[1+(OOO0OOO0O0OOO0O0OOO0OOOO-1)*4+4]=paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_dEBV")
+colnames(O0O0OOO0O0OOOOO0O0OO)[1+(i-1)*4+1]=paste0(target_trait_name[i],"_EBV")
+colnames(O0O0OOO0O0OOOOO0O0OO)[1+(i-1)*4+2]=paste0(target_trait_name[i],"_Res")
+colnames(O0O0OOO0O0OOOOO0O0OO)[1+(i-1)*4+3]=paste0(target_trait_name[i],"_EBV_Plus_Res")
+colnames(O0O0OOO0O0OOOOO0O0OO)[1+(i-1)*4+4]=paste0(target_trait_name[i],"_dEBV")
 
 }
 
@@ -6827,25 +6827,25 @@ Var=OOOOOOOOOOOOOOO0OOOO
 
 heritablilty=Prior/sum(Prior[,1])
 SE_h2=matrix(NA,nrow=nrow(Prior),ncol=1)
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(Prior)){
+for(i in 1:nrow(Prior)){
 
 derivate=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOOO in 1:nrow(Prior)){
+for(j in 1:nrow(Prior)){
 
-if(OOO0OOO0O0OOO0O0OOO0OOOOO==OOO0OOO0O0OOO0O0OOO0OOOO){derivate=cbind(derivate,(sum(Prior[,1])-Prior[OOO0OOO0O0OOO0O0OOO0OOOO,1])/(sum(Prior[,1])^2) )}
-if(OOO0OOO0O0OOO0O0OOO0OOOOO!=OOO0OOO0O0OOO0O0OOO0OOOO){derivate=cbind(derivate,(-Prior[OOO0OOO0O0OOO0O0OOO0OOOO,1])/(sum(Prior[,1])^2 ))}
+if(j==i){derivate=cbind(derivate,(sum(Prior[,1])-Prior[i,1])/(sum(Prior[,1])^2) )}
+if(j!=i){derivate=cbind(derivate,(-Prior[i,1])/(sum(Prior[,1])^2 ))}
 
 }
-SE_h2[OOO0OOO0O0OOO0O0OOO0OOOO,1]=sqrt(derivate%*%Var%*%t(derivate)) # ¿ªÆ½·½¸ù²ÅÊÇ×îÖÕ½á¹û
+SE_h2[i,1]=sqrt(derivate%*%Var%*%t(derivate)) # ¿ªÆ½·½¸ù²ÅÊÇ×îÖÕ½á¹û
 }
 return(SE_h2)
 }
 
 temp=fread("AI_inv.txt",data.table=F)
 O0OOO0OOO0O0O0OOOOOO=diag(max(temp[,1]))
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(temp)){
-O0OOO0OOO0O0O0OOOOOO[temp[OOO0OOO0O0OOO0O0OOO0OOOO,1],temp[OOO0OOO0O0OOO0O0OOO0OOOO,2]]=temp[OOO0OOO0O0OOO0O0OOO0OOOO,7]
-O0OOO0OOO0O0O0OOOOOO[temp[OOO0OOO0O0OOO0O0OOO0OOOO,2],temp[OOO0OOO0O0OOO0O0OOO0OOOO,1]]=temp[OOO0OOO0O0OOO0O0OOO0OOOO,7]
+for(i in 1:nrow(temp)){
+O0OOO0OOO0O0O0OOOOOO[temp[i,1],temp[i,2]]=temp[i,7]
+O0OOO0OOO0O0O0OOOOOO[temp[i,2],temp[i,1]]=temp[i,7]
 }
 
 if(BLUPF90_algorithm=="AI_REML"){
@@ -6857,16 +6857,16 @@ log=fread("blupf90.log",data.table=F,fill = T)
 }
 
 #·ÖÐÔ×´¼ÆËã
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-OOOOOOOOOOOOOOO0OOOO=O0OOO0OOO0O0O0OOOOOO[seq(OOO0OOO0O0OOO0O0OOO0OOOO,nrow(O0OOO0OOO0O0O0OOOOOO),length(target_trait_name)),seq(OOO0OOO0O0OOO0O0OOO0OOOO,nrow(O0OOO0OOO0O0O0OOOOOO),length(target_trait_name))]
+OOOOOOOOOOOOOOO0OOOO=O0OOO0OOO0O0O0OOOOOO[seq(i,nrow(O0OOO0OOO0O0O0OOOOOO),length(target_trait_name)),seq(i,nrow(O0OOO0OOO0O0O0OOOOOO),length(target_trait_name))]
 OOOOOOOOOOOOOOO0OOOO=OOOOOOOOOOOOOOO0OOOO[!diag(OOOOOOOOOOOOOOO0OOOO)==0,!diag(OOOOOOOOOOOOOOO0OOOO)==0]
 
-Prior_pos=(1:nrow(log))[log[,1]%in%c("Genetic","Residual")]+OOO0OOO0O0OOO0O0OOO0OOOO
-Prior=matrix(as.numeric(log[Prior_pos,OOO0OOO0O0OOO0O0OOO0OOOO]))
+Prior_pos=(1:nrow(log))[log[,1]%in%c("Genetic","Residual")]+i
+Prior=matrix(as.numeric(log[Prior_pos,i]))
 
-OOO0O0OOO0O0O0OOO0O0=(1:nrow(log))[log[,1]%in%c("SE")]+OOO0OOO0O0OOO0O0OOO0OOOO
-Prior_se=matrix(as.numeric(log[OOO0O0OOO0O0O0OOO0O0,OOO0OOO0O0OOO0O0OOO0OOOO]))
+OOO0O0OOO0O0O0OOO0O0=(1:nrow(log))[log[,1]%in%c("SE")]+i
+Prior_se=matrix(as.numeric(log[OOO0O0OOO0O0O0OOO0O0,i]))
 
 Prior_se=Prior_se[!Prior[,1]==1,]
 Prior=Prior[!Prior[,1]==1,] #È¥³ýÈßÓàµÄËæ»úÐ§Ó¦(e.g. ÐÔ×´Ã»ÓÐ¸ÃËæ»úÐ§Ó¦£¬µ«ÊÇBLUPF90»á×Ô¶¯¸³Óè¸ÃÐ§Ó¦µÄ·½²îÎª1)
@@ -6875,13 +6875,13 @@ Prior=as.matrix(Prior)
 h2_se=O0OOO0O0O0O0O0OOOOOO(OOOOOOOOOOOOOOO0OOOO=OOOOOOOOOOOOOOO0OOOO,Prior=Prior)
 h2=Prior/sum(Prior[,1])
 
-temp_random_effect_name=random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]]
+temp_random_effect_name=random_effect_name[[i]]
 temp_random_effect_name=sort(temp_random_effect_name[!temp_random_effect_name%in%genetic_effect_name])
 temp_random_effect_name=c(temp_random_effect_name,"Id","Residual")
 
 data_h2=cbind(temp_random_effect_name,Prior,Prior_se,h2,h2_se)
 colnames(data_h2)=c("Random_effect_name","prior","prior_se","h2","h2_se")
-write.table(data_h2,paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_heritability_result.txt"),quote=F,row.names=F,col.names=T,sep="\t")
+write.table(data_h2,paste0(target_trait_name[i],"_heritability_result.txt"),quote=F,row.names=F,col.names=T,sep="\t")
 
 }
 
@@ -6993,8 +6993,8 @@ if(length(grep(" ",relationship_path))>0){
 if(file.exists(paste0(relationship_path,"/",IND_geno_file_name))){file.copy(paste0(relationship_path,"/",IND_geno_file_name),output_result_path,recursive=TRUE)}
 
 tmp=relationship_path
-for(OOO0OOO0O0OOO0O0OOO0OOOO in relationship_name){
-file.copy(paste0(tmp,"/",OOO0OOO0O0OOO0O0OOO0OOOO),output_result_path,recursive=TRUE)
+for(i in relationship_name){
+file.copy(paste0(tmp,"/",i),output_result_path,recursive=TRUE)
 relationship_path=output_result_path
 }
 }
@@ -7085,17 +7085,17 @@ file.copy(paste0(provided_prior_file_path,"/",provided_prior_file_name),
 
 #calculate model_reliability  and  corrected_phe 
 if("PAROUT_STD"%in%list.files()&(is.null(maternal_effect_name))&(FALSE%in%include_social_effect)){
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-prior=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$prior[[OOO0OOO0O0OOO0O0OOO0OOOO]],5)
-prior_se=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$prior_se[[OOO0OOO0O0OOO0O0OOO0OOOO]],5)
-h2=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$h2[[OOO0OOO0O0OOO0O0OOO0OOOO]],5)
-h2_se=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$h2_se[[OOO0OOO0O0OOO0O0OOO0OOOO]],5)
+prior=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$prior[[i]],5)
+prior_se=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$prior_se[[i]],5)
+h2=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$h2[[i]],5)
+h2_se=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$h2_se[[i]],5)
 
-data=cbind(c(DIR$random_effect_name[[OOO0OOO0O0OOO0O0OOO0OOOO]],"Residual"),prior,prior_se,h2,h2_se)
+data=cbind(c(DIR$random_effect_name[[i]],"Residual"),prior,prior_se,h2,h2_se)
 
 colnames(data)=c("Random_effect_name","prior","prior_se","h2","h2_se")
-write.table(data,paste0(target_trait_name[OOO0OOO0O0OOO0O0OOO0OOOO],"_heritability_result.txt"),quote=F,row.names=F,col.names=T,sep="\t")
+write.table(data,paste0(target_trait_name[i],"_heritability_result.txt"),quote=F,row.names=F,col.names=T,sep="\t")
 }
 }
 
@@ -7172,29 +7172,29 @@ prior_se=read.table(file,skip=1,nrows=npar)
 cov=read.table(file,skip=1+npar)
 OOO0OOOOO0O0OOO0OOOO=diag(1,npar)    #µÚÒ»ÁÐºÍµÚ¶þÁÐ¶ÔÓ¦µÄÊÇ PRIORÎÄ¼þµÄ·½²î×é·ÖµÄÐÐºÅ
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(cov)){
- OOO0OOOOO0O0OOO0OOOO[cov[OOO0OOO0O0OOO0O0OOO0OOOO,1],cov[OOO0OOO0O0OOO0O0OOO0OOOO,2]]=cov[OOO0OOO0O0OOO0O0OOO0OOOO,4]
- OOO0OOOOO0O0OOO0OOOO[cov[OOO0OOO0O0OOO0O0OOO0OOOO,2],cov[OOO0OOO0O0OOO0O0OOO0OOOO,1]]=cov[OOO0OOO0O0OOO0O0OOO0OOOO,4]
+for(i in 1:nrow(cov)){
+ OOO0OOOOO0O0OOO0OOOO[cov[i,1],cov[i,2]]=cov[i,4]
+ OOO0OOOOO0O0OOO0OOOO[cov[i,2],cov[i,1]]=cov[i,4]
 }
 
 h2=NULL;h2_se=NULL;O0O0OOOOOOOOO0OOOOOO=NULL;O0OOOOO0O0OOO0O0OOO0=NULL;
 
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:length(target_trait_name)){
+for(i in 1:length(target_trait_name)){
 
-OOO0OOOOOOOOOOOOO0OO_pos=(1:nrow(Prior))[Prior[,2]%in%OOO0OOO0O0OOO0O0OOO0OOOO & Prior[,3]%in%OOO0OOO0O0OOO0O0OOO0OOOO]
+OOO0OOOOOOOOOOOOO0OO_pos=(1:nrow(Prior))[Prior[,2]%in%i & Prior[,3]%in%i]
 OOO0OOOOOOOOOOOOO0OO=as.matrix(Prior[OOO0OOOOOOOOOOOOO0OO_pos,4])
 O0O0O0OOOOOOO0O0O0OO=OOO0OOOOO0O0OOO0OOOO[OOO0OOOOOOOOOOOOO0OO_pos,OOO0OOOOOOOOOOOOO0OO_pos]
 
 Var=O0O0O0OOOOOOO0O0O0OO #ÐÅÏ¢¾ØÕóµÄÄæ¾ØÕóÎª ·½²î-Ð­·½²î¾ØÕó
 heritablilty=OOO0OOOOOOOOOOOOO0OO/sum(OOO0OOOOOOOOOOOOO0OO[,1])
 SE_h2=matrix(NA,nrow=nrow(OOO0OOOOOOOOOOOOO0OO),ncol=1)
-for(OOO0OOO0O0OOO0O0OOO0OOOO in 1:nrow(OOO0OOOOOOOOOOOOO0OO)){
+for(i in 1:nrow(OOO0OOOOOOOOOOOOO0OO)){
 derivate=NULL
-for(OOO0OOO0O0OOO0O0OOO0OOOOO in 1:nrow(OOO0OOOOOOOOOOOOO0OO)){
-if(OOO0OOO0O0OOO0O0OOO0OOOOO==OOO0OOO0O0OOO0O0OOO0OOOO){derivate=cbind(derivate,(sum(OOO0OOOOOOOOOOOOO0OO[,1])-OOO0OOOOOOOOOOOOO0OO[OOO0OOO0O0OOO0O0OOO0OOOO,1])/(sum(OOO0OOOOOOOOOOOOO0OO[,1])^2) )}
-if(OOO0OOO0O0OOO0O0OOO0OOOOO!=OOO0OOO0O0OOO0O0OOO0OOOO){derivate=cbind(derivate,(-OOO0OOOOOOOOOOOOO0OO[OOO0OOO0O0OOO0O0OOO0OOOO,1])/(sum(OOO0OOOOOOOOOOOOO0OO[,1])^2 ))}
+for(j in 1:nrow(OOO0OOOOOOOOOOOOO0OO)){
+if(j==i){derivate=cbind(derivate,(sum(OOO0OOOOOOOOOOOOO0OO[,1])-OOO0OOOOOOOOOOOOO0OO[i,1])/(sum(OOO0OOOOOOOOOOOOO0OO[,1])^2) )}
+if(j!=i){derivate=cbind(derivate,(-OOO0OOOOOOOOOOOOO0OO[i,1])/(sum(OOO0OOOOOOOOOOOOO0OO[,1])^2 ))}
 }
-SE_h2[OOO0OOO0O0OOO0O0OOO0OOOO,1]=sqrt(derivate%*%Var%*%t(derivate)) # ¿ªÆ½·½¸ù²ÅÊÇ×îÖÕ½á¹û
+SE_h2[i,1]=sqrt(derivate%*%Var%*%t(derivate)) # ¿ªÆ½·½¸ù²ÅÊÇ×îÖÕ½á¹û
 }
 
 O0O0OOOOOOOOO0OOOOOO=c(O0O0OOOOOOOOO0OOOOOO,list(OOO0OOOOOOOOOOOOO0OO))
