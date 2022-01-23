@@ -5257,7 +5257,7 @@ IND_middle_set=IND_middle
 IND_offspring_set=IND_offspring
 #test_tmp_base_result=tmp_base_result #当循环之间的结果是一样的时候，通过这个来跳出循环
 while(length(IND_middle)>0){
-#if(i>1000){stop("Found generations of provided pedigree larger than 1000, please check your pedigree carefully!")}
+if(i>1000){stop("Found generations of provided pedigree larger than 1000, please check your pedigree carefully!")}
 i=i+1
 #tmp_ped=tmp_ped[tmp_ped[,2]%in%IND_middle|tmp_ped[,3]%in%IND_middle,]
 tmp_ped=tmp_ped[tmp_ped[,1]%in%IND_middle,]
@@ -5277,6 +5277,7 @@ IND_middle=tmp_IND_middle
 OOOOO0OOOOOOOOO0OOOO$Generation=as.numeric(as.factor(OOOOO0OOOOOOOOO0OOOO$Generation))
 
 OOOOO0OOOOOOOOO0OOOO$Generation=OOOOO0OOOOOOOOO0OOOO$Generation-1
+
 }else if(trace_direction=="forward"){
 #OOOOO0OOOOOOOOO0OOOO=data.frame(Offspring=c(IND_base,IND_middle,IND_offspring),Generation="NA",stringsAsFactors=F)
 #tmp_ped=ped
@@ -5302,7 +5303,8 @@ OOOOO0OOOOOOOOO0OOOO=OOOOO0OOOOOOOOO0OOOO[,c(1,4)]
 }else{
 stop("Non-standard input of trace_direction parameter")
 }
-cat(paste0("Found ",i+1," generations in provided pedigree \n"))
+generation=max(OOOOO0OOOOOOOOO0OOOO$Generation)+1
+cat(paste0("Found ",generation," generations in provided pedigree \n"))
 
 OOOOO0OOOOOOOOO0OOOO=OOOOO0OOOOOOOOO0OOOO[!duplicated(OOOOO0OOOOOOOOO0OOOO[,1]),]
 OOOOO0OOOOOOOOO0OOOO=OOOOO0OOOOOOOOO0OOOO[!OOOOO0OOOOOOOOO0OOOO[,1]%in%NA,]
