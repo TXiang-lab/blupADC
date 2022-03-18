@@ -5089,6 +5089,7 @@ trace_pedigree<-function(input_pedigree=NULL,  #第一列为个体号,第二列为父亲,第三
 						 input_pedigree_path=NULL,
 						 input_pedigree_name=NULL,
 						 multi_col=FALSE,#不对系谱数据进行重新整理
+						 missing_value=NULL,
 						 dup_error_check=TRUE,
 						 sex_error_check=TRUE,
 						 breed_error_check=FALSE,
@@ -5098,7 +5099,7 @@ trace_pedigree<-function(input_pedigree=NULL,  #第一列为个体号,第二列为父亲,第三
 						 trace_sibs=FALSE,#是否追溯同胞
 						 trace_fullsibs=FALSE, #追溯全同胞
 						 max_fullsibs=NULL,  #追溯全同胞时，全同胞最大数量
-						 trace_direction="forward", #reverse 为反向
+						 trace_direction="backward", #backward 为反向
 						 #trace_offspring=FALSE, #追溯个体的子代
 						 trace_generation=NULL, #追溯的代数	
 						 trace_birth_date=NULL, #仅追溯出生日期在给定日期之后的个体
@@ -5107,6 +5108,8 @@ trace_pedigree<-function(input_pedigree=NULL,  #第一列为个体号,第二列为父亲,第三
 						 output_pedigree_name=NULL,
 						 output_pedigree_tree=FALSE,
 						 pedigree_tree_depth=3,
+						 display_message=TRUE,
+						 priority_rename_id=NULL,
 						 summary_sibs=FALSE
 						 ){
 
@@ -5128,21 +5131,32 @@ pedigree=data.table::fread(paste0(input_pedigree_path,"/",input_pedigree_name),d
 pedigree=input_pedigree
 }
 
-if(ncol(pedigree)==3){	
+
+if(ncol(pedigree)==3){
+if(display_message==TRUE){	
 cat("Peidgree provided has three columns,please make sure the format of pedigree_data has three columns: Offspring Sire Dam  \n")
+}
 }else if(ncol(pedigree)==4){
+if(display_message==TRUE){
 cat("Peidgree provided has four columns,please make sure the format of pedigree_data has four columns: Offspring Sire Dam  Birth_Date \n")
+}
 }else if(multi_col==TRUE){
+if(display_message==TRUE){
 cat("Peidgree provided has multiple columns,please make sure the format of pedigree_data similar to: Offspring Sire Dam  SireSire SireDam ......  \n")
+}
 pedigree=O0OOOOO0OOO0O0OOOOO0(pedigree)
 }else{
 stop("Error:peidgree_provided is not standard format!")
 }
 
 #将缺失值变为NA
+if(!is.null(missing_value)){
+pedigree[pedigree==missing_value]=NA
+}else{
 pedigree[pedigree=="-9999"]=NA
 pedigree[pedigree=="0"]=NA
 pedigree[pedigree==""]=NA
+}
 
 ##将系谱变成长系谱，确保第一列包含所有个体
 #id_F=na.omit(unique(pedigree[!pedigree[,2]%in%pedigree[,1],2]))
@@ -5161,10 +5175,13 @@ if(!mode(ped)=="character"){ped=apply(ped,2,as.character)}
 colnames(ped)[1:3]=c("Offspring","Sire","Dam")
 ped=ped[!is.na(ped[,1]),]
 #检查系谱错误
+if(display_message==TRUE){
+cat("Start checking pedigree......\n")
+}
 O0O0OOOOOOOOOOO0OOO0=OOOOOOO0O0O0O0OOOOO0(ped=ped, dup_error_check=dup_error_check, sex_error_check=sex_error_check,
 						                        breed_error_check=breed_error_check, birth_date_error_check=birth_date_error_check,
-												parent_error_check=parent_error_check)
-
+												parent_error_check=parent_error_check,display_message=display_message)
+if(display_message==TRUE){cat("Finish checking pedigree......\n")}
 ped=O0O0OOOOOOOOOOO0OOO0$ped
 
 error_duplicated_id=O0O0OOOOOOOOOOO0OOO0$error_duplicated_id
@@ -5176,7 +5193,7 @@ error_parent_id=O0O0OOOOOOOOOOO0OOO0$error_parent_id
 rename_ped=NULL;rename_phenotype=NULL
 #系谱排序, 数字化
 if(!is.null(trace_birth_date)){
-cat("Please make sure_pedigree data has four columns \n")
+if(display_message==TRUE){cat("Please make sure_pedigree data has four columns \n")}
 trace_id=na.omit(ped[as.numeric(ped[,4])>=trace_birth_date,1])
 }
 
@@ -5199,7 +5216,7 @@ trace_id=na.omit(ped[as.numeric(ped[,4])>=trace_birth_date,1])
 ped[ped==0]=NA
 #指定个体追溯系谱
 if(!is.null(trace_id)){                     #根据给定的个体id, trace所有和这些个体id有联系的个体的系谱(默认trace这些个体以及它们的父母)
-cat("Tracing porvided id......\n")
+if(display_message==TRUE){cat("Tracing porvided id......\n")}
 i=0
 trace_type="Match"
 trace_id_set=trace_id
@@ -5234,7 +5251,7 @@ ped=ped[ped[,1]%in%trace_id_set,]
 }
 
 #通过for 循环判断哪些个体的代数
-
+if(trace_direction=="backward"){ped[is.na(ped)]="0"}
 rename_pedigree=ped
 
 base_result=single_pedigree_cpp(ped)
@@ -5243,7 +5260,24 @@ IND_base=base_result[[1]]
 IND_middle=base_result[[2]]
 IND_offspring=base_result[[3]]
 
-if(trace_direction=="reverse"){
+
+
+
+
+
+if(trace_direction=="backward"){
+
+#########################################################################################
+#2022.3.17                                                                              #
+#在IND_offspring中，有些个体是另一些个体父母的同胞，具体问题复现可以根据 example_ped2来观察  #
+#解决办法：找到IND_middle个体的同胞，将其从IND_offspring中去除                          #
+IND_middle_sibs=match_all_sibs(IND_middle,ped)                                                    #
+offsprint_sibs=IND_offspring[IND_offspring%in%IND_middle_sibs]                                      #
+if(length(offsprint_sibs)>0){                                                                               #
+IND_middle=c(IND_middle,offsprint_sibs)                                                                   #
+IND_offspring=setdiff(IND_offspring,offsprint_sibs)                                                    #
+}                                                                                                           #
+#########################################################################################
 
 OOOOO0OOOOOOOOO0OOOO=data.frame(Offspring=c(IND_base,IND_middle,IND_offspring),Generation="NA",stringsAsFactors=F)
 OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%IND_base,2]=paste0("A",sprintf("%5s",0))
@@ -5279,17 +5313,6 @@ OOOOO0OOOOOOOOO0OOOO$Generation=as.numeric(as.factor(OOOOO0OOOOOOOOO0OOOO$Genera
 OOOOO0OOOOOOOOO0OOOO$Generation=OOOOO0OOOOOOOOO0OOOO$Generation-1
 
 }else if(trace_direction=="forward"){
-#OOOOO0OOOOOOOOO0OOOO=data.frame(Offspring=c(IND_base,IND_middle,IND_offspring),Generation="NA",stringsAsFactors=F)
-#tmp_ped=ped
-#i=0
-#IND_base_set=IND_base
-#OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%IND_base_set,2]=i
-#while(length(IND_base_set)>0){
-#i=i+1
-#IND_base_set=unique(na.omit(tmp_ped[tmp_ped[,2]%in%IND_base_set|tmp_ped[,3]%in%IND_base_set,1]))
-#OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%IND_base_set,2]=i
-#if(i>1000){stop("Found generations of provided pedigree larger than 1000, please check your pedigree carefully!")}
-#}
 
 OOOOO0OOOOOOOOO0OOOO=data.frame(Offspring=c(IND_base,IND_middle,IND_offspring),stringsAsFactors=F)
 OOOOO0OOOOOOOOO0OOOO$Sire=ped[match(OOOOO0OOOOOOOOO0OOOO[,1],ped[,1]),2]
@@ -5303,8 +5326,11 @@ OOOOO0OOOOOOOOO0OOOO=OOOOO0OOOOOOOOO0OOOO[,c(1,4)]
 }else{
 stop("Non-standard input of trace_direction parameter")
 }
-generation=max(OOOOO0OOOOOOOOO0OOOO$Generation)+1
-cat(paste0("Found ",generation," generations in provided pedigree \n"))
+OOOOO0OOOOOOOOO0OOOO=OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]!=0,]
+generation=max(OOOOO0OOOOOOOOO0OOOO$Generation)-min(OOOOO0OOOOOOOOO0OOOO$Generation)+1
+OOOOO0OOOOOOOOO0OOOO$Generation=OOOOO0OOOOOOOOO0OOOO$Generation-(min(OOOOO0OOOOOOOOO0OOOO$Generation)-1)
+
+if(display_message==TRUE){cat(paste0("Found ",generation," generations in provided pedigree \n"))}
 
 OOOOO0OOOOOOOOO0OOOO=OOOOO0OOOOOOOOO0OOOO[!duplicated(OOOOO0OOOOOOOOO0OOOO[,1]),]
 OOOOO0OOOOOOOOO0OOOO=OOOOO0OOOOOOOOO0OOOO[!OOOOO0OOOOOOOOO0OOOO[,1]%in%NA,]
@@ -5322,7 +5348,7 @@ O0O0OOO0O0O0O0OOO0OO=max(as.numeric(OOOOO0OOOOOOOOO0OOOO[,2]))
 OOO0O0OOOOO0OOOOOOOO=O0O0OOO0O0O0O0OOO0OO-trace_generation+1
 
 if(OOO0O0OOOOO0OOOOOOOO< 0){
-message(paste0("Attention:the max generation of this_pedigree is ",O0O0OOO0O0O0O0OOO0OO))
+if(display_message==TRUE){cat(paste0("Attention:the max generation of this_pedigree is ",O0O0OOO0O0O0O0OOO0OO," \n"))}
 OOO0O0OOOOO0OOOOOOOO=0
 }
 
@@ -5330,7 +5356,14 @@ OOOOO0OOOOOOOOO0OOOO=OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,2]%in%c(OOO0O0OO
 OOOOO0OOOOOOOOO0OOOO[,2]=OOOOO0OOOOOOOOO0OOOO[,2]-OOO0O0OOOOO0OOOOOOOO
 }
 
-OOOOO0OOOOOOOOO0OOOO=cbind(OOOOO0OOOOOOOOO0OOOO,1:nrow(OOOOO0OOOOOOOOO0OOOO));
+#set these animals have smallest renamed_id
+if(!is.null(priority_rename_id)){
+OOOOO0OOOOOOOOO0OOOO=rbind(OOOOO0OOOOOOOOO0OOOO[OOOOO0OOOOOOOOO0OOOO[,1]%in%priority_rename_id,],OOOOO0OOOOOOOOO0OOOO[!OOOOO0OOOOOOOOO0OOOO[,1]%in%priority_rename_id,])
+}
+
+OOOOO0OOOOOOOOO0OOOO=cbind(OOOOO0OOOOOOOOO0OOOO,1:nrow(OOOOO0OOOOOOOOO0OOOO))
+
+
 colnames(OOOOO0OOOOOOOOO0OOOO)[3]="Offspring_Id"
 
 
@@ -5365,7 +5398,7 @@ tmp=OOOOO0OOOOOOOOO0OOOO[,c(1,3)]
 colnames(tmp)=c("Original_Id","Renamed_Id")
 data.table::fwrite(data.table(tmp),paste0(output_pedigree_name,"_renamed_key.txt"),col.names=T,quote=F,sep=" ",row.names=F)
 }else{
-cat("Output ordered but non-renamed pedigree! \n")
+if(display_message==TRUE){cat("Output ordered but non-renamed pedigree! \n")}
 tmp=O0OOOOO0O0OOO0OOO0O0
 tmp[is.na(tmp)]=0
 tmp[,4]=1:nrow(tmp)
@@ -5377,14 +5410,14 @@ if(sum((OOOOO0OOOOOOOOO0OOOO$Sire_Id-OOOOO0OOOOOOOOO0OOOO$Offspring_Id)>0)>=1 |s
 stop("Rename error: sire_id or dam_id larger than offspring_id \n")
 }
 
-
+if(min(OOOOO0OOOOOOOOO0OOOO[,2]==0))OOOOO0OOOOOOOOO0OOOO[,2]=OOOOO0OOOOOOOOO0OOOO[,2]+1
 #追溯全系谱
 #将系谱 rename排序后，
 #依次从上到下，找个体的祖先，
 #利用迭代的思想，因为系谱在上面的个体是系谱在下面个体的祖先，如果上面个体的祖先已知，那么下面个体的祖先就也是已知的。
 OOOOOOOOO0OOO0OOOOOO=NULL
 if(output_pedigree_tree==TRUE){
-cat("Constructing pedigree_tree......\n")
+if(display_message==TRUE){cat("Constructing pedigree_tree......\n")}
 
 #original_ped=OOOOO0OOOOOOOOO0OOOO
 #original_ped[,4]=original_ped[match(original_ped[,4],original_ped[,3]),1]
@@ -5437,14 +5470,15 @@ OOOOOOO0O0O0O0OOOOO0<-function(ped,  #matrix format
 						   sex_error_check=TRUE,
 						   breed_error_check=FALSE,
 						   parent_error_check=TRUE,
-						   birth_date_error_check=FALSE)
+						   birth_date_error_check=FALSE,
+						   display_message=TRUE)
 {
 #将缺失值变为NA
-ped[ped=="-9999"]=NA
-ped[ped=="0"]=NA
-ped[ped==""]=NA
+#ped[ped=="-9999"]=NA
+#ped[ped=="0"]=NA
+#ped[ped==""]=NA
 ped=as.matrix(ped)
-error_duplicated_id=NULL;error_sex_id=NULL;error_breed_id=NULL;error_birth_date_id=NULL;
+error_duplicated_id=NULL;error_sex_id=NULL;error_breed_id=NULL;error_birth_date_id=NULL;error_parent_id=NULL;
 
 #错误0：个体既出在子代又出现在父母列
 
@@ -5457,7 +5491,7 @@ duplicated_id=unique(ped[duplicated(ped[,1]),1])
 error_duplicated_id=NULL
 
 if(length(duplicated_id)>0){
-
+#需要改写成c++
 for(id in duplicated_id){
 duplicated_set=ped[ped[,1]%in%id,]
 if(length(unique(duplicated_set[,2]))>=2| length(unique(duplicated_set[,3]))>=2){
@@ -5466,7 +5500,7 @@ error_duplicated_id=c(error_duplicated_id,id)
 }
 
 if(length(error_duplicated_id)>0){
-cat(paste0("Found ",length(error_duplicated_id)," duplicated id error records: offsprings with  same id but have different sire or dam records, records of sire and dam would be treated as missing value \n"))
+if(display_message==TRUE){cat(paste0("Found ",length(error_duplicated_id)," duplicated id error records: offsprings with  same id but have different sire or dam records, records of sire and dam would be treated as missing value \n"))}
 ped[ped[,1]%in%error_duplicated_id,2:3]=NA
 }
 ped=ped[!duplicated(ped[,1]),]  #选择非重复的行
@@ -5479,8 +5513,9 @@ if(sex_error_check==TRUE){
 error_sex_id=unique(na.omit(c(ped[,2][ped[,2]%in%ped[,3]],ped[ped[,1]==ped[,2]|ped[,1]==ped[,3],1])))
 if(length(error_sex_id)>0){
 
+if(display_message==TRUE){
 cat(paste0("Found ",length(error_sex_id)," sex error records: ids in the sire column also appear in the dam column or offspring column, these ids would be treated as missing value \n"))
-
+}
 
 ped[ped[,2]%in%error_sex_id,2:3]=NA
 ped[ped[,3]%in%error_sex_id,2:3]=NA
@@ -5497,7 +5532,9 @@ breed_dam=substr(ped[,3],1,2)
 O0O0O0OOOOO0OOOOOOOO=(O0OOO0OOOOO0OOO0OOOO==breed_sire) & (O0OOO0OOOOO0OOO0OOOO==breed_dam) #逻辑值：父母的品种记录均和后代一致
 
 if(sum(O0O0O0OOOOO0OOOOOOOO==FALSE)>=1){
+if(display_message==TRUE){
 cat("Found breed error: the breed of offspring, sire and dam are not equal  \n")
+}
 error_breed_id=ped[!O0O0O0OOOOO0OOOOOOOO,1]
 ped[!O0O0O0OOOOO0OOOOOOOO,2:3]=NA
 }
@@ -5526,7 +5563,9 @@ if(sum(na.omit(OOOOO0OOOOOOO0OOOOO0==FALSE))>=1){
 error_birth_date_id=O0OOO0O0O0OOOOO0O0O0[!OOOOO0OOOOOOO0OOOOO0,1]
 error_birth_date_id=na.omit(error_birth_date_id)
 ped[ped[,1]%in%error_birth_date_id,2:3]=NA
+if(display_message==TRUE){
 cat(paste0("Found ",length(error_birth_date_id)," birth date error records: the birth date of offspring is before than the birth date of sire and dam \n"))
+}
 }
 }
 
@@ -5546,7 +5585,7 @@ dam_id_parents=match_parents(dam_id,ped)[[1]]
 dam_id_sire=dam_id_parents[,1]
 dam_id_dam=dam_id_parents[,2]
 
-error_parent_id=NULL
+
 
 pos1=sire_id_sire==offspring_id
 pos2=sire_id_dam==offspring_id
@@ -5559,7 +5598,9 @@ if(TRUE%in%pos3){error_parent_id=c(error_parent_id,na.omit(offspring_id[pos3]))}
 if(TRUE%in%pos4){error_parent_id=c(error_parent_id,na.omit(offspring_id[pos4]))}
 
 if(length(error_parent_id)>0){
+if(display_message==TRUE){
 cat(paste0("Found ",length(error_parent_id)," parent id error records: the relationships between offsprings and parents have conflicts, records of sire and dam would be treated as missing value \n"))
+}
 ped[ped[,1]%in%error_parent_id,2:3]=NA
 }
 ped=ped[!duplicated(ped[,1]),]  #选择非重复的行
@@ -5664,7 +5705,7 @@ Total_result=c(Total_result,result)
 }
 pedigree=do.call(rbind,Total_result)
 pedigree=pedigree[!duplicated(paste0(pedigree[,1],pedigree[,2],pedigree[,3])),]
-message("Complete multi-coulums pedigree_data convert into standard 3 columns pedigree_data!")
+if(display_message==TRUE){cat("Complete multi-coulums pedigree_data convert into standard 3 columns pedigree_data! \n")}
 return(pedigree)
 }
 
@@ -5693,7 +5734,20 @@ sibs=unique(sibs_ped[,1])
 }
 return(setdiff(sibs,trace_id))
 }
-#绘制方差组分的图
+
+
+
+#找寻个体的全同胞合半同胞
+match_all_sibs<-function(id=NULL,ped=NULL){
+id_F=ped[ped[,1]%in%id,2]
+id_M=ped[ped[,1]%in%id,3]
+if(length(id_F)==0){id_F=NA}
+if(length(id_M)==0){id_M=NA}
+id_P=na.omit(c(id_F,id_M))
+sibs=ped[ped[,2]%in%id_P|ped[,3]%in%id_P,1]
+
+return(setdiff(sibs,id))
+}#绘制方差组分的图
 plot_dmu_blupf90_prior<-function(target_trait_name=NULL,random_effect_name=NULL,output_path=NULL,genetic_effect_name="Id"){
 library(ggplot2)
 library(RColorBrewer)
