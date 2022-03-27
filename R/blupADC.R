@@ -8076,7 +8076,7 @@ cat("Complete read the Plink format genotype data \n")}
 
 
 
-IND_name=input_data_plink_ped[,1]
+IND_name=input_data_plink_ped[,2]
 
 n_ind=length(IND_name)
 
