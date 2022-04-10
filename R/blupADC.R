@@ -1789,10 +1789,11 @@ cat("Complete Read The Plink Format Genotype Data \n")
 }else if(input_data_type=="Plink"&!is.null(input_data_plink_ped)){
 
 
-
+input_data_ped=input_data_plink_ped
+input_data_map=input_data_plink_map
 fwrite(data.table(input_data_plink_ped),paste0(output_data_path,"/temp_plink.ped"),quote=F,row.names=F,col.names=F,sep=" ")
-
 fwrite(data.table(input_data_plink_map),paste0(output_data_path,"/temp_plink.map"),quote=F,row.names=F,col.names=F,sep=" ")
+rm(input_data_plink_ped,input_data_plink_map);
 
 
 
