@@ -50,7 +50,7 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 `blupADC` links to R packages `Rcpp`, `RcppArmadillo` , `data.table` and  `bigmemory` .  These dependencies should be installed before installing `blupADC`.  
 
 ```R
-install.packages(c("Rcpp", "RcppArmadillo","data.table","bigmemory"))
+install.packages(c("Rcpp", "RcppArmadillo","RcppProgress","data.table","bigmemory"))
 ```
 
 **👉 Note: In the analysis of DMU  and BLUPF90 , we need to download software DMU  ([DMU download website](https://dmu.ghpc.au.dk/dmu/))  and BLUPF90 previously ([BLUPF90 download website](http://nce.ads.uga.edu/html/projects/programs/)). For convenience, we have encapsulated  the basic module of DMU and BLUPF90 in package `blupADC`.**  
