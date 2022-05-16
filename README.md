@@ -14,6 +14,7 @@
 ------------------------------------------------------------------------
 **Documents support two-language([English](https://qsmei.netlify.app/post/feature-0-overview/overview/) and [Chinese](https://qsmei.netlify.app/zh/post/feature-0-overview/overview/)).** 
 ![overview](https://qsmei-markdown.oss-cn-shanghai.aliyuncs.com/markdown-img/20220125145543.png)
+![overview](https://qsmei-markdown.oss-cn-shanghai.aliyuncs.com/markdown-img/20220516191833.png)
 ### OVERVIEW 
 `blupADC` is an useful and powerful tool for handling genomic data and pedigree data in animal and plant breeding(**traditional blup and genomic selection**).  In the design of this package, most of data analysis problems in breeding have been considered, and  the speed of calculation is also the key point. In terms of the speed,  the core functions of this package are coded by c++ (`Rcpp` and `RcppArmadillo `) , and it also supports  parallel calculation (by applying `openMP` programming) and big data calculation(by importing `bigmemory ` package). 
 
