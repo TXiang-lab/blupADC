@@ -74,7 +74,7 @@ install.packages(packageurl,repos=NULL,method="libcurl")
 #### Install blupADC  (way3)
 
 ```R
-packageurl <- "https://gitee.com/qsmei/blupADC/attach_files/949242/download/blupADC_1.0.6.tar.gz"
+packageurl <- "https://gitee.com/qsmei/blupADC/attach_files/1062637/download/blupADC_1.0.6.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
