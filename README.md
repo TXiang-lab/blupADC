@@ -44,7 +44,8 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 - Fix dEBV(2021.12.22)
 
 ### 1.0.6
--Support running multiple tasks in DMU simultaneously! 
+- Support running multiple tasks in DMU simultaneously! (2022.05.25)
+
 
 ## GETTING STARTED
 
