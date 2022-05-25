@@ -313,3 +313,17 @@ h2_se=c(h2_se,list(SE_h2))
 
 return(list(prior=total_trait_prior,prior_se=trait_prior_se,h2=h2,h2_se=h2_se))
 }
+
+
+
+Multitasks_run_DMU<-function(tasks){
+cat("Perform multitasks of DMU simultaneously! \n")
+library(future)
+plan(cluster, workers = length(tasks))
+
+final_tasks=NULL
+for(i in 1:length(tasks)){
+final_tasks=c(final_tasks,future({eval(tasks[i])} ))
+}
+future::value(final_tasks)
+}
