@@ -43,6 +43,9 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 - Support LR method to evaluate prediction accuracy and Hotelling_test to test significance between predictive abilities(by cross-validation method)
 - Fix dEBV(2021.12.22)
 
+### 1.0.6
+-Support running multiple tasks in DMU simultaneously! 
+
 ## GETTING STARTED
 
 ### 🙊Installation
