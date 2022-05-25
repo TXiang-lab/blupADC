@@ -316,7 +316,7 @@ return(list(prior=total_trait_prior,prior_se=trait_prior_se,h2=h2,h2_se=h2_se))
 
 
 
-Multitasks_run_DMU<-function(tasks){
+Multitasks_run_DMU_BLUPF90<-function(tasks){
 cat("Perform multitasks of DMU simultaneously! \n")
 library(future)
 plan(cluster, workers = length(tasks))
