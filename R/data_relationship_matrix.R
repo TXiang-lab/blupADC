@@ -92,6 +92,10 @@ output_matrix_name=NULL
 }
 
 
+if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+setwd(output_matrix_path)
+}
+
 #判断输入类型
 if("Homozygous"%in%inbred_type){kinship_type=c(kinship_type,"G_A")}
 if("G_Diag"%in%inbred_type){kinship_type=c(kinship_type,"G_A")}
@@ -283,6 +287,7 @@ if(return_result==FALSE){rm(P_A_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(P_A),paste0(output_matrix_name,"P_A_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(P_A);gc();}
@@ -304,6 +309,7 @@ if(return_result==FALSE){rm(P_Ainv_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(P_Ainv),paste0(output_matrix_name,"P_Ainv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(P_Ainv);gc();}
@@ -359,6 +365,7 @@ if(return_result==FALSE){rm(P_D_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(P_D),paste0(output_matrix_name,"P_D_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(P_D);gc();}
@@ -380,6 +387,7 @@ if(return_result==FALSE){rm(P_Dinv_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_pedigree),"IND_pedigree.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(P_Dinv),paste0(output_matrix_name,"P_Dinv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(P_Dinv);gc();}
@@ -435,6 +443,7 @@ if(return_result==FALSE){rm(G_A_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(G_A),paste0(output_matrix_name,"G_A_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(G_A);gc();}
@@ -456,6 +465,7 @@ if(return_result==FALSE){rm(G_Ainv_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(G_Ainv),paste0(output_matrix_name,"G_Ainv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(G_Ainv);gc();}
@@ -507,6 +517,7 @@ if(return_result==FALSE){rm(G_D_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(G_D),paste0(output_matrix_name,"G_D_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(G_D);gc();}
@@ -528,6 +539,7 @@ if(return_result==FALSE){rm(G_Dinv_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_geno),"IND_geno.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(G_Dinv),paste0(output_matrix_name,"G_Dinv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(G_Dinv);gc();}
@@ -614,6 +626,7 @@ if(return_result==FALSE){rm(H_A_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(H_A),paste0(output_matrix_name,"H_A_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(H_A);gc();}
@@ -635,6 +648,7 @@ if(return_result==FALSE){rm(H_Ainv_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(H_Ainv),paste0(output_matrix_name,"H_Ainv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(H_Ainv);gc();}
@@ -693,6 +707,7 @@ if(return_result==FALSE){rm(H_D_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(H_D),paste0(output_matrix_name,"H_D_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(H_D);gc();}
@@ -714,6 +729,7 @@ if(return_result==FALSE){rm(H_Dinv_three);gc();}
 
 if("col_all" %in% output_matrix_type){
 if((!is.null(output_matrix_path)&!is.null(output_matrix_name))){
+fwrite(data.table(IND_Additive),"IND_SSBLUP.txt",quote=F,row.names=F,col.names=F,sep="\t")
 fwrite(data.frame(H_Dinv),paste0(output_matrix_name,"H_Dinv_col_all.txt"),quote=F,row.names=F,col.names=F,sep="\t")
 }
 if(return_result==FALSE){rm(H_Dinv);gc();}
