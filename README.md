@@ -44,7 +44,8 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 - Fix dEBV(2021.12.22)
 
 ### 1.0.6
-- Support running multiple tasks in DMU and BLUPF90 simultaneously! (2022.05.25)
+- Support running multiple tasks in DMU and BLUPF90 simultaneously! (2022.05.25)  see details in Feature 7.1
+- Encapsulated object-oriented programming in running DMU!(2022.05.30) see details in Feature 7.2
 
 
 ## GETTING STARTED
@@ -227,6 +228,54 @@ run_DMU(
         relationship_name="pedigree.txt",            #name of relationship file 
         output_result_path=getwd()                   # output path 
         )
+```
+
+
+#### Feature 7.1 Multitasks genetic evaluation with DMU (need to download R package: "future" in advance)
+
+``` R
+library(blupADC)
+data_path=system.file("extdata", package = "blupADC")  #  path of example files 
+  
+t1=expression(
+        run_DMU(
+        phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
+        target_trait_name=list(c("Trait1")),                     #trait name 
+        ......
+        )
+t2=expression(
+        run_DMU(
+        phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
+        target_trait_name=list(c("Trait1")),                     #trait name 
+        ......
+        )  
+
+Multitasks_run_DMU_BLUPF90(c(t1,t2))        
+```
+#### Feature 7.2 Encapsulated object-oriented programming for running DMU (need to download R package: "R6" in advance)
+
+``` R
+library(blupADC)
+data_path=system.file("extdata", package = "blupADC")  #  path of example files 
+my_trait1=create_DMU$new() 
+
+my_trait1$parameters_list$phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age") # colnames of phenotype 
+my_trait1$parameters_list$target_trait_name=list(c("Trait1"))                     #trait name 
+my_trait1$parameters_list$fixed_effect_name=list(c("Sex","Herd_Year_Season"))     #fixed effect name
+my_trait1$parameters_list$random_effect_name=list(c("Id","Litter"))               #random effect name
+my_trait1$parameters_list$covariate_effect_name=NULL                              #covariate effect name
+my_trait1$parameters_list$phe_path=data_path                          #path of phenotype file
+my_trait1$parameters_list$phe_name="phenotype.txt"                    #name of phenotype file
+my_trait1$parameters_list$integer_n=5                                 #number of integer variable 
+my_trait1$parameters_list$analysis_model="PBLUP_A"                    #model of genetic evaluation
+my_trait1$parameters_list$dmu_module="dmuai"                          #modeule of estimating variance components 
+my_trait1$parameters_list$relationship_path=data_path                 #path of relationship file 
+my_trait1$parameters_list$relationship_name="pedigree.txt"            #name of relationship file 
+my_trait1$parameters_list$output_result_path=getwd()                   # output path 
+
+my_trait1$do_analysis() # perform genetic evaluation 
+my_trait1$get_EBV() #get EBV into R environment
+my_trait1$get_h2()  #get heritability and its SE into R environment      
 ```
 
 #### Feature 8. Genetic evaluation with BLUPF90 ([see more details](https://qsmei.netlify.app/post/feature-8-run_blupf90/blupf90/))
