@@ -123,7 +123,7 @@ header_information_part=rbind("DATAFILE",phe_name,
 temp_effect="Residual"
 #temp_effect_pos=match(temp_effect,provided_BLUPF90_prior_effect_name)
 #co_variance_pos=(Trait_n*(temp_effect_pos-1)+1):(Trait_n*temp_effect_pos)
-temp_effect_pos=which(provided_BLUPF90_prior_effect_name%in%temp_effect)
+temp_effect_pos=which(provided_BLUPF90_prior_effect_name%in%temp_effect)+length(relationship_name)-1
 co_variance_pos=temp_effect_pos
 co_variance=given_prior[co_variance_pos,co_variance_pos]
 co_variance=inner_matrix(co_variance)
@@ -287,7 +287,7 @@ if(analysis_model=="GBLUP_A"){
 	#temp_effect_pos=match(temp_effect,provided_BLUPF90_prior_effect_name)
 	#temp_effect_pos=effect_pos[provided_BLUPF90_prior_effect_name%in%temp_effect][i]
 	temp_effect_pos=which(provided_BLUPF90_prior_effect_name%in%temp_effect)
-	co_variance_pos=temp_effect_pos
+	co_variance_pos=temp_effect_pos+i-1
 	#co_variance_pos=(Trait_n*(temp_effect_pos-1)+1):(Trait_n*temp_effect_pos)
 	co_variance=given_prior[co_variance_pos,co_variance_pos]
 	co_variance=inner_matrix(co_variance)

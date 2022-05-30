@@ -118,7 +118,7 @@ if(analysis_model=="User_define"){
 #rename renf90.dat 
 phe=read.table(phe_name,header=F);colnames(phe)=phe_col_names
 renf90.phe=read.table("renf90.dat",header=F)
-renf90.phe[,ncol(renf90.phe)]=phe[,genetic_effect_name]
+renf90.phe[,(ncol(renf90.phe)-length(relationship_name)+1):ncol(renf90.phe)]=phe[,genetic_effect_name]
 write.table(renf90.phe,"renf90.dat",quote=F,row.names=F,sep=" ",col.names=F)
 
 #modify renf90.par
@@ -128,6 +128,14 @@ pos=match("add_animal",renf90[,1])
 renf90[pos,1]="user_file"
 renf90[pos+2,1]=relationship_name[1]
 renf90[is.na(renf90)]=""
+
+renf90=data.table::fread("renf90.par",data.table=F,fill=T)
+pos=(1:nrow(renf90))[renf90[,1]%in%"add_animal"]
+renf90[pos,1]="user_file"
+renf90[pos+2,1]=relationship_name
+renf90[is.na(renf90)]=""
+
+
 
 #读取 renadd.ped 将表型数据中的新id
 

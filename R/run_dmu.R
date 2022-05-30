@@ -185,6 +185,7 @@ if(file.exists("COR3"))file.remove("COR3")
 #************finished run DMU1 and DMUai*****************
 #################
 
+h2_data=NULL
 #将PAROUT 拷贝到输出的路径下
 if(!is.null(provided_prior_file_path)&!is.null(provided_prior_file_name)){
 file.copy(paste0(provided_prior_file_path,"/",provided_prior_file_name),
@@ -200,10 +201,10 @@ prior_se=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")
 h2=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$h2[[i]],5)
 h2_se=round(cal_dmu_se_reml(target_trait_name=target_trait_name,"PAROUT_STD")$h2_se[[i]],5)
 
-data=cbind(c(DIR$random_effect_name[[i]],"Residual"),prior,prior_se,h2,h2_se)
+h2_data=cbind(c(DIR$random_effect_name[[i]],"Residual"),prior,prior_se,h2,h2_se)
 
-colnames(data)=c("Random_effect_name","prior","prior_se","h2","h2_se")
-write.table(data,paste0(target_trait_name[i],"_heritability_result.txt"),quote=F,row.names=F,col.names=T,sep="\t")
+colnames(h2_data)=c("Random_effect_name","prior","prior_se","h2","h2_se")
+write.table(h2_data,paste0(target_trait_name[i],"_heritability_result.txt"),quote=F,row.names=F,col.names=T,sep="\t")
 }
 }
 
@@ -243,7 +244,7 @@ plot_dmu_blupf90_prior(genetic_effect_name=genetic_effect_name,target_trait_name
 cat(paste0("Completed the ",analysis_model," analyse of ",length(target_trait_name)," trait model:",paste(target_trait_name,collapse = " & ")," \n"))
 
 if(return_result==TRUE){
-return(dmu_result)
+return(list(dmu_result,h2_data,DIR))
 }
 
 }
@@ -313,7 +314,6 @@ h2_se=c(h2_se,list(SE_h2))
 
 return(list(prior=total_trait_prior,prior_se=trait_prior_se,h2=h2,h2_se=h2_se))
 }
-
 
 
 Multitasks_run_DMU_BLUPF90<-function(tasks){
