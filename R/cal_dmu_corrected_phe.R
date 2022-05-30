@@ -145,7 +145,7 @@ debv_result=calculate_debv(target_trait_name=target_trait_name,
 for(i in 1:length(target_trait_name)){
 cor_phe[,1+(i-1)*4+i+3]=as.numeric(debv_result[match(cor_phe[,1],debv_result[,1]),i+1])
 }
-original_cor_phe=cor_phe #带有NA的
+
 }
 }
 
@@ -181,6 +181,7 @@ cor_phe[is.na(cor_phe)]="-9999"
 write.table(cor_phe,paste0(output_ebv_name,".txt"),quote=F,row.names=F,col.names=F,sep=" ")
 }
 
+original_cor_phe=cor_phe #带有NA的
 if(return_result==TRUE){return(original_cor_phe)}
 }
 
