@@ -44,8 +44,8 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 - Fix dEBV(2021.12.22)
 
 ### 1.0.6
-- Support running multiple tasks in DMU and BLUPF90 simultaneously! (2022.05.25)  see details in Feature 7.1
-- Encapsulated object-oriented programming in running DMU!(2022.05.30) see details in Feature 7.2
+- Support running multiple tasks in DMU and BLUPF90 simultaneously! (2022.05.25)  **see details in Feature 7.1**
+- Encapsulated object-oriented programming in running DMU!(2022.05.30) **see details in Feature 7.2**
 
 
 ## GETTING STARTED
@@ -55,7 +55,7 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 `blupADC` links to R packages `Rcpp`, `RcppArmadillo` , `data.table` and  `bigmemory` .  These dependencies should be installed before installing `blupADC`.  
 
 ```R
-install.packages(c("Rcpp", "RcppArmadillo","RcppProgress","data.table","bigmemory"))
+install.packages(c("Rcpp", "RcppArmadillo","RcppProgress","data.table","bigmemory","R6"))
 ```
 
 **👉 Note: In the analysis of DMU  and BLUPF90 , we need to download software DMU  ([DMU download website](https://dmu.ghpc.au.dk/dmu/))  and BLUPF90 previously ([BLUPF90 download website](http://nce.ads.uga.edu/html/projects/programs/)). For convenience, we have encapsulated  the basic module of DMU and BLUPF90 in package `blupADC`.**  
