@@ -246,7 +246,7 @@ t1=expression(
 t2=expression(
         run_DMU(
         phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
-        target_trait_name=list(c("Trait1")),                     #trait name 
+        target_trait_name=list(c("Trait2")),                     #trait name 
         ......
         )  
 
