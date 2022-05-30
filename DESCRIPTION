@@ -2,7 +2,7 @@ Package: blupADC
 Type: Package
 Title: blup-Associated Data Cleaner
 Version: 1.0.6
-Date: 2022-01-10
+Date: 2022-05-30
 Authors@R: c(person("Quanshun", "Mei",
     role=c("aut", "cre"),
     email="hzau_qsmei@163.com"),
@@ -14,9 +14,9 @@ Author: Quanshun Mei and Tao Xiang
 Maintainer: Quanshun Mei <hzau_qsmei@163.com>
 Description: for animal and plant breeding
 License: GPL-3
-Depends: data.table,Rcpp,RcppArmadillo
-Imports: Rcpp,data.table,purrr
-LinkingTo: Rcpp, RcppArmadillo,RcppProgress,BH,bigmemory
-Suggests: ggplot2,patchwork,ggimage
+Depends: data.table,Rcpp,RcppArmadillo,R6
+Imports: Rcpp,data.table,purrr,R6
+LinkingTo: Rcpp, RcppArmadillo,RcppProgress,BH,bigmemory,R6
+Suggests: ggplot2,patchwork,ggimage,future
 RoxygenNote: 7.1.1
 LazyData: true
