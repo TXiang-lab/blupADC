@@ -241,13 +241,13 @@ t1=expression(
         run_DMU(
         phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
         target_trait_name=list(c("Trait1")),                     #trait name 
-        ......
+        ......)
         )
 t2=expression(
         run_DMU(
         phe_col_names=c("Id","Mean","Sex","Herd_Year_Season","Litter","Trait1","Trait2","Age"), # colnames of phenotype 
         target_trait_name=list(c("Trait2")),                     #trait name 
-        ......
+        ......)
         )  
 
 Multitasks_run_DMU_BLUPF90(c(t1,t2))        
