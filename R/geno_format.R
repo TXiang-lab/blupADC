@@ -91,7 +91,7 @@ stop("Unknow input bigmemory_data_type, bigmemory_data_type should be double or 
 if(input_data_type=="Hapmap"){
 if(!is.null(input_data_path)&!is.null(input_data_name)){
 cat("Start read the Hapmap format genotype data \n")
-input_data_hmp=fread(paste0(input_data_path,"/",input_data_name),data.table=F)
+input_data_hmp=fread(paste0(input_data_path,"/",input_data_name),data.table=F,header=T)
 cat("Complete read the Hapmap format genotype data  \n")}
 
 if(!is.matrix(input_data_hmp)){input_data_hmp=as.matrix(input_data_hmp)}
@@ -175,8 +175,8 @@ rm(input_data_hmp);gc();
 if(input_data_type=="Plink"){
 if(!is.null(input_data_path)&!is.null(input_data_name)){
 cat("Start read the Plink format genotype data \n")
-input_data_plink_ped=fread(paste0(input_data_path,"/",input_data_name,".ped"),data.table=F)
-input_data_plink_map=fread(paste0(input_data_path,"/",input_data_name,".map"),data.table=F)
+input_data_plink_ped=fread(paste0(input_data_path,"/",input_data_name,".ped"),data.table=F,header=F)
+input_data_plink_map=fread(paste0(input_data_path,"/",input_data_name,".map"),data.table=F,header=F)
 cat("Complete read the Plink format genotype data \n")}
 
 IND_name=input_data_plink_ped[,2]
@@ -675,12 +675,12 @@ fwrite(data_blupf90,paste0(output_data_name,".blupf90"),quote=F,row.names=F,col.
 if(input_data_type=="Numeric"){
 if(!is.null(input_data_path)&!is.null(input_data_name)){
 cat("Start read the Numeric format genotype data \n")
-input_data_numeric=fread(paste0(input_data_path,"/",input_data_name),data.table=F)
+input_data_numeric=fread(paste0(input_data_path,"/",input_data_name),data.table=F,header=F)
 IND_name=as.character(input_data_numeric[,1])
 input_data_numeric=as.matrix(input_data_numeric[,-1])
 if(file.exists(paste0(input_data_path,"/",input_data_name,".map"))){
 cat("Start read the Numeric_map data \n")
-input_data_numeric_map=fread(paste0(input_data_path,"/",input_data_name,".map"),data.table=F)
+input_data_numeric_map=fread(paste0(input_data_path,"/",input_data_name,".map"),data.table=F,header=F)
 }
 cat("Complete read the Numeric format genotype data \n")}
 
@@ -763,10 +763,10 @@ rm(input_data_numeric);gc();
 if(input_data_type=="BLUPF90"){
 if(!is.null(input_data_path)&!is.null(input_data_name)){
 cat("Start read the BLUPF90 format genotype data \n")
-input_data_blupf90=fread(paste0(input_data_path,"/",input_data_name),data.table=F)
+input_data_blupf90=fread(paste0(input_data_path,"/",input_data_name),data.table=F,header=F)
 if(file.exists(paste0(input_data_path,"/",input_data_name,".map"))){
 cat("Start read the BLUPF90_map data \n")
-input_data_blupf90_map=fread(paste0(input_data_path,"/",input_data_name,".map"),data.table=F)
+input_data_blupf90_map=fread(paste0(input_data_path,"/",input_data_name,".map"),data.table=F,header=F)
 }
 cat("Complete read the BLUPF90 format genotype data \n")}
 IND_name=as.character(input_data_blupf90[,1]);input_data_blupf90=input_data_blupf90[,2];gc();
