@@ -26,10 +26,10 @@ if("disperation"%in%type){disperation=as.numeric(lm(result$whole_Effect~result$p
 if("accuracy"%in%type){
 if(is.null(K)&is.null(F)&is.null(f2)){stop("Please provide Kinship matrix or inbreeding coefficients !")}
 if(!is.null(K)){
-cat("Please make sure the colnames of Kinship matrix are individual name")
+cat("Please make sure the colnames of Kinship matrix are individual name! \n")
 if(is.null(partial_sigma_a2)){stop("Please provide partial_sigma_a2!")}
 IND_name=rownames(K)
-K=K[match(candidate_id,IND_name),match(candidate_id,IND_name)];gc();
+K=K[match(as.character(candidate_id),IND_name),match(as.character(candidate_id),IND_name)];gc();
 F=mean(diag(K)-1)
 f2=mean(K[upper.tri(K)])
 rm(K);gc();
