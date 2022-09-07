@@ -44,7 +44,7 @@ CharacterMatrix numeric_to_hapmap_cpp(CharacterVector IND_name,
 										int cpu_cores=1,
 										std::string miss_base="N"){  //输入数据，
 			omp_set_num_threads(cpu_cores);
-			Rcout<<"Start Numeric to BLUPF90 format conversion......"<<endl;	
+			Rcout<<"Start Numeric to Hapmap format conversion......"<<endl;	
 			int i,j,k;	
 			int n_ind=data_numeric.n_rows,n_snp=data_numeric.n_cols;
 			CharacterVector tmp1=data_numeric_map.column(3),tmp2=data_numeric_map.column(4);
