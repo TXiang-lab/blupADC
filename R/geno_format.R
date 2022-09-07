@@ -676,14 +676,14 @@ if(input_data_type=="Numeric"){
 if(!is.null(input_data_path)&!is.null(input_data_name)){
 cat("Start read the Numeric format genotype data \n")
 input_data_numeric=fread(paste0(input_data_path,"/",input_data_name),data.table=F,header=F)
-IND_name=as.character(input_data_numeric[,1])
+
 input_data_numeric=as.matrix(input_data_numeric[,-1])
 if(file.exists(paste0(input_data_path,"/",input_data_name,".map"))){
 cat("Start read the Numeric_map data \n")
 input_data_numeric_map=fread(paste0(input_data_path,"/",input_data_name,".map"),data.table=F,header=F)
 }
 cat("Complete read the Numeric format genotype data \n")}
-
+IND_name=as.character(input_data_numeric[,1])
 output_type_number=get_output_type_number(input_data_type=input_data_type,
 										  output_data_type=output_data_type,
 										  bigmemory_cal=bigmemory_cal,
