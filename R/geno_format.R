@@ -510,7 +510,7 @@ if(typeof(input_data_haplotype_hap)!="integer"){input_data_haplotype_hap=Numeric
 
 IND_name=as.character(input_data_haplotype_sample[,1])
 #构建block
-if(!is.null(phased_genotype==TRUE)&all(is.null(haplotype_window_nSNP),is.null(haplotype_window_kb),is.null(haplotype_window_block))){
+if((phased_genotype==TRUE)&all(is.null(haplotype_window_nSNP),is.null(haplotype_window_kb),is.null(haplotype_window_block))){
 stop("Once set phased_genotype==TRUE,  haplotype_window_nSNP or haplotype_window_kb or haplotype_window_block must be provided!")
 }
 
