@@ -1,8 +1,8 @@
 Package: blupADC
 Type: Package
 Title: blup-Associated Data Cleaner
-Version: 1.0.6
-Date: 2022-05-30
+Version: 1.0.7
+Date: 2022-10-06
 Authors@R: c(person("Quanshun", "Mei",
     role=c("aut", "cre"),
     email="hzau_qsmei@163.com"),
