@@ -1061,6 +1061,110 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// qmsim_to_numeric_cpp
+arma::Mat<int> qmsim_to_numeric_cpp(std::vector<std::string>& data_qmsim, int cpu_cores);
+RcppExport SEXP _blupADC_qmsim_to_numeric_cpp(SEXP data_qmsimSEXP, SEXP cpu_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type data_qmsim(data_qmsimSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    rcpp_result_gen = Rcpp::wrap(qmsim_to_numeric_cpp(data_qmsim, cpu_cores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// qmsim_to_blupf90_cpp
+std::vector<std::string> qmsim_to_blupf90_cpp(std::vector<std::string>& data_qmsim, int cpu_cores);
+RcppExport SEXP _blupADC_qmsim_to_blupf90_cpp(SEXP data_qmsimSEXP, SEXP cpu_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type data_qmsim(data_qmsimSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    rcpp_result_gen = Rcpp::wrap(qmsim_to_blupf90_cpp(data_qmsim, cpu_cores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// qmsim_to_hapmap_cpp
+CharacterMatrix qmsim_to_hapmap_cpp(CharacterVector IND_name, CharacterMatrix& data_qmsim_map, std::vector<std::string>& data_qmsim, int cpu_cores, std::string miss_base);
+RcppExport SEXP _blupADC_qmsim_to_hapmap_cpp(SEXP IND_nameSEXP, SEXP data_qmsim_mapSEXP, SEXP data_qmsimSEXP, SEXP cpu_coresSEXP, SEXP miss_baseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type IND_name(IND_nameSEXP);
+    Rcpp::traits::input_parameter< CharacterMatrix& >::type data_qmsim_map(data_qmsim_mapSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type data_qmsim(data_qmsimSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    Rcpp::traits::input_parameter< std::string >::type miss_base(miss_baseSEXP);
+    rcpp_result_gen = Rcpp::wrap(qmsim_to_hapmap_cpp(IND_name, data_qmsim_map, data_qmsim, cpu_cores, miss_base));
+    return rcpp_result_gen;
+END_RCPP
+}
+// qmsim_to_ped_cpp
+CharacterMatrix qmsim_to_ped_cpp(CharacterVector IND_name, CharacterMatrix& data_qmsim_map, std::vector<std::string>& data_qmsim, int cpu_cores, std::string miss_base);
+RcppExport SEXP _blupADC_qmsim_to_ped_cpp(SEXP IND_nameSEXP, SEXP data_qmsim_mapSEXP, SEXP data_qmsimSEXP, SEXP cpu_coresSEXP, SEXP miss_baseSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type IND_name(IND_nameSEXP);
+    Rcpp::traits::input_parameter< CharacterMatrix& >::type data_qmsim_map(data_qmsim_mapSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type data_qmsim(data_qmsimSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    Rcpp::traits::input_parameter< std::string >::type miss_base(miss_baseSEXP);
+    rcpp_result_gen = Rcpp::wrap(qmsim_to_ped_cpp(IND_name, data_qmsim_map, data_qmsim, cpu_cores, miss_base));
+    return rcpp_result_gen;
+END_RCPP
+}
+// qmsim_to_vcf_cpp
+CharacterMatrix qmsim_to_vcf_cpp(CharacterVector IND_name, CharacterMatrix& data_qmsim_map, std::vector<std::string>& data_qmsim, std::string phased_symbol, int cpu_cores);
+RcppExport SEXP _blupADC_qmsim_to_vcf_cpp(SEXP IND_nameSEXP, SEXP data_qmsim_mapSEXP, SEXP data_qmsimSEXP, SEXP phased_symbolSEXP, SEXP cpu_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterVector >::type IND_name(IND_nameSEXP);
+    Rcpp::traits::input_parameter< CharacterMatrix& >::type data_qmsim_map(data_qmsim_mapSEXP);
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type data_qmsim(data_qmsimSEXP);
+    Rcpp::traits::input_parameter< std::string >::type phased_symbol(phased_symbolSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    rcpp_result_gen = Rcpp::wrap(qmsim_to_vcf_cpp(IND_name, data_qmsim_map, data_qmsim, phased_symbol, cpu_cores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// qmsim_to_boa_cpp
+arma::Mat<int> qmsim_to_boa_cpp(std::vector<std::string>& data_qmsim, int cpu_cores);
+RcppExport SEXP _blupADC_qmsim_to_boa_cpp(SEXP data_qmsimSEXP, SEXP cpu_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::vector<std::string>& >::type data_qmsim(data_qmsimSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    rcpp_result_gen = Rcpp::wrap(qmsim_to_boa_cpp(data_qmsim, cpu_cores));
+    return rcpp_result_gen;
+END_RCPP
+}
+// user_define_phased_vcf_to_cpp
+void user_define_phased_vcf_to_cpp(CharacterMatrix& data_vcf, std::vector<int> pos_conflict_ref, int cpu_cores);
+RcppExport SEXP _blupADC_user_define_phased_vcf_to_cpp(SEXP data_vcfSEXP, SEXP pos_conflict_refSEXP, SEXP cpu_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix& >::type data_vcf(data_vcfSEXP);
+    Rcpp::traits::input_parameter< std::vector<int> >::type pos_conflict_ref(pos_conflict_refSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    user_define_phased_vcf_to_cpp(data_vcf, pos_conflict_ref, cpu_cores);
+    return R_NilValue;
+END_RCPP
+}
+// purify_vcf_cpp
+void purify_vcf_cpp(CharacterMatrix& data_vcf, int cpu_cores);
+RcppExport SEXP _blupADC_purify_vcf_cpp(SEXP data_vcfSEXP, SEXP cpu_coresSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< CharacterMatrix& >::type data_vcf(data_vcfSEXP);
+    Rcpp::traits::input_parameter< int >::type cpu_cores(cpu_coresSEXP);
+    purify_vcf_cpp(data_vcf, cpu_cores);
+    return R_NilValue;
+END_RCPP
+}
 // cumulativeSum
 void cumulativeSum(const std::vector<int> input, std::vector<int>& result);
 RcppExport SEXP _blupADC_cumulativeSum(SEXP inputSEXP, SEXP resultSEXP) {
@@ -1661,6 +1765,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_blupADC_get_blupf90_allele_string_plink", (DL_FUNC) &_blupADC_get_blupf90_allele_string_plink, 5},
     {"_blupADC_plink_to_blupf90_cpp", (DL_FUNC) &_blupADC_plink_to_blupf90_cpp, 5},
     {"_blupADC_plink_convertion", (DL_FUNC) &_blupADC_plink_convertion, 7},
+    {"_blupADC_qmsim_to_numeric_cpp", (DL_FUNC) &_blupADC_qmsim_to_numeric_cpp, 2},
+    {"_blupADC_qmsim_to_blupf90_cpp", (DL_FUNC) &_blupADC_qmsim_to_blupf90_cpp, 2},
+    {"_blupADC_qmsim_to_hapmap_cpp", (DL_FUNC) &_blupADC_qmsim_to_hapmap_cpp, 5},
+    {"_blupADC_qmsim_to_ped_cpp", (DL_FUNC) &_blupADC_qmsim_to_ped_cpp, 5},
+    {"_blupADC_qmsim_to_vcf_cpp", (DL_FUNC) &_blupADC_qmsim_to_vcf_cpp, 5},
+    {"_blupADC_qmsim_to_boa_cpp", (DL_FUNC) &_blupADC_qmsim_to_boa_cpp, 2},
+    {"_blupADC_user_define_phased_vcf_to_cpp", (DL_FUNC) &_blupADC_user_define_phased_vcf_to_cpp, 3},
+    {"_blupADC_purify_vcf_cpp", (DL_FUNC) &_blupADC_purify_vcf_cpp, 2},
     {"_blupADC_cumulativeSum", (DL_FUNC) &_blupADC_cumulativeSum, 2},
     {"_blupADC_paste_vec_short", (DL_FUNC) &_blupADC_paste_vec_short, 1},
     {"_blupADC_get_haplotype_set_short", (DL_FUNC) &_blupADC_get_haplotype_set_short, 1},
