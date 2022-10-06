@@ -33,8 +33,15 @@ run_BLUPF90<-function(
 								   covariate_effect_name=NULL, #列表
 								   provided_effect_file_path=NULL, #各个性状的效应文件
 								   provided_effect_file_name="model_define.txt",
+								   maternal_effect_option=NULL, # pe mat mpe
+								   mat_cov=NULL,
+								   mat_pe_cov=NULL,
+								   mat_mpe_cov=NULL,
 								   phe_path=NULL,
 								   phe_name=NULL,
+								   random_regression_effect_name=NULL,
+								   reg_pe_cov=NULL,
+								   reg_gen_cov=NULL,
 								   user_file_id=NULL, # user_file_id, 
 								   output_result_path=NULL,
 								   output_ebv_path=NULL,
@@ -44,6 +51,7 @@ run_BLUPF90<-function(
 								   relationship_path=NULL,
 								   analysis_model="PBLUP_A",
 								   BLUPF90_algorithm="AI_REML",
+								   gibbs_sampler="thrgibbs1f90",
 								   genetic_effect_name="Id",
 								   included_permanent_effect=FALSE,
 								   provided_BLUPF90_prior_file_path=NULL,
@@ -51,11 +59,17 @@ run_BLUPF90<-function(
 								   provided_BLUPF90_prior_effect_name=NULL, #随机效应的名称, 包括Residual
 					                 provided_renf90_par_file_path=NULL,
 					                 provided_renf90_par_file_name=NULL,
-								  BLUPF90_alt_option=NULL,
+								  cal_se_reml=FALSE, #if output the se of heritablilty
+								   BLUPF90_alt_option=NULL,
 								   BLUPF90_genumeric_name=NULL,
 								   BLUPF90_map_name=NULL,
 								   plot_variance=FALSE,
-								   BLUPF90_software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",system.file("extdata/bin", package = "blupADC"),system.file("extdata/bin_windows", package = "blupADC"))
+								   BLUPF90_software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",
+																system.file("extdata/bin_linux", package = "blupADC"),
+																ifelse(as.character(Sys.info()["sysname"])=="Windows",
+																system.file("extdata/bin_windows", package = "blupADC"),
+																system.file("extdata/bin_mac", package = "blupADC")
+																))
 
 ){
 
@@ -103,6 +117,13 @@ generate_renum(
 			    relationship_path=relationship_path,
 			    genetic_effect_name=genetic_effect_name,
 				missing_value=missing_value,
+				maternal_effect_option=maternal_effect_option, # pe mat mpe
+				mat_cov=mat_cov,
+				mat_pe_cov=mat_pe_cov,
+				mat_mpe_cov=mat_mpe_cov,
+				random_regression_effect_name=random_regression_effect_name,
+				reg_pe_cov=reg_pe_cov,
+				reg_gen_cov=reg_gen_cov,				
 			    included_permanent_effect=included_permanent_effect,
 			    provided_BLUPF90_prior_file_path=provided_BLUPF90_prior_file_path,
 			    provided_BLUPF90_prior_file_name=provided_BLUPF90_prior_file_name,
@@ -158,8 +179,25 @@ cat("Start running BLUP module of BLUPF90......\n")
 cat("No need to estimate variace components......\n")
 system2(paste0(BLUPF90_software_path,"/blupf90"),"renf90.par",stdout="blup_remlf90.log")
 cat("Complete running BLUP module of BLUPF90\n")
+}else if(BLUPF90_algorithm=="Gibbs"){
+cat("Start running Gibbs module of BLUPF90......\n")
+cat(paste0("Using gibbs_sampler: ",gibbs_sampler," to estimate variace components......\n"))
+cat("Please enter the following three papamters in each line! \n")
+cat("1. Number of samples \n")
+cat("2. Length of burn-in \n")
+cat("3. Give n to store every n-th sample? (1 means store all samples) \n")
+system2(paste0(BLUPF90_software_path,"/",gibbs_sampler),"renf90.par",stdout=paste0(gibbs_sampler,".log"))
+cat(paste0("Using gibbs_sampler: ",gibbs_sampler," to estimate variace components......\n"))
+cat("Complete running Gibbs module of BLUPF90 \n")
+cat("Please enter the following three papamters in each line! \n")
+cat("1. Additional number of Burn-in \n")
+cat("2. Give n to store every n-th sample? (1 means store all samples) \n")
+cat("3. Enter 0 for exiting \n")
+system2(paste0(BLUPF90_software_path,"/postgibbsf90"),"renf90.par",stdout=paste0("postgibbsf90.log"))
+cat("Complete postgibbsf90 analysis! \n")
 }
 
+if(!"Gibbs"%in%BLUPF90_algorithm){
 #计算校正表型
 cor_phe=cal_corrected_phe_BLUPF90(target_trait_name=target_trait_name)
 cor_phe=cor_phe[order(cor_phe[,1]),]
@@ -177,7 +215,7 @@ utils::write.table(cor_phe,paste0(output_ebv_name,".txt"),quote=F,row.names=F,co
 
 #统计方差组分结果-遗传力及标准误
 
-if(BLUPF90_algorithm!="BLUP"){
+if(cal_se_reml==TRUE){
 cal_blupf90_se_reml(target_trait_name=target_trait_name,random_effect_name=random_effect_name,genetic_effect_name=genetic_effect_name,BLUPF90_algorithm=BLUPF90_algorithm)
 }
 
@@ -185,7 +223,7 @@ if(plot_variance==TRUE){
 message("Plot the result of variance components......")
 plot_dmu_blupf90_prior(genetic_effect_name=genetic_effect_name,target_trait_name=target_trait_name,random_effect_name=random_effect_name,output_path=output_result_path)
 }
-
+}
 }
 
 

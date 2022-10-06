@@ -272,9 +272,9 @@ final_ped[,2]=final_ped[,2]-min_generation
 
 #set these animals have smallest renamed_id
 if(!is.null(priority_rename_id)){
-final_ped=rbind(final_ped[final_ped[,1]%in%priority_rename_id,],final_ped[!final_ped[,1]%in%priority_rename_id,])
+pos_tmp=na.omit(match(priority_rename_id,final_ped[,1]))
+final_ped=rbind(final_ped[pos_tmp,],final_ped[-c(pos_tmp),])
 }
-
 final_ped=cbind(final_ped,1:nrow(final_ped))
 
 

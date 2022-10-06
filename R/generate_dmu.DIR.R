@@ -35,7 +35,13 @@ generate_DIR<-function(phe_col_names=NULL,
 					   output_DIR_name=NULL,
 					   IND_geno_file_name=NULL, #
 					   IND_geno=NULL,
-					   SSBLUP_omega=0.05				   
+					   SSBLUP_omega=0.05,
+					   EM_iter=10,
+					   dmu5_iter=1000000,
+					   gibbs_n_rounds=10000,
+					   gibbs_n_burnin=1000,
+					   gibbs_n_gaps=5,
+					   gibbs_seeds=c(1994,1998)
 					   ){
 #生成 social_effect的表型
 #social effect其实可以看做是特殊情况的随机回归，需要将随机效应那一行设置为 1+1+1+1类似的形式即可
@@ -153,7 +159,7 @@ MODEL=matrix("",nrow=1+Trait_n*(Trait_n+6),ncol=length(phe_col_names))
 
 PRIOR=matrix("",nrow=(Trait_n*(Trait_n+1)/2)*6,ncol=length(phe_col_names))
 
-PARAMETER=matrix("",nrow=10,ncol=length(phe_col_names))
+PARAMETER=matrix("",nrow=10*length(target_trait_name),ncol=length(phe_col_names))
 
 
 
@@ -533,9 +539,10 @@ VAR_STR[i,1]=paste0("$VAR_STR ",i," COR ASCII     ",relationship_path,"/",relati
 
 
 #$SOLUTION
+#if(dmu_module!="rjmc"){
 SOLUTION[1,1]="$RESIDUALS ASCII"
 SOLUTION[2,1]="$SOLUTION"
-
+#}
 #$PRIOR
 
 if(include_social_effect==FALSE){  #social effect 不知道该如何构建PRIOR文件，
@@ -596,7 +603,7 @@ PRIOR=NULL
 if(dmu_module=="dmuai"){
 
 PARAMETER[1,1]="$DMUAI"
-PARAMETER[2,1]="10"
+PARAMETER[2,1]=EM_iter
 PARAMETER[3,1]=iteration_criteria
 PARAMETER[4,1]="1.0d-6"
 PARAMETER[5,1]="1"
@@ -604,8 +611,21 @@ PARAMETER[6,1]="0"
 
 }else if(dmu_module=="dmu5"){
 PARAMETER[1,1]="$DMU5"
-PARAMETER[2,2]="1000000 1e-9"
+PARAMETER[2,2]=paste0(dmu5_iter," 1e-9")
 PARAMETER[3,3]="512"
+
+}else if(dmu_module=="rjmc"){
+PARAMETER[1,1]="$RJMC"
+PARAMETER[2,1]="3 0"
+PARAMETER[3,1]=paste(gibbs_seeds,collapse=" ")
+PARAMETER[4,1]=paste(gibbs_n_burnin,gibbs_n_rounds,gibbs_n_gaps,collapse=" ")
+
+if(!is.null(PRIOR)){
+n_var=length(unique(PRIOR[,1]))
+}else{
+n_var=length(unique(random_lev))+1
+}
+PARAMETER[5:(5+n_var-1),1]=paste(1:n_var,6*length(target_trait_name))
 }
 
 
