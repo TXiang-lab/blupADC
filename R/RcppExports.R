@@ -277,6 +277,38 @@ plink_convertion <- function(data_ped, data_map, type = 1L, miss_base = "N", pha
     .Call(`_blupADC_plink_convertion`, data_ped, data_map, type, miss_base, phased_symbol, miss_base_num, cpu_cores)
 }
 
+qmsim_to_numeric_cpp <- function(data_qmsim, cpu_cores = 1L) {
+    .Call(`_blupADC_qmsim_to_numeric_cpp`, data_qmsim, cpu_cores)
+}
+
+qmsim_to_blupf90_cpp <- function(data_qmsim, cpu_cores = 1L) {
+    .Call(`_blupADC_qmsim_to_blupf90_cpp`, data_qmsim, cpu_cores)
+}
+
+qmsim_to_hapmap_cpp <- function(IND_name, data_qmsim_map, data_qmsim, cpu_cores = 1L, miss_base = "N") {
+    .Call(`_blupADC_qmsim_to_hapmap_cpp`, IND_name, data_qmsim_map, data_qmsim, cpu_cores, miss_base)
+}
+
+qmsim_to_ped_cpp <- function(IND_name, data_qmsim_map, data_qmsim, cpu_cores = 1L, miss_base = "N") {
+    .Call(`_blupADC_qmsim_to_ped_cpp`, IND_name, data_qmsim_map, data_qmsim, cpu_cores, miss_base)
+}
+
+qmsim_to_vcf_cpp <- function(IND_name, data_qmsim_map, data_qmsim, phased_symbol = "|", cpu_cores = 1L) {
+    .Call(`_blupADC_qmsim_to_vcf_cpp`, IND_name, data_qmsim_map, data_qmsim, phased_symbol, cpu_cores)
+}
+
+qmsim_to_boa_cpp <- function(data_qmsim, cpu_cores = 1L) {
+    .Call(`_blupADC_qmsim_to_boa_cpp`, data_qmsim, cpu_cores)
+}
+
+user_define_phased_vcf_to_cpp <- function(data_vcf, pos_conflict_ref, cpu_cores = 1L) {
+    invisible(.Call(`_blupADC_user_define_phased_vcf_to_cpp`, data_vcf, pos_conflict_ref, cpu_cores))
+}
+
+purify_vcf_cpp <- function(data_vcf, cpu_cores = 1L) {
+    invisible(.Call(`_blupADC_purify_vcf_cpp`, data_vcf, cpu_cores))
+}
+
 cumulativeSum <- function(input, result) {
     invisible(.Call(`_blupADC_cumulativeSum`, input, result))
 }

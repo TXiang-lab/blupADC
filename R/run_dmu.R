@@ -43,12 +43,23 @@ run_DMU<-function(
 					   debv_id=NULL,    #计算这些个体的校正表型
 					   output_ebv_path=NULL,
 					   output_ebv_name=NULL,			   
-					   DMU_software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",system.file("extdata/bin", package = "blupADC"),system.file("extdata/bin_windows", package = "blupADC")),
+					   DMU_software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",
+																system.file("extdata/bin_linux", package = "blupADC"),
+																ifelse(as.character(Sys.info()["sysname"])=="Windows",
+																system.file("extdata/bin_windows", package = "blupADC"),
+																system.file("extdata/bin_mac", package = "blupADC")
+																)),
 					   IND_geno_file_name="IND_geno.txt", #
 					   IND_geno=NULL,
 					   SSBLUP_omega=0.05,
 					   plot_variance=FALSE,
-					   return_result=FALSE
+					   return_result=FALSE,
+					   EM_iter=10,
+					   dmu5_iter=1000000,
+					   gibbs_n_rounds=10000,
+					   gibbs_n_burnin=1000,
+					   gibbs_n_gaps=5,
+					   gibbs_seeds=c(1994,1998)
 					   ){
 cat("R package:blupADC is only the wrapper of dmu-package in the field of academic research! \n")
 cat("The release of pre-installed dmu-package is 5.2 ! \n")
@@ -150,7 +161,13 @@ system(paste0("cp -r ",provided_DIR_file_path,"/",provided_DIR_file_name,"  ",ou
 					   output_DIR_name="Trait.DIR",
 					   IND_geno_file_name=IND_geno_file_name, #
 					   IND_geno=IND_geno,
-					   SSBLUP_omega=SSBLUP_omega
+					   SSBLUP_omega=SSBLUP_omega,
+					   EM_iter=EM_iter,
+					   dmu5_iter=dmu5_iter,
+					   gibbs_n_rounds=gibbs_n_rounds,
+					   gibbs_n_burnin=gibbs_n_burnin,
+					   gibbs_n_gaps=gibbs_n_gaps,
+					   gibbs_seeds=gibbs_seeds
 					   )
 }
 
@@ -164,7 +181,7 @@ setwd(output_result_path)
 
 os_type=as.character(Sys.info()["sysname"])
 
-if(os_type=="Linux"){
+if(os_type!="Windows"){
 system(paste0(DMU_software_path,"/dmu1  release=5.3 < ",output_result_path,"/Trait.DIR"," >  ",paste(target_trait_name,collapse = "_"),".dmu1.lst"))
 system(paste0(DMU_software_path,"/",dmu_module," release=5.3 < ",output_result_path,"/Trait.DIR"," >  ",paste(target_trait_name,collapse = "_"),".",dmu_module,".lst"))
 }else{

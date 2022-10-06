@@ -27,9 +27,15 @@ generate_renum<-function(
 								   covariate_effect_name=NULL, #列表
 								   provided_effect_file_path=NULL, #各个性状的效应文件
 								   provided_effect_file_name="model_define.txt",
+								   maternal_effect_option=NULL, # pe mat mpe
+								   mat_cov=NULL,
+								   mat_pe_cov=NULL,
+								   mat_mpe_cov=NULL,
 								   phe_name=NULL,
 								   phe_path=NULL,
-
+								   random_regression_effect_name=NULL,
+								   reg_pe_cov=NULL,
+								   reg_gen_cov=NULL,
 								   missing_value="-9999",
 								   relationship_name=NULL,
 								   relationship_path=NULL,
@@ -46,7 +52,6 @@ generate_renum<-function(
 								   ){
 
 Trait_n=length(target_trait_name)
-
 if(is.null(relationship_name)){
 stop("Please provide relationship name!")
 }else{
@@ -79,6 +84,7 @@ given_prior=as.matrix(prior)
 provided_BLUPF90_prior_effect_name=c(do.call(c,random_effect_name),rep("Residual",length(target_trait_name)))
 
 }
+
 
 #获取固定效应、随机效应、协变量记录
 if(!is.null(provided_effect_file_path)&!is.null(provided_effect_file_name)){
@@ -125,10 +131,13 @@ temp_effect="Residual"
 #co_variance_pos=(Trait_n*(temp_effect_pos-1)+1):(Trait_n*temp_effect_pos)
 temp_effect_pos=which(provided_BLUPF90_prior_effect_name%in%temp_effect)+length(relationship_name)-1
 co_variance_pos=temp_effect_pos
+
 co_variance=given_prior[co_variance_pos,co_variance_pos]
 co_variance=inner_matrix(co_variance)
 
 residual_effect_part=rbind("RESIDUAL_VARIANCE",co_variance) # 残差
+
+
 
 #获取各性状下效应对应的位置
 ####################       #################################
@@ -158,8 +167,21 @@ fixed_effect_part=data.frame(NULL)}
 ####################       #################################
 ########construct  Covariate-Effect Part           #########
 if(!is.null(covariate_effect_name)&(!identical(covariate_effect_name,rep(list(NULL),Trait_n)))){
+
+#consider the situation for random regression model 
+#hence, covariate_effect should also include these regression coefficients
+if(!is.null(random_regression_effect_name)){
+coef_regression=blupf90_get_random_regression(random_regression_effect_name,genetic_effect_name)$coef_regression
+pe_regression=blupf90_get_random_regression(random_regression_effect_name,genetic_effect_name)$pe_regression
+if(!is.null(pe_regression)){included_permanent_effect=TRUE}
+for(i in 1:Trait_n){
+covariate_effect_name[[i]]=c(covariate_effect_name[[i]],coef_regression)
+}
+}
+
 total_covariate_effect=unique(do.call(c,covariate_effect_name))
 total_covariate_effect=sort(total_covariate_effect)
+
 total_covariate_effect_pos=match(total_covariate_effect,phe_col_names)
 covariate_effect_part=NULL
 covariate_effect_pos=NULL
@@ -208,15 +230,17 @@ for(i in 1:Trait_n){  #每个性状下固定效应的 pos
 }
 
 random_effect_pos_matrix=do.call(rbind,random_effect_pos) #pos的矩阵格式
-
 for(i in 1:length(total_random_effect)){
 
 	temp_effect=total_random_effect[i]
 	#temp_effect_pos=match(temp_effect,provided_BLUPF90_prior_effect_name)
 	#co_variance_pos=(Trait_n*(temp_effect_pos-1)+1):(Trait_n*temp_effect_pos)
 	temp_effect_pos=which(provided_BLUPF90_prior_effect_name%in%temp_effect)
-	co_variance_pos=temp_effect_pos
-	co_variance=given_prior[co_variance_pos,co_variance_pos]
+	co_variance=matrix(0,Trait_n,Trait_n); #assume traits have missing records of random effect
+	i_pos_matrix=random_effect_pos_matrix[,i] # 0 means there is missing in the record
+	non_missing_pos=which(i_pos_matrix!=0)
+	co_variance[non_missing_pos,non_missing_pos]=given_prior[temp_effect_pos,temp_effect_pos]
+	
 	co_variance=inner_matrix(co_variance)
 
 	non_genetic_random_effect_part=rbind(non_genetic_random_effect_part,"EFFECT",paste0(paste(random_effect_pos_matrix[,i],collapse=" ")," cross alpha "),
@@ -236,12 +260,21 @@ permanent_effect_part=NULL
 ########construct  Permanent Effect Part   		   #########
 
 if(included_permanent_effect==TRUE){
+
 Optional_genetic_effect=rbind("OPTIONAL","pe")
 	temp_effect="Permanent"
 	temp_effect_pos=match(temp_effect,provided_BLUPF90_prior_effect_name)
-	co_variance_pos=(Trait_n*(temp_effect_pos-1)+1):(Trait_n*temp_effect_pos)
-	co_variance=given_prior[co_variance_pos,co_variance_pos]
-	co_variance=inner_matrix(co_variance)
+	if(!temp_effect%in%provided_BLUPF90_prior_effect_name){
+		status=as.numeric(sapply(included_permanent_effect,isTRUE)); #zero means there are no permanent_effect 
+		co_variance=matrix(0,Trait_n,Trait_n);
+		non_missing_pos=which(status!=0)
+		co_variance[non_missing_pos,non_missing_pos]=0.5
+	}else{
+		co_variance_pos=(Trait_n*(temp_effect_pos-1)+1):(Trait_n*temp_effect_pos)
+		co_variance=given_prior[co_variance_pos,co_variance_pos]
+		co_variance=inner_matrix(co_variance)
+	}
+	
 	permanent_effect_part=rbind("(CO)VARIANCES_PE",co_variance)
 }
 
@@ -266,10 +299,82 @@ if(analysis_model=="GBLUP_A"){
 	co_variance=given_prior[co_variance_pos,co_variance_pos]
 	co_variance=inner_matrix(co_variance)
 
+	
+	if(!is.null(random_regression_effect_name)){
+	
+		effect_regression=blupf90_get_random_regression(random_regression_effect_name,genetic_effect_name)
+		coef_regression=effect_regression$coef_regression
+		gen_regression=effect_regression$gen_regression
+		pe_regression=effect_regression$pe_regression
+		rr_pos=match(coef_regression,phe_col_names)
+		
+		if(!is.null(gen_regression)){
+			
+			if(is.null(reg_gen_cov)){
+				reg_gen_cov=matrix(0.5,Trait_n*length(gen_regression),Trait_n*length(gen_regression))
+				diag(reg_gen_cov)=1
+			}
+			reg_gen_cov=rbind("RANDOM_REGRESSION","data","RR_POSITION",paste(rr_pos,collapse=" "),
+							  "(CO)VARIANCES",inner_matrix(reg_gen_cov)
+							  )
+		}
+	
+		if(!is.null(pe_regression)){
+			
+			if(is.null(reg_pe_cov)){
+				reg_pe_cov=matrix(0.5,Trait_n*length(gen_regression),Trait_n*length(gen_regression))
+				diag(reg_pe_cov)=1
+			}
+			reg_pe_cov=rbind("(CO)VARIANCES_PE",inner_matrix(reg_pe_cov))
+			# reg_pe_cov=rbind("EFFECT",paste0(paste(match(rep(genetic_effect_name,Trait_n),phe_col_names),collapse=" ")," cross alpha "),
+	                              # "RANDOM","diagonal",
+							  # "RANDOM_REGRESSION","data","RR_POSITION",paste(rr_pos,collapse=" "),	  
+							   # "(CO)VARIANCES",inner_matrix(reg_pe_cov))			
+		}	
+	
+	genetic_random_effect_part=rbind(genetic_random_effect_part,"EFFECT",paste0(paste(match(rep(genetic_effect_name,Trait_n),phe_col_names),collapse=" ")," cross alpha "),
+	                              "RANDOM","animal",Optional_genetic_effect,"FILE",addtive_relationship_name,reg_gen_cov,
+								  reg_pe_cov
+									 )
+							 
+	}else if(is.null(maternal_effect_option)){ #whether consider maternal effect 
 	genetic_random_effect_part=rbind(genetic_random_effect_part,"EFFECT",paste0(paste(match(rep(genetic_effect_name,Trait_n),phe_col_names),collapse=" ")," cross alpha "),
 	                              "RANDOM","animal",Optional_genetic_effect,"FILE",addtive_relationship_name,"FILE_POS","1 2 3 0 0",
 							 "PED_DEPTH","0",
 						     "(CO)VARIANCES",co_variance,permanent_effect_part)
+	}else if(!is.null(maternal_effect_option)){
+	
+	if("mat"%in%maternal_effect_option){
+		
+		if(is.null(mat_cov)){
+			mat_cov=matrix(0.5,2,2);diag(mat_cov)=1
+		}
+		mat_cov=rbind("(CO)VARIANCES",inner_matrix(mat_cov))
+	}
+	
+	if("pe"%in%maternal_effect_option){
+		
+		if(is.null(mat_pe_cov)){
+			mat_pe_cov=1
+		}
+		mat_pe_cov=rbind("(CO)VARIANCES_PE",inner_matrix(mat_pe_cov))
+	}
+	
+	if("mpe"%in%maternal_effect_option){
+		
+		if(is.null(mat_mpe_cov)){
+			mat_mpe_cov=1
+		}
+		mat_mpe_cov=rbind("(CO)VARIANCES_MPE",inner_matrix(mat_mpe_cov))
+	}
+
+	genetic_random_effect_part=rbind(genetic_random_effect_part,"EFFECT",paste0(paste(match(rep(genetic_effect_name,Trait_n),phe_col_names),collapse=" ")," cross alpha "),
+	                              "RANDOM","animal",Optional_genetic_effect,
+						      "OPTIONAL",paste(maternal_effect_option,collapse=" "), #maternal effect option
+							  "FILE",addtive_relationship_name,
+							  mat_cov,mat_pe_cov,mat_mpe_cov)	
+	
+	}
 
 }else if(analysis_model=="User_define"){
     addtive_relationship_name="dummy_pedigree.txt"
@@ -382,9 +487,39 @@ BLUPF90_generate_prior<-function(target_trait_name=NULL,
 								 included_permanent_effect=FALSE){
 
 
-prior=diag(10+length(target_trait_name)+length(do.call(c,random_effect_name))+included_permanent_effect)
+prior=diag(20+length(target_trait_name)+length(do.call(c,random_effect_name)))
 prior[prior==0]=0.5
 
 return(prior)
 }
 
+	
+	#get the regression_name_coef for random effect 
+	# regression=list(c("L1&id&pe_effect","L2&id&pe_effect"))
+	# blupf90_get_random_regression(regression,"id") 
+	blupf90_get_random_regression<-function(regression,genetic_effect_name){
+	
+	regression=regression[[1]]
+	reg_k=length(regression) #随机回归效应的个数
+	gen_regression=NULL #regression coefficients in genetic effect
+	pe_regression=NULL  #regression coefficients in permanent effect
+	coef_regression=NULL
+	for(j in 1:reg_k){
+		regression_name=unlist(strsplit(regression[j],split = "&")) 
+		regression_name_coef=regression_name[1]       # regression coefficients
+		regression_name_effect=regression_name[-1]    # random effect name 
+		coef_regression=c(coef_regression,regression_name_coef)
+		if(genetic_effect_name %in% regression_name_effect){
+			gen_regression=c(gen_regression,regression_name_coef)
+		}
+		if("pe_effect" %in% regression_name_effect){
+			pe_regression=c(pe_regression,regression_name_coef)
+		}		
+	}
+	gen_regression=unique(gen_regression)
+	pe_regression=unique(pe_regression)
+	coef_regression=unique(coef_regression)
+	return(list(coef_regression=coef_regression,
+			    gen_regression=gen_regression,
+				pe_regression=pe_regression))
+	}
