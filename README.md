@@ -298,3 +298,29 @@ run_BLUPF90(
         output_result_path=getwd()                   # output path 
         )   
 ```
+
+:question:#### Install instructions for Mac user
+#option1 
+Mac user can download the latest verstion of blupADC by using the following code directly:
+```R
+devtools::install_github("TXiang-lab/blupADC")
+```
+Due to the difference of  compiler， user need to change the .Makevars file as below:
+```
+CC=/usr/local/bin/gcc-12 -fopenmp
+CXX=/usr/local/bin/g++-12 -fopenmp
+CXX11=/usr/local/bin/g++-12 -fopenmp
+CXX14=/usr/local/bin/g++-12 -fopenmp
+CXX17=/usr/local/bin/g++-12 -fopenmp
+FLIBS=-L/usr/local/bin/gfortran/lib
+F77=/usr/local/bin/gfortran
+FC=/usr/local/bin/gfortran
+CFLAGS=-mtune=native -g -O2 -Wall -pedantic -Wconversion
+CPPFLAGS=-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+CXXFLAGS=-mtune=native -g -O2 -Wall -pedantic -Wconversion
+```
+For different chip version, the path of gcc may be different.
+#option2
+User can also download the binary version of blupADC directly as below:
+```
+```
