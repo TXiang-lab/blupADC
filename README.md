@@ -114,6 +114,8 @@ For different chip version, the path of gcc may be different.
 
 User can also download the binary version of blupADC directly as below:
 ```
+packageurl <- "https://github.com/TXiang-lab/blupADC/releases/download/V1.0.7/blupADC_1.0.7.tgz"
+install.packages(packageurl,repos=NULL,method="libcurl")
 ```
 
 **Note**: In terms of the relationship matrix construction, we highly recommend Microsoft R Open(faster than traditional R many times)
