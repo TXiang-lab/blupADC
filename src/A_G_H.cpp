@@ -1,5 +1,40 @@
 #include "shared_function.h"
+#define	matrix_threshold  0.00001
 
+
+// [[Rcpp::export]]
+arma::mat cal_breed_pro(arma::Mat<int> Pedigree, int n_meta){   //前三列为个体号，父亲，母亲，必须确保前面几行为Metafounder
+	int n_ind=Pedigree.n_rows;
+	int Sire_id,Dam_id;
+	arma::Col<int> Sire=Pedigree.col(1);
+	arma::Col<int> Dam=Pedigree.col(2);
+
+    arma::mat Breed_matrix(n_ind,n_meta);	
+	Breed_matrix.fill(0);
+	//Breed_matrix.col(0)=Pedigree.col(0);
+	//Breed_matrix.col(n_breed)=Breed;
+
+	
+	for(int i=0; i < n_ind; i++){
+		Sire_id=Sire[i];
+		Dam_id=Dam[i];		
+		
+	
+		if(Sire_id==0&&Dam_id==0){  //父母均未知,
+		
+			Breed_matrix(i,i)=1; //父母未知的情况下,此时品种必须是已知的
+				
+		}else{                     //父母均已知	
+
+			
+			for(int j=0;j<n_meta;j++){
+			Breed_matrix(i,j)=(Breed_matrix(Sire_id-1,j)+Breed_matrix(Dam_id-1,j))/2; //父母均已知,计算品种j的比例				
+		   }
+	    }
+	}
+
+	return Breed_matrix; 
+}
 
 // [[Rcpp::export]]
 arma::Mat<double> makeA_cpp(arma::Mat<int> Pedigree){   //稀疏矩阵运行速度会变慢
@@ -15,6 +50,58 @@ arma::Mat<double> makeA_cpp(arma::Mat<int> Pedigree){   //稀疏矩阵运行速�
 	bool status1,status2;
 	
 	for(int i=0; i < IND; i++){
+
+	status1=(Sire[i]==0);
+	status2=(Dam[i]==0);
+
+
+	if(!status1&&!status2){  //父母均已知
+		A_matrix(i,i)=1+0.5*(A_matrix(Sire[i]-1,Dam[i]-1));	
+		for(int j=0;j<i;j++){
+			if(i>j) A_matrix(j,i)=A_matrix(i,j)=0.5*(A_matrix(j,Sire[i]-1)+A_matrix(j,Dam[i]-1));
+	    }
+	}else if(status1&&status2){  //父母均未知
+		A_matrix(i,i)=1;	
+		for(int j=0;j<i;j++){
+			if(i>j) A_matrix(j,i)=0;
+	    }
+	}else if(!status1&&status2){  //父已知，母未知	
+		A_matrix(i,i)=1;
+		for(int j=0;j<i;j++){
+			if(i>j) A_matrix(j,i)=A_matrix(i,j)=0.5*(A_matrix(j,Sire[i]-1));
+		}
+	}else{  //父未知，母已知	
+		A_matrix(i,i)=1;
+		for(int j=0;j<i;j++){
+			if(i>j) A_matrix(j,i)=A_matrix(i,j)=0.5*(A_matrix(j,Dam[i]-1));
+	    }
+	}
+	}
+	Rcout<<"Complete constructing pedigree additive relationship matrix!"<<endl;  	
+	return A_matrix;
+	}
+
+
+// [[Rcpp::export]]
+arma::Mat<double> makeA_meta_cpp(arma::Mat<int> Pedigree, arma::Mat<double> Gamma){   //稀疏矩阵运行速度会变慢
+
+
+	Rcout<<"Start constructing pedigree additive relationship matrix......"<<endl;  		
+	arma::Mat<double> A_matrix(Pedigree.n_rows,Pedigree.n_rows);	
+	A_matrix.fill(0);
+	arma::Col<int> Animal=Pedigree.col(0);
+	arma::Col<int> Sire=Pedigree.col(1);
+	arma::Col<int> Dam=Pedigree.col(2);
+	int IND=Pedigree.n_rows;
+	bool status1,status2;
+	int n_meta=Gamma.n_rows;
+
+
+A_matrix.submat(span(0,n_meta-1),span(0,n_meta-1))=Gamma;
+
+
+	
+	for(int i=n_meta; i < IND; i++){
 
 	status1=(Sire[i]==0);
 	status2=(Dam[i]==0);
@@ -656,7 +743,6 @@ List gene_dropping_D(arma::Mat<int> Pedigree, bool inverse=false, int iteration=
 	
 
 
-
 // [[Rcpp::export]]
 List makeHA_cpp(arma::Mat<int> & Pedigree, arma::Mat<int> & M, 
 						   CharacterVector IND_geno,
@@ -673,16 +759,15 @@ List makeHA_cpp(arma::Mat<int> & Pedigree, arma::Mat<int> & M,
 						   double omega=0.05){	
 				
 				arma::Mat<double> P_A=makeA_cpp(Pedigree);
+				arma::Mat<double> P_Ainv=makeAinv_cpp(Pedigree);
 				arma::Mat<int> M_new=M.rows(pos_geno);
 				arma::Mat<double> H_A,H_Ainv;
 				arma::Col<double> inbred;
 
-				
-
 				Rcout<<"Start constructing H_Additive relationship matrix......"<<endl; 						   
 				
 				arma::Mat<double> A22=P_A.submat(pos_A22,pos_A22);
-				arma::Mat<double> A22_inv=arma::inv(A22);			
+				arma::Mat<double> A22_inv=arma::inv(A22);		
 
 				if(APY_algorithm==false){		
 				arma::Mat<double> A11=P_A.submat(pos_A11,pos_A11);
@@ -717,7 +802,7 @@ List makeHA_cpp(arma::Mat<int> & Pedigree, arma::Mat<int> & M,
 				
 				arma::Mat<double> G_Ainv;
 				G_Ainv=arma::inv(G_A);
-				arma::Mat<double> P_Ainv=makeAinv_cpp(Pedigree);
+				//arma::Mat<double> P_Ainv=makeAinv_cpp(Pedigree);
 				H_Ainv=P_Ainv.submat(pos_A,pos_A);
 				H_Ainv.submat(pos_H22,pos_H22)=H_Ainv.submat(pos_H22,pos_H22)+G_Ainv-A22_inv;				
 				}			
@@ -736,8 +821,11 @@ List makeHA_cpp(arma::Mat<int> & Pedigree, arma::Mat<int> & M,
 }						   
 	
 	
+
 // [[Rcpp::export]]
 List makeHA_metafounder_cpp(arma::Mat<int> & Pedigree, arma::Mat<int> & M, 
+						   std::vector<std::string> meta_ind,
+							arma::mat provided_gamma,
 						   arma::uvec pos_A11,
 						   arma::uvec pos_A22,
 						   arma::uvec pos_geno,
@@ -745,32 +833,100 @@ List makeHA_metafounder_cpp(arma::Mat<int> & Pedigree, arma::Mat<int> & M,
 						   arma::uvec pos_H22,
 						   bool direct=false,
 						   bool inverse=true,
-						   double omega=0.05){	
+						   double omega=0.05,
+						   bool scaled=false,
+						   std::string gamma_method="gls"
+						   ){	
 				
 				arma::Mat<double> P_A=makeA_cpp(Pedigree);
+				arma::Mat<double> P_Ainv=makeAinv_cpp(Pedigree);
 				arma::Mat<int> M_new=M.rows(pos_geno);
 				arma::Mat<double> G_A=G_matrix_cpp(M_new,true,false,true,false)["G"];
 				int ind_n1=pos_A11.size(),ind_n2=pos_A22.size(),ind_n=pos_A11.size()+pos_A22.size();
 				Rcout<<"Start constructing metafounder-H_Additive relationship matrix......"<<endl; 
 				
 				arma::Mat<double> A22=P_A.submat(pos_A22,pos_A22);
-				arma::Mat<double> A22_inv=arma::inv(A22);
-				arma::Mat<double> identity1(ind_n2,1,fill::ones);
-				arma::Mat<double> identity2(ind_n,ind_n,fill::ones);			
-				arma::Row<double> miu=arma::inv(identity1.t()*A22_inv*identity1)*identity1.t()*A22_inv*M_new;
-				arma::Row<double> p=miu/2;
-				double gama=8*arma::var(p);
-				Rcout<<"Estimated gama="<<gama<<endl;
-				double k=1-gama/2;
-				P_A=P_A*(1-gama/2)+gama*identity2;
+				arma::Mat<double> A22_inv=inv(A22);
+				//arma::Mat<double> identity2(ind_n,ind_n,fill::ones);			
+				
+				int n_meta=meta_ind.size();
+				arma::mat gamma(n_meta,n_meta),Q(ind_n,n_meta,fill::ones),miu,M1;
+				M1=conv_to<arma::Mat<double>>::from(M_new);
+			    
+				if(n_meta>=2){
+					
+					Q=cal_breed_pro(Pedigree,n_meta);				
+				}
+				Q=Q.rows(pos_A22);
+				if(gamma_method=="naive"){	
+					Rcout<<"Estimating gamma via naive method......"<<endl;
+					
+					
+					if(n_meta==1){
+						gamma=2*var(mean(M1));
+					}else{
+						miu=inv(Q.t() *Q)*(Q.t()*M1);
+						
+						for(int i=0;i<n_meta;i++){
+						
+							gamma(i,i)=2*sum((miu.row(i)-1)%(miu.row(i)-1))/M1.n_cols;
+						
+							for(int j=0;j<i;j++){
+							
+								gamma(i,j)=gamma(j,i)=2*sum((miu.row(i)-1)%(miu.row(j)-1))/M1.n_cols;
+							
+							}
+						}
+					}
+
+				}else if(gamma_method=="gls"){
+					Rcout<<"Estimating gamma via gls method......"<<endl;
+					//arma::Mat<double> identity1(ind_n2,1,fill::ones);
+					//arma::Row<double> miu=1/accu(A22_inv)*identity1.t()*A22_inv*M_new;	
+					
+					if(n_meta==1){
+						miu=1/accu(A22_inv)*Q.t()*A22_inv*M1;
+						gamma=2*var(miu.row(0));
+					}else{
+						
+						miu=inv(Q.t()*A22_inv*Q)*(Q.t()*A22_inv*M1);
+						
+						for(int i=0;i<n_meta;i++){
+							
+							//arma::Row<double> tmpi=miu.row(i);
+							gamma(i,i)=2*sum((miu.row(i)-1)%(miu.row(i)-1))/M1.n_cols;
+						
+							for(int j=0;j<i;j++){
+								
+								//arma::Row<double> tmpj=miu.row(j);							
+								gamma(i,j)=gamma(j,i)=2*sum((miu.row(i)-1)%(miu.row(j)-1))/M1.n_cols;
+							
+							}
+						}		
+					}					
+				
+				}else if(gamma_method=="provided"){	
+					Rcout<<"Using provided gamma to perform calculating!"<<endl;
+					gamma=provided_gamma;
+				}
+				
+				Rcout<<"Estimated gamma="<<endl;
+				Rcout<<gamma<<endl;
+				
+				P_A=makeA_meta_cpp(Pedigree,gamma); 			 
+				//P_Ainv=inv(P_A);
+				double k=1+mean(gamma.diag())/2-mean(mean(gamma));
+				//P_A=P_A*(1-gamma/2)+gamma*identity2;
 				A22=P_A.submat(pos_A22,pos_A22);
 				A22_inv=arma::inv(A22);
+				//P_A(0,0)=gamma;			
 				
 				arma::Mat<double> A11=P_A.submat(pos_A11,pos_A11);
 				arma::Mat<double> A12=P_A.submat(pos_A11,pos_A22);
-						
+				
 				Rcout<<"Adjusting G_A , the adjusting parameter omega is: omega= "<<omega<<endl;
 				G_A=G_A*(1-omega)+A22*omega;
+				
 				arma::Mat<double> H_A,H_Ainv;
 				arma::Col<double> inbred1=A11.diag(),inbred2=A22.diag(),inbred;
 				inbred=join_cols(inbred1,inbred2);
@@ -782,18 +938,153 @@ List makeHA_metafounder_cpp(arma::Mat<int> & Pedigree, arma::Mat<int> & M,
 				H_A.submat(span(0,ind_n1-1),span(ind_n1,ind_n-1))=tmp;
 				H_A.submat(span(ind_n1,ind_n-1),span(0,ind_n1-1))=tmp.t();
 				H_A.submat(span(ind_n1,ind_n-1),span(ind_n1,ind_n-1))=G_A;
-				H_A=H_A/k;   //使得metafounder的方差组分是 compatable
+				H_A=H_A;   
+				H_A.clean(matrix_threshold);
+				
+					if(scaled==true){
+						
+						H_A=H_A/k;	 //使得metafounder的方差组分是 compatable
+							
+					}
+				
 				}
 				
 				if(inverse==true){
 				arma::Mat<double> G_Ainv=arma::inv(G_A);
 				arma::Mat<double> P_Ainv=arma::inv(P_A);
 				H_Ainv=P_Ainv.submat(pos_A,pos_A);
-				H_Ainv.submat(pos_H22,pos_H22)=H_Ainv.submat(pos_H22,pos_H22)+G_Ainv-A22_inv;				
-				}			
+				H_Ainv.submat(pos_H22,pos_H22)=H_Ainv.submat(pos_H22,pos_H22)+G_Ainv-A22_inv;
+				H_Ainv.clean(matrix_threshold);
 				
-				return List::create(Named("H") =H_A,_["Hinv"] = H_Ainv,Named("inbred") =inbred);
-}	
+					if(scaled==true){
+						
+						H_Ainv=H_Ainv*k;	 //使得metafounder的方差组分是 compatable
+							
+					}
+				
+				}
+				
+								
+				return List::create(Named("H") =H_A,_["Hinv"] = H_Ainv,Named("inbred") =inbred,
+									Named("miu") =miu);
+}		
+
+
+
+// [[Rcpp::export]]
+List makeA_metafounder_cpp(arma::Mat<int> & Pedigree, arma::Mat<int> & M, 
+						   std::vector<std::string> meta_ind,
+							arma::mat provided_gamma,
+						   arma::uvec pos_A11,
+						   arma::uvec pos_A22,
+						   arma::uvec pos_geno,
+						   arma::uvec pos_A,
+						   arma::uvec pos_H22,
+						   bool direct=false,
+						   bool inverse=true,
+						   double omega=0.05,
+						   bool scaled=false,
+						   std::string gamma_method="gls"
+						   ){	
+				
+				arma::Mat<double> P_A=makeA_cpp(Pedigree);
+				arma::Mat<double> P_Ainv=makeAinv_cpp(Pedigree);
+				arma::Mat<int> M_new=M.rows(pos_geno);
+				arma::Mat<double> G_A=G_matrix_cpp(M_new,true,false,true,false)["G"];
+				int ind_n1=pos_A11.size(),ind_n2=pos_A22.size(),ind_n=pos_A11.size()+pos_A22.size();
+				Rcout<<"Start constructing metafounder-H_Additive relationship matrix......"<<endl; 
+				
+				arma::Mat<double> A22=P_A.submat(pos_A22,pos_A22);
+				arma::Mat<double> A22_inv=P_Ainv.submat(pos_A22,pos_A22);
+				//arma::Mat<double> identity2(ind_n,ind_n,fill::ones);			
+				
+				int n_meta=meta_ind.size();
+				arma::mat gamma(n_meta,n_meta),Q(ind_n,n_meta,fill::ones),miu,M1;
+				M1=conv_to<arma::Mat<double>>::from(M_new);
+			    
+				if(n_meta>=2){
+					
+					Q=cal_breed_pro(Pedigree,n_meta);				
+				}
+				Q=Q.rows(pos_A22);
+				if(gamma_method=="naive"){	
+					Rcout<<"Estimating gamma via naive method......"<<endl;
+					
+					
+					if(n_meta==1){
+						gamma=2*var(mean(M1));
+					}else{
+						miu=inv(Q.t() *Q)*(Q.t()*M1);
+						
+						for(int i=0;i<n_meta;i++){
+						
+							gamma(i,i)=2*sum((miu.row(i)-1)%(miu.row(i)-1))/M1.n_cols;
+						
+							for(int j=0;j<i;j++){
+							
+								gamma(i,j)=gamma(j,i)=2*sum((miu.row(i)-1)%(miu.row(j)-1))/M1.n_cols;
+							
+							}
+						}
+					}
+					
+				}else if(gamma_method=="gls"){
+					Rcout<<"Estimating gamma via gls method......"<<endl;
+					//arma::Mat<double> identity1(ind_n2,1,fill::ones);
+					//arma::Row<double> miu=1/accu(A22_inv)*identity1.t()*A22_inv*M_new;	
+					
+					if(n_meta==1){
+						miu=1/accu(A22_inv)*Q.t()*A22_inv*M1;
+						gamma=2*var(miu.row(0));
+					}else{
+						
+						miu=inv(Q.t()*A22_inv*Q)*(Q.t()*A22_inv*M1);
+						
+						for(int i=0;i<n_meta;i++){
+							
+							//arma::Row<double> tmpi=miu.row(i);
+							gamma(i,i)=2*sum((miu.row(i)-1)%(miu.row(i)-1))/M1.n_cols;
+						
+							for(int j=0;j<i;j++){
+								
+								//arma::Row<double> tmpj=miu.row(j);							
+								gamma(i,j)=gamma(j,i)=2*sum((miu.row(i)-1)%(miu.row(j)-1))/M1.n_cols;
+							
+							}
+						}		
+					}					
+				
+				}else if(gamma_method=="provided"){	
+					Rcout<<"Using provided gamma to perform calculating!"<<endl;
+					gamma=provided_gamma;
+				}
+				
+				Rcout<<"Estimated gamma="<<endl;
+				Rcout<<gamma<<endl;
+				
+				P_A=makeA_meta_cpp(Pedigree,gamma); 	
+				double k=1+mean(gamma.diag())/2-mean(mean(gamma));				
+				if(direct==true){
+				P_A.clean(matrix_threshold);			
+					if(scaled==true){						
+						P_A=P_A/k;	 //使得metafounder的方差组分是 compatable							
+					}				
+				}
+				
+				if(inverse==true){
+				P_Ainv=arma::inv(P_A);
+				P_Ainv.clean(matrix_threshold);				
+					if(scaled==true){						
+						P_Ainv=P_Ainv*k;	 //使得metafounder的方差组分是 compatable
+							
+					}
+				
+				}
+				
+								
+				return List::create(Named("A") =P_A,_["Ainv"] = P_Ainv);
+}
+
 
 
 

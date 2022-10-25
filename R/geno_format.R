@@ -14,8 +14,6 @@ geno_format<-function(
 		input_data_haplotype_hap=NULL,
 		input_data_haplotype_map=NULL,
 		input_data_haplotype_sample=NULL,
-		input_data_qmsim=NULL, #qmsim-format is phased 
-		input_data_qmsim_map=NULL,
 		bigmemory_cal=FALSE,
 		bigmemory_data_type="integer",
 		bigmemory_data_path=getwd(),
@@ -31,7 +29,6 @@ geno_format<-function(
 		output_data_type=NULL,  # "Plink" , "Hapmap" , "VCF"  "BLUPF90"  "Numeric"  "Haplotype"
 		output_data_path=NULL,
 		return_result=FALSE,
-		user_defined_ref_alt_map=NULL, #convert phased data to user-define(ref,alt) phased data
 		cpu_cores=1  #调用的cpu数目，用于加速计算
 		){	
 options (warn =-1)	
@@ -56,7 +53,6 @@ input=get_input_data_type(input_data_type=input_data_type,input_data_hmp=input_d
 								    input_data_numeric=input_data_numeric,input_data_vcf=input_data_vcf,
 									input_data_haplotype_hap=input_data_haplotype_hap,input_data_haplotype_map=input_data_haplotype_map,
 									input_data_haplotype_sample=input_data_haplotype_sample,
-									input_data_qmsim=input_data_qmsim,
 								     miss_base=miss_base)
 
 input_data_type=input$input_data_type
@@ -295,43 +291,18 @@ block_end=1:5
 output_block=NULL
 }
 
-if(!is.null(user_defined_ref_alt_map)){output_data_type=c(output_data_type,"VCF")}
-
 output_type_number=get_output_type_number(input_data_type=input_data_type,
 										  output_data_type=output_data_type,
 										  bigmemory_cal=bigmemory_cal,
-										  phased_genotype=phased_genotype,
-										  user_defined_ref_alt_map=user_defined_ref_alt_map)
+										  phased_genotype=phased_genotype)
 n_ind=ncol(input_data_vcf)-9
 n_snp=nrow(input_data_vcf)
 n_window=length(block_start)
-data_haplotype_map=input_data_vcf[,c(1,3,2,4,5)];#Chr,SNP,Pos,Ref,Alt
-IND_name=colnames(input_data_vcf)[-c(1:9)]
+data_haplotype_map=input_data_vcf[,c(1,3,2,4,5)];IND_name=colnames(input_data_vcf)[-c(1:9)]
 
 if(length(output_type_number)==0){stop("Please provided standard output data type!")}
 for(type in output_type_number){
 if(exists(".Random.seed")){fixed_openMP(.Random.seed);set.seed(19980204)}
-
-if(type==0){
-
-pos=match(data_haplotype_map[,2],user_defined_ref_alt_map[,1]) #user_defined_ref_alt_map, SNP,Ref,Alt
-if(sum(is.na(pos))>0){
-stop("SNPs in VCF but not in user_defined_ref_alt_map!")
-}
-user_defined_ref_alt_map=as.matrix(user_defined_ref_alt_map[pos,])
-pos_conflict_ref=(1:nrow(user_defined_ref_alt_map))[user_defined_ref_alt_map[,2]!=data_haplotype_map[,4]]-1
-user_define_phased_vcf_to_cpp(input_data_vcf,pos_conflict_ref,cpu_cores) #also modify input_data_vcf
-input_data_vcf[,4]=user_defined_ref_alt_map[,2]
-input_data_vcf[,5]=user_defined_ref_alt_map[,3]
-data_vcf=input_data_vcf
-if(!is.null(output_data_path)&!is.null(output_data_name)){
-cat("Start writing output data...... \n")
-fwrite(data.frame(get_vcf_header()),paste0(output_data_name,".vcf"),quote=F,row.names=F,col.names=F,sep="\t")
-fwrite(data.table(data_vcf),paste0(output_data_name,".vcf"),append=TRUE,quote=F,row.names=F,col.names=T,sep="\t")}
-if(return_result==FALSE){rm(data_vcf);gc();}
-}
-
-
 if(type==1){data_hmp=vcf_convertion(input_data_vcf,block_start,block_end,type,miss_base,miss_base_num,cpu_cores)$hmp
 data_hmp[,1]=input_data_vcf[,3]
 data_hmp[,3]=input_data_vcf[,1]
@@ -898,133 +869,6 @@ cat(paste0("bigmemory-Numeric data is save as ",bigmemory_data_path,"/",bigmemor
 rm(input_data_blupf90);gc();
 }
 
-
-
-####################################input data type is QMsim#################################### 
-#Genotypes (0 = a1,a1; 2 = a2,a2; 3 = a1,a2; 4 = a2,a1; 5 = missing; The first allele is paternal and the second allele is maternal)
-if(input_data_type=="QMsim"){
-if(!is.null(input_data_path)&!is.null(input_data_name)){
-cat("Start read the QMsim format genotype data \n")
-input_data_qmsim=fread(paste0(input_data_path,"/",input_data_name),data.table=F,header=F,skip=1)
-if(file.exists(paste0(input_data_path,"/",input_data_name,".map"))){
-cat("Start read the QMsim_map data \n")
-input_data_qmsim_map=fread(paste0(input_data_path,"/",input_data_name,".map"),data.table=F) #SNP,Chr,Pos
-}
-cat("Complete read the QMsim format genotype data \n")}
-IND_name=as.character(input_data_qmsim[,1]);input_data_qmsim=input_data_qmsim[,2];gc();
-n_ind=length(IND_name)
-n_snp=nchar(input_data_qmsim[1])
-output_type_number=get_output_type_number(input_data_type=input_data_type,
-										  output_data_type=output_data_type,
-										  bigmemory_cal=bigmemory_cal,
-										  phased_genotype=phased_genotype)
-
-if(length(output_type_number)==0){stop("Please provided standard output data type!")}
-
-if(!is.null(input_data_qmsim_map)){
-if(ncol(input_data_qmsim_map)==3){
-cat("Provided input_data_qmsim_map constains 3 columns, please make sure the format is: SNP_name, Chromosome, Position \n")
-input_data_qmsim_map=cbind(input_data_qmsim_map,"A","T")
-}else if(ncol(input_data_qmsim_map)==5){
-cat("Provided input_data_qmsim_map constains 5 columns, please make sure the format is: Chromosome,SNP_name, Position, Ref, Alt\n")
-}else{
-stop("Provided input_data_qmsim_map didn't meet the requirement format, it should be 3 columns or 5 columns!")
-}
-
-input_data_qmsim_map=as.matrix(input_data_qmsim_map)
-#input_data_qmsim_map[,1]=as.numeric(input_data_qmsim_map[,1])
-#input_data_qmsim_map[,3]=as.numeric(input_data_qmsim_map[,3])
-}
-
-
-for(type in output_type_number){
-if(exists(".Random.seed")){fixed_openMP(.Random.seed);set.seed(19980204)}
-
-if(type==1){data_numeric=qmsim_to_numeric_cpp(input_data_qmsim,cpu_cores)
-rownames(data_numeric)=IND_name
-if(!is.null(output_data_path)&!is.null(output_data_name)){
-cat("Start writing output data...... \n")
-fwrite(data.frame(data_numeric),paste0(output_data_name,".numeric"),quote=F,row.names=T,col.names=F,sep="\t")}
-if(return_result==FALSE){rm(data_numeric);gc();}
-}
-
-
-if(type==2){
-if(is.null(input_data_qmsim_map)){stop("Please provide QMsim map information!")}
-data_ped=qmsim_to_ped_cpp(IND_name,input_data_qmsim_map,input_data_qmsim,cpu_cores,miss_base)
-data_map=input_data_qmsim_map[,c(1,2,3,3)];data_map[,3]=as.numeric(data_map[,3])/1000000;
-if(!is.null(output_data_path)&!is.null(output_data_name)){
-cat("Start writing output data...... \n")
-fwrite(data.frame(data_ped),paste0(output_data_name,".ped"),quote=F,row.names=F,col.names=F,sep="\t")
-fwrite(data.frame(data_map),paste0(output_data_name,".map"),quote=F,row.names=F,col.names=F,sep="\t")}
-if(return_result==FALSE){rm(data_map,data_ped);gc();}
-
-}
-
-
-if(type==3){
-if(is.null(input_data_qmsim_map)){stop("Please provide QMsim map information!")}
-data_hmp=qmsim_to_hapmap_cpp(IND_name,input_data_qmsim_map,input_data_qmsim,cpu_cores,miss_base)
-data_hmp[,c(2,5:11)]="NA"
-colnames(data_hmp)=c("rs#","alleles","chrom","pos","strand","assembly","center","protLSID","assayLSID","panelLSID","QCcode",IND_name)
-if(!is.null(output_data_path)&!is.null(output_data_name)){
-cat("Start writing output data...... \n")
-fwrite(data.table(data_hmp),paste0(output_data_name,".hmp.txt"),quote=F,row.names=F,col.names=T,sep="\t")}
-if(return_result==FALSE){rm(data_hmp);gc();}
-}
-
-
-if(type==4){
-if(is.null(input_data_qmsim_map)){stop("Please provide QMsim map information!")}
-data_vcf=qmsim_to_vcf_cpp(IND_name,input_data_qmsim_map,input_data_qmsim,phased_symbol,cpu_cores)
-if(!is.null(output_data_path)&!is.null(output_data_name)){
-cat("Start writing output data...... \n")
-fwrite(data.frame(get_vcf_header()),paste0(output_data_name,".vcf"),quote=F,row.names=F,col.names=F,sep="\t")
-fwrite(data.table(data_vcf),paste0(output_data_name,".vcf"),append=TRUE,quote=F,row.names=F,col.names=T,sep="\t")}
-if(return_result==FALSE){rm(data_vcf);gc();}
-}
-
-if(type==5){
-data_boa=qmsim_to_boa_cpp(input_data_qmsim,cpu_cores)
-if(!is.null(output_data_path)&!is.null(output_data_name)){
-cat("Start writing output data...... \n")
-fwrite(data.table(data_boa),paste0(output_data_name,".boa"),quote=F,row.names=F,col.names=F,sep="\t")}
-if(return_result==FALSE){rm(data_boa);gc();}
-}
-
-if(type==6){data_blupf90=data.frame(V1=sprintf(paste0("%-",max(nchar(IND_name))+3,"s"),IND_name),V2=qmsim_to_blupf90_cpp(input_data_qmsim,cpu_cores),stringsAsFactors=F)
-if(!is.null(output_data_path)&!is.null(output_data_name)){
-cat("Start writing output data...... \n")
-fwrite(data_blupf90,paste0(output_data_name,".blupf90"),quote=F,row.names=F,col.names=F,sep=" ")}
-if(return_result==FALSE){rm(data_blupf90);gc();}
-}
-
-#构建bigmemory对象 
-if(type==11){
-
-if(exists("pBigMat_num_address")){rm(pBigMat_num_address)}
-gc()
-delete_bigmemory_file("numeric",bigmemory_data_name,bigmemory_data_path,FALSE);
-
-pBigMat_num_address=make_bigmemory_object_address_cpp(nrow=n_ind,ncol=n_snp,file_name=paste0(bigmemory_data_name,"_numeric"),
-                                                                file_path=bigmemory_data_path,type=bigmemory_data_type)
-																
-blupf90_to_numeric_memory_cpp(input_data_qmsim,pBigMat_num_address,cpu_cores,type=bigmemory_data_type)								 
-data_numeric=make_bigmemory_object_cpp(nrow=n_ind,ncol=n_snp,file_name=paste0(bigmemory_data_name,"_numeric"),
-                                                                file_path=bigmemory_data_path,type=bigmemory_data_type)	
-options(bigmemory.allow.dimnames=TRUE)
-rownames(data_numeric)=IND_name
-colnames(data_numeric)=paste0("SNP",1:ncol(data_numeric))																
-cat(paste0("bigmemory-Numeric data is save as ",bigmemory_data_path,"/",bigmemory_data_name,"_numeric \n"))
-																
-}
-
-
-}
-rm(input_data_qmsim);gc();
-}
-
-
 options (warn =1)
 ##############################################
 
@@ -1037,7 +881,6 @@ if(!exists("data_vcf")){data_vcf=NULL}
 if(!exists("data_haplotype_hap")){data_haplotype_hap=NULL}
 if(!exists("data_haplotype_map")){data_haplotype_map=NULL}
 if(!exists("data_haplotype_sample")){data_haplotype_sample=NULL}
-if(!exists("data_boa")){data_boa=NULL}
 if(!exists("output_block")){output_block=NULL}
 
 
@@ -1070,13 +913,12 @@ if(return_result==TRUE){return(list(hmp=data_hmp,
 									 haplotype_hap=data_haplotype_hap,
 									 haplotype_map=data_haplotype_map,
 									 haplotype_sample=data_haplotype_sample,
-									 phased_block=output_block,
-									 boa=data_boa))}
+									 phased_block=output_block))}
 } 
 
 
 get_input_data_type<-function(input_data_type=NULL,input_data_hmp=NULL,input_data_plink_ped=NULL,input_data_plink_map=NULL,
-							  input_data_numeric=NULL,input_data_blupf90=NULL,input_data_haplotype_hap=NULL,input_data_qmsim=NULL,
+							  input_data_numeric=NULL,input_data_blupf90=NULL,input_data_haplotype_hap=NULL,
 							  input_data_haplotype_map=NULL,input_data_haplotype_sample=NULL,input_data_vcf=NULL,miss_base=NULL){
 
 if(is.null(input_data_type)){
@@ -1086,7 +928,6 @@ if(!is.null(input_data_plink_map)&!is.null(input_data_plink_ped)){input_data_typ
 if(!is.null(input_data_blupf90)){input_data_type=c(input_data_type,"BLUPF90")}
 if(!is.null(input_data_numeric)){input_data_type=c(input_data_type,"Numeric")}
 if(!is.null(input_data_vcf)){input_data_type=c(input_data_type,"VCF")}
-if(!is.null(input_data_qmsim)){input_data_type=c(input_data_type,"QMsim")}
 if(!is.null(input_data_haplotype_hap)&!is.null(input_data_haplotype_sample)&!is.null(input_data_haplotype_map)){input_data_type=c(input_data_type,"Haplotype")}
 input_data_type=unique(input_data_type)
 
@@ -1120,10 +961,9 @@ return(rbind(H1,H2,H3,H4,H5,H6,H7,H8))
 get_output_type_number<-function(input_data_type=NULL,
 								 output_data_type=NULL,
 								 bigmemory_cal=FALSE,
-								 phased_genotype=FALSE,
-								 user_defined_ref_alt_map=NULL)
+								 phased_genotype=FALSE)
 								 {
-data_type_set=c("Hapmap","Plink","VCF","Haplotype","Numeric","BLUPF90","QMsim","Boa")
+data_type_set=c("Hapmap","Plink","VCF","Haplotype","Numeric","BLUPF90")
 output_data_type=unique(output_data_type)
 input_data_type=unique(input_data_type)
 
@@ -1131,9 +971,7 @@ if(length(unique(input_data_type))!=1){stop("Provided input_data_type  more than
 if(sum(!input_data_type%in%data_type_set)>=1){stop("Provided input_data_type contain non-standard type!")}
 if(sum(!output_data_type%in%data_type_set)>=1){stop("Provided output_data_type contain non-standard type!")}
 
-if(is.null(user_defined_ref_alt_map)){
 output_data_type=output_data_type[!output_data_type%in%input_data_type]
-}
 
 type_number=NULL
 
@@ -1169,7 +1007,6 @@ if(input_data_type=="Plink"){
 }else if(input_data_type=="VCF"){
 
    if(bigmemory_cal==FALSE){
-		if("VCF"%in%output_data_type){type_number=c(type_number,0)}	
 		if("Hapmap"%in%output_data_type){type_number=c(type_number,1)}
 		if("Haplotype"%in%output_data_type){type_number=c(type_number,3)}	
 		if("Numeric"%in%output_data_type&phased_genotype==TRUE){type_number=c(type_number,4)}
@@ -1177,10 +1014,8 @@ if(input_data_type=="Plink"){
 		if("Numeric"%in%output_data_type&phased_genotype==FALSE){type_number=c(type_number,6)}
 		if("BLUPF90"%in%output_data_type&phased_genotype==FALSE){type_number=c(type_number,7)} 
 		if("Plink"%in%output_data_type&phased_genotype==TRUE){type_number=c(type_number,8)} 
-		if("Plink"%in%output_data_type&phased_genotype==FALSE){type_number=c(type_number,2)}
-		
-   }else{
-		if("VCF"%in%output_data_type){type_number=c(type_number,0)}
+		if("Plink"%in%output_data_type&phased_genotype==FALSE){type_number=c(type_number,2)} 
+   }else{		
 		if("Hapmap"%in%output_data_type){type_number=c(type_number,1)}
 		if("Plink"%in%output_data_type&phased_genotype==TRUE){type_number=c(type_number,8)} 
 		if("Plink"%in%output_data_type&phased_genotype==FALSE){type_number=c(type_number,2)} 
@@ -1250,32 +1085,6 @@ if(input_data_type=="Plink"){
 		if("Plink"%in%output_data_type){type_number=c(type_number,2)}
 		if("Hapmap"%in%output_data_type){type_number=c(type_number,3)}
 		if("VCF"%in%output_data_type){type_number=c(type_number,4)}		 
-   
-   }
-   
-}else if(input_data_type=="QMsim"){
-
-		if("VCF"%in%output_data_type){
-	
-		cat("Please make sure  provide input_data_qmsim_map, which should be 3 columns(SNP_name, Chromosome, Position) or 5 columns(Chromosome,SNP_name, Position, Ref, Alt) \n")
-
-		}
-
-   if(bigmemory_cal==FALSE){
-		if("Numeric"%in%output_data_type){type_number=c(type_number,1)}
-		if("Plink"%in%output_data_type){type_number=c(type_number,2)}
-		if("Hapmap"%in%output_data_type){type_number=c(type_number,3)}
-		if("VCF"%in%output_data_type){type_number=c(type_number,4)}
-		if("Boa"%in%output_data_type){type_number=c(type_number,5)}
-		if("BLUPF90"%in%output_data_type){type_number=c(type_number,6)}
-	
-   }else{ 
-         if("Numeric"%in%output_data_type){type_number=c(type_number,11)} 
-		if("Plink"%in%output_data_type){type_number=c(type_number,2)}
-		if("Hapmap"%in%output_data_type){type_number=c(type_number,3)}
-		if("VCF"%in%output_data_type){type_number=c(type_number,4)}	
-		if("Boa"%in%output_data_type){type_number=c(type_number,5)}
-		if("BLUPF90"%in%output_data_type){type_number=c(type_number,6)}
    
    }
 }

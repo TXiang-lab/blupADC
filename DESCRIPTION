@@ -20,3 +20,5 @@ LinkingTo: Rcpp, RcppArmadillo,RcppProgress,BH,bigmemory,R6
 Suggests: ggplot2,patchwork,ggimage,future
 RoxygenNote: 7.1.1
 LazyData: true
+NeedsCompilation: yes
+Packaged: 2022-10-07 21:09:11 UTC; qumei

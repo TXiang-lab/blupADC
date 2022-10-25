@@ -30,6 +30,9 @@ cal_kinship<-function(
 	     kinship_type=NULL,         #c("G_A","G_D","P_A","P_D","H_A"),
 	     dominance_type="genotypic",     # "genotypic","classical"
 	     Metafounder_algorithm=FALSE,
+          Metafounder_scaled=TRUE,
+          gamma_method="gls", # gls,naive, provided
+		provided_gamma=matrix(0.5,2,2),
 	     SSBLUP_omega=0.05, # ssblup parameter
 	     gene_dropping_algorithm=FALSE,
 	     gene_dropping_iteration=1000, # gene_dropping_algorithm 的模拟次数
@@ -48,6 +51,7 @@ cal_kinship<-function(
 	      APY_algorithm=FALSE,
 	      APY_eigen_threshold=0.95,
 	      APY_n_core=0,
+		  sex_error_check=FALSE,
 		  col3_bigmemory=FALSE,
 		  col3_bigmemory_data_path=NULL,
 		  col3_bigmemory_data_name=NULL,
@@ -197,6 +201,12 @@ gc();
 
 if(bigmemory_cal==TRUE){output_matrix_path=bigmemory_data_path;output_matrix_name=bigmemory_data_name}
 
+priority_rename_id=NULL
+if(Metafounder_algorithm==TRUE){
+meta_ind=as.character(input_pedigree[input_pedigree[,2]==0&input_pedigree[,3]==0,1])
+priority_rename_id=input_pedigree[,1]
+}
+
 #读取系谱数据
 if(!is.null(input_pedigree_path)&!is.null(input_pedigree_name)){
 input_pedigree=fread(paste0(input_pedigree_path,"/",input_pedigree_name),data.table=F)
@@ -205,7 +215,7 @@ input_pedigree=fread(paste0(input_pedigree_path,"/",input_pedigree_name),data.ta
 #rename IND
 if(!is.null(input_pedigree)&is.null(input_data_numeric)){
 
-rename_ped=trace_pedigree(input_pedigree,multi_col=pedigree_multi_col)$rename_ped
+rename_ped=trace_pedigree(input_pedigree,multi_col=pedigree_multi_col,priority_rename_id=priority_rename_id,sex_error_check=sex_error_check)$rename_ped
 IND_pedigree=rename_ped[,1]
 num_ped=as.matrix(rename_ped[,3:5]) #数字化的3列系谱
 num_ped=apply(num_ped,2,as.integer)
@@ -222,7 +232,7 @@ IND_pedigree=as.numeric(IND_pedigree)
 
 }else if(!is.null(input_pedigree)&!is.null(input_data_numeric)){
 cat("Please make sure the genotype id is accordance with the _pedigree_id! \n")
-rename_ped=trace_pedigree(input_pedigree,multi_col=pedigree_multi_col)$rename_ped
+rename_ped=trace_pedigree(input_pedigree,multi_col=pedigree_multi_col,priority_rename_id=priority_rename_id,sex_error_check=sex_error_check)$rename_ped
 IND_pedigree=rename_ped[,1]
 num_ped=as.matrix(rename_ped[,3:5]) #数字化的3列系谱
 num_ped=apply(num_ped,2,as.integer)
@@ -260,6 +270,7 @@ homo_inbred=NULL;diag_inbred=NULL;pedigree_inbred=NULL;H_inbred=NULL
 if(bigmemory_cal==FALSE){
 #Part1 计算kinship 
 ########################################## P_A ##########################################
+if(Metafounder_algorithm==FALSE){
 if("P_A"%in%kinship_type&(!"P_Ainv"%in%kinship_type)){
 P_A=makeA_cpp(num_ped)
 P_Ainv=NULL
@@ -272,7 +283,41 @@ P_Ainv=makeAinv_cpp(num_ped)
 P_Ainv=makeAinv_cpp(num_ped)
 P_A=NULL
 }
+}else{
 
+#estimate gamma 
+if("P_A"%in%kinship_type|"P_Ainv"%in%kinship_type){
+IND_geno2=setdiff(IND_geno,IND_pedigree)    #有基因型但是无系谱
+IND_A22=intersect(IND_pedigree,IND_geno)    #既有基因型又有系谱
+IND_A11=setdiff(IND_pedigree,IND_A22)        #有系谱但是无基因型
+IND_Additive=c(IND_A11,IND_A22)               #在H矩阵中的个体
+pos_geno=match(IND_A22,IND_geno)-1            #既有基因型又有系谱的个体在 基因型数据中的位置
+pos_A11=match(IND_A11,IND_pedigree)-1         #有系谱但是无基因型个体在  在系谱中的位置
+pos_A22=match(IND_A22,IND_pedigree)-1         #既有基因型又有系谱的个体在  在系谱中的位置
+pos_A=match(IND_Additive,IND_pedigree)-1      #H矩阵的个体  在系谱中的位置 
+pos_H22=match(IND_A22,IND_Additive)-1         #既有基因型又有系谱的个体在  在H矩阵中的位置
+if(length(IND_A22)==0){stop("No aminals both with genotype and_pedigree, Please check you data ! \n")
+}else{cat(length(IND_A22),"individuals both have genotype and_pedigree \n")}
+if(length(IND_geno2)>0){cat(paste0(length(IND_geno2)," individuals have genotype but not in the_pedigree, these individuals are removed ! \n"))}
+}
+
+if("P_A"%in%kinship_type&(!"P_Ainv"%in%kinship_type)){
+P_A=makeA_metafounder_cpp(num_ped,input_data_numeric,meta_ind,as.matrix(provided_gamma),pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=TRUE,inverse=FALSE,omega=SSBLUP_omega,scaled=Metafounder_scaled,gamma_method=gamma_method)$A
+P_Ainv=NULL
+rm(P_Aresult);gc();
+}else if("P_A"%in%kinship_type&("P_Ainv"%in%kinship_type)){
+P_Aresult=makeA_metafounder_cpp(num_ped,input_data_numeric,meta_ind,as.matrix(provided_gamma),pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=TRUE,inverse=TRUE,omega=SSBLUP_omega,scaled=Metafounder_scaled,gamma_method=gamma_method)
+P_A=P_Aresult$A
+P_Ainv=P_Aresult$Ainv
+rm(P_Aresult);gc();
+}else if(!"P_A"%in%kinship_type&("P_Ainv"%in%kinship_type)){
+P_Ainv=makeA_metafounder_cpp(num_ped,input_data_numeric,meta_ind,as.matrix(provided_gamma),pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=FALSE,inverse=TRUE,omega=SSBLUP_omega,scaled=Metafounder_scaled,gamma_method=gamma_method)$Ainv
+P_A=NULL
+}
+
+
+
+}
 
 if(!is.null(P_A)){
 
@@ -589,24 +634,24 @@ H_Ainv=makeHA_cpp(num_ped,input_data_numeric,IND_geno,pos_A11,pos_A22,pos_geno,p
 H_A=NULL
 H_A_inbred=NULL
 }
-}else{
 
+}else{
 if("H_A"%in%kinship_type&(!"H_Ainv"%in%kinship_type)){
-H_Aresult=makeHA_metafounder_cpp(num_ped,input_data_numeric,pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=TRUE,inverse=FALSE,omega=SSBLUP_omega)
+H_Aresult=makeHA_metafounder_cpp(num_ped,input_data_numeric,meta_ind,as.matrix(provided_gamma),pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=TRUE,inverse=FALSE,omega=SSBLUP_omega,scaled=Metafounder_scaled,gamma_method=gamma_method)
 H_A_inbred=H_Aresult$inbred
 H_inbred=data.frame(Id=IND_Additive,Diag_inbred=H_A_inbred,stringsAsFactors=F)
 H_A=H_Aresult$H
 H_Ainv=NULL
 rm(H_Aresult);gc();
 }else if("H_A"%in%kinship_type&("H_Ainv"%in%kinship_type)){
-H_Aresult=makeHA_metafounder_cpp(num_ped,input_data_numeric,pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=TRUE,inverse=TRUE,omega=SSBLUP_omega)
+H_Aresult=makeHA_metafounder_cpp(num_ped,input_data_numeric,meta_ind,as.matrix(provided_gamma),pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=TRUE,inverse=TRUE,omega=SSBLUP_omega,scaled=Metafounder_scaled,gamma_method=gamma_method)
 H_A_inbred=H_Aresult$inbred
 H_inbred=data.frame(Id=IND_Additive,Diag_inbred=H_A_inbred,stringsAsFactors=F)
 H_A=H_Aresult$H
 H_Ainv=H_Aresult$Hinv
 rm(H_Aresult);gc();
 }else if(!"H_A"%in%kinship_type&("H_Ainv"%in%kinship_type)){
-H_Ainv=makeHA_metafounder_cpp(num_ped,input_data_numeric,pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=FALSE,inverse=TRUE,omega=SSBLUP_omega)$Hinv
+H_Ainv=makeHA_metafounder_cpp(num_ped,input_data_numeric,meta_ind,as.matrix(provided_gamma),pos_A11,pos_A22,pos_geno,pos_A,pos_H22,direct=FALSE,inverse=TRUE,omega=SSBLUP_omega,scaled=Metafounder_scaled,gamma_method=gamma_method)$Hinv
 H_A=NULL
 H_A_inbred=NULL
 }

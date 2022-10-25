@@ -33,13 +33,17 @@ geno_qc_impute<-function(
 	 qc_maf=0.05,
 	 qc_hwe=0.0000001,
 	 extra_parameter=NULL,
-	 plink_software_path=ifelse(as.character(Sys.info()["sysname"])=="Windows",system.file("extdata/bin_windows", package = "blupADC"),system.file("extdata/bin_linux", package = "blupADC")),
+	 plink_software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",system.file("extdata/bin_linux", package = "blupADC"),
+						 ifelse(as.character(Sys.info()["sysname"])=="Windows",system.file("extdata/bin_windows", package = "blupADC"),
+						         system.file("extdata/bin_mac", package = "blupADC"))),
 	 plink_software_name="plink", 
 	 chr_set=NULL, # 识别多个染色体-plink, 最多可识别多个95个 	 
 	 keep_inds_set=NULL,   #字符串向量
 	 keep_snps_set=NULL,   #字符串向量
 	 keep_chroms_set=NULL, #数值向量
-	 beagle_software_path=ifelse(as.character(Sys.info()["sysname"])=="Windows",system.file("extdata/bin_windows", package = "blupADC"),system.file("extdata/bin_linux", package = "blupADC")),
+	 beagle_software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",system.file("extdata/bin_linux", package = "blupADC"),
+						 ifelse(as.character(Sys.info()["sysname"])=="Windows",system.file("extdata/bin_windows", package = "blupADC"),
+						         system.file("extdata/bin_mac", package = "blupADC"))),
 	 beagle_software_name="beagle.5.2.jar",
 	 beagle_ped_path=NULL,  
 	 beagle_ped_name=NULL,

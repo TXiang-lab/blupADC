@@ -1,0 +1,31 @@
+{
+    "args": [
+        "-fopenmp",
+        "-std=gnu++11",
+        "-I/Library/Frameworks/R.framework/Resources/include",
+        "-DNDEBUG",
+        "-DARMA_64BIT_WORD=1",
+        "-I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include",
+        "-fPIC",
+        "-I/Library/Frameworks/R.framework/Versions/4.1/Resources/library/Rcpp/include",
+        "-I/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppArmadillo/include",
+        "-I/Library/Frameworks/R.framework/Versions/4.1/Resources/library/RcppProgress/include",
+        "-I/Library/Frameworks/R.framework/Versions/4.1/Resources/library/BH/include",
+        "-I/Library/Frameworks/R.framework/Versions/4.1/Resources/library/bigmemory/include",
+        "-DEIGEN_DONT_VECTORIZE",
+        "-I/Library/Developer/CommandLineTools/usr/lib/clang/14.0.0/include",
+        "-I/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin21/12/../../../../../../include/c++/12",
+        "-I/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin21/12/../../../../../../include/c++/12/x86_64-apple-darwin21",
+        "-I/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin21/12/../../../../../../include/c++/12/backward",
+        "-I/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin21/12/include",
+        "-I/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin21/12/include-fixed",
+        "-I/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/usr/include",
+        "-I/Library/Developer/CommandLineTools/SDKs/MacOSX12.sdk/System/Library/Frameworks"
+    ],
+    "pch": "RcppArmadillo",
+    "is_cpp": true,
+    "hash": "1665166630166525302016652529531665252953",
+    "compiler": "1940674775554654367",
+    "rversion": "4.1.0",
+    "dbversion": 1
+}
