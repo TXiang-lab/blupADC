@@ -22,7 +22,7 @@
 Finally, we kindly provides an easier way of applying `blupADC`, which is a free  website([shinyapp](http://47.95.251.15:443/blupADC/)).  Several functions are still under development.  But the pitfall of this website is that it can't handle big data. 
 
 😊 Good Luck Charlie ! 
-If you have suggestion or question, please contact: hzau_qsmei@163.com ! 
+If you have suggestion or question, please contact: quanshun1994@gmail.com ! 
 ### 👨‍💻 Citation 
 
 Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An R package and shiny toolkit for comprehensive genetic data analysis in animal and plant breeding." *bioRxiv* (2021), **doi:** https://doi.org/10.1101/2021.09.09.459557
