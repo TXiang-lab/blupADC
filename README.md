@@ -57,7 +57,6 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 ```R
 install.packages(c("Rcpp", "RcppArmadillo","RcppProgress","data.table","bigmemory","R6"))
 ```
-
 **👉 Note: In the analysis of DMU  and BLUPF90 , we need to download software DMU  ([DMU download website](https://dmu.ghpc.au.dk/dmu/))  and BLUPF90 previously ([BLUPF90 download website](http://nce.ads.uga.edu/html/projects/programs/)). For convenience, we have encapsulated  the basic module of DMU and BLUPF90 in package `blupADC`.**  
 
  **For commercial use of DMU and BLUPF90,  user must contact the author of DMU and BLUPF90 !!!** 
@@ -82,6 +81,7 @@ install.packages(packageurl,repos=NULL,method="libcurl")
 packageurl <- "https://gitee.com/qsmei/blupADC/attach_files/1062637/download/blupADC_1.0.6.tar.gz"
 install.packages(packageurl,repos=NULL,method="libcurl")
 ```
+⚠️During installation, if there are some errors like that: ‘trimatl_ind’ was not declared in this scope, ‘class arma::Mat<double>’ has no member named ‘clean’......Please make sure the version of RcppArmadillo over 0.9.870.2.0."
 
 After installed successfully, the `blupADC` package can be loaded by typing
 
