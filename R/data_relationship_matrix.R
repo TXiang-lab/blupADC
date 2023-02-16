@@ -77,15 +77,16 @@ if(length(MKL_status)==0){
 cat("In terms of relationship matrix construction, we highly recommend you to switch to R-open which supprots MKL! \n")
 }else{
 
-if(cpu_cores==1){
-
-if(getMKLthreads()==1){
-
-max_cores=parallel::detectCores()
-setMKLthreads(max_cores)
-
-}}
-
+#if(cpu_cores==1){
+#
+#if(getMKLthreads()==1){
+#
+#max_cores=parallel::detectCores()
+#setMKLthreads(max_cores)
+#
+#}}	
+print(paste0("The number of cores you used in  matrix multiplication is ",cpu_cores,"!"))
+setMKLthreads(cpu_cores)
 }
 
 inbred_output_matrix_path=output_matrix_path
