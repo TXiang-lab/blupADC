@@ -143,23 +143,23 @@ covariate_effect_name=c(covariate_effect_name,list(covariate_effect))
 
 
 #software create DIR file 
-COMMENT=matrix("",nrow=2,ncol=length(phe_col_names))
+COMMENT=matrix("",nrow=2,ncol=length(phe_col_names)+10)
 
-ANALYSE=matrix("",nrow=2,ncol=length(phe_col_names))
+ANALYSE=matrix("",nrow=2,ncol=length(phe_col_names)+10)
 
-DATA=matrix("",nrow=2,ncol=length(phe_col_names))
+DATA=matrix("",nrow=2,ncol=length(phe_col_names)+10)
 
-VARIABLE=matrix("",nrow=10,ncol=length(phe_col_names))
+VARIABLE=matrix("",nrow=10,ncol=length(phe_col_names)+10)
 
-VAR_STR=matrix("",nrow=4+length(relationship_name),ncol=length(phe_col_names))
+VAR_STR=matrix("",nrow=4+length(relationship_name),ncol=length(phe_col_names)+10)
 
-SOLUTION=matrix("",nrow=2,ncol=length(phe_col_names))
+SOLUTION=matrix("",nrow=2,ncol=length(phe_col_names)+10)
 
-MODEL=matrix("",nrow=1+Trait_n*(Trait_n+6),ncol=length(phe_col_names))
+MODEL=matrix("",nrow=1+Trait_n*(Trait_n+6),ncol=length(phe_col_names)+10)
 
-PRIOR=matrix("",nrow=(Trait_n*(Trait_n+1)/2)*6,ncol=length(phe_col_names))
+PRIOR=matrix("",nrow=(Trait_n*(Trait_n+1)/2)*6,ncol=length(phe_col_names)+10)
 
-PARAMETER=matrix("",nrow=10*length(target_trait_name),ncol=length(phe_col_names))
+PARAMETER=matrix("",nrow=10*length(target_trait_name),ncol=length(phe_col_names)+10)
 
 
 
