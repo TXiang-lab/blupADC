@@ -279,7 +279,9 @@ system(paste0("java ",Java_Space," -jar ", beagle_software,beagle_reference,beag
 
 file.rename(paste0(output_imputation_data,".log"),paste0(output_imputation_data,"_beagle_output.log"))
 #删除填充的input data
-system(paste0("rm -rf ",input_imputation_data))
+if(is.null(input_data_path)&is.null(input_data_name)){
+	system(paste0("rm -rf ",input_imputation_data))
+}	
 #解压 .gz 格式			
 system(paste0("gzip  -d ",output_imputation_data,".vcf.gz")) #将.gz文件解压为 .vcf  ,便于进行 vcftools转换
 }
