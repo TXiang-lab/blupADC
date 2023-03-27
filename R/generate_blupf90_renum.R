@@ -289,7 +289,7 @@ if(analysis_model=="GBLUP_A"){
 	co_variance=inner_matrix(co_variance)
 
 	genetic_random_effect_part=rbind(genetic_random_effect_part,"EFFECT",paste0(paste(match(rep(genetic_effect_name,Trait_n),phe_col_names),collapse=" ")," cross alpha "),
-	                              "RANDOM","animal","SNP_FILE",addtive_relationship_name,
+	                              "RANDOM","animal",Optional_genetic_effect,"SNP_FILE",addtive_relationship_name,
 						     "(CO)VARIANCES",co_variance,permanent_effect_part)
 }else if(analysis_model=="PBLUP_A"){
 
