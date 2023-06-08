@@ -611,8 +611,8 @@ PARAMETER[6,1]="0"
 
 }else if(dmu_module=="dmu5"){
 PARAMETER[1,1]="$DMU5"
-PARAMETER[2,2]=paste0(dmu5_iter," 1e-9")
-PARAMETER[3,3]="512"
+PARAMETER[2,1]=paste0(dmu5_iter," 1e-9")
+PARAMETER[3,1]="512"
 
 }else if(dmu_module=="rjmc"){
 PARAMETER[1,1]="$RJMC"
