@@ -1,5 +1,0 @@
-new("big.matrix.descriptor", description = list(sharedType = "FileBacked", 
-    filename = "blupADC_numeric.bk", dirname = "c:/Users/26564/Desktop/", 
-    totalRows = 300L, totalCols = 8075L, rowOffset = c(0, 300
-    ), colOffset = c(0, 8075), nrow = 300, ncol = 8075, rowNames = NULL, 
-    colNames = NULL, type = "integer", separated = FALSE))

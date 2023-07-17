@@ -41,10 +41,19 @@ generate_DIR<-function(phe_col_names=NULL,
 					   gibbs_n_rounds=10000,
 					   gibbs_n_burnin=1000,
 					   gibbs_n_gaps=5,
-					   gibbs_seeds=c(1994,1998)
+					   gibbs_seeds=c(1994,1998),
+					   #newly added parameters for the new feature in blupADC
+						phe_file=NULL,
+						kinship_file=NULL,
+						prior_file=NULL
 					   ){
 #生成 social_effect的表型
 #social effect其实可以看做是特殊情况的随机回归，需要将随机效应那一行设置为 1+1+1+1类似的形式即可
+
+if(is.null(phe_file)){
+phe_file=paste0(phe_path,"/",phe_name)
+}
+
 
 if(TRUE%in%include_social_effect){
 
@@ -55,7 +64,7 @@ if(!is.null(group_effect_name)){
 
 cat("Generating phenotype of social genetic effect automatically......\n")
 
-phe=fread(paste0(phe_path,"/",phe_name),data.table=F,header=F)
+phe=fread(phe_file,data.table=F,header=F)
 colnames(phe)=phe_col_names
 
 social_result=generate_social_phe(phe=phe,
@@ -184,7 +193,7 @@ dmu_algorithm_code=ifelse(dmu_module=="dmuai",1,
 ANALYSE[1,1]=paste0("$ANALYSE ",dmu_module_code," ",dmu_algorithm_code," 0 0 ")
 
 #$DATA 
-DATA[1,1]=paste0("$DATA  ASCII (",integer_n,",",real_n," ,",missing_value,") ",phe_path,"/",phe_name)
+DATA[1,1]=paste0("$DATA  ASCII (",integer_n,",",real_n," ,",missing_value,") ",phe_file)
 
 
 #$VARIABLE
@@ -287,10 +296,15 @@ random_lev_names=as.character(random_lev)
 random_total_lev_number=random_lev_number[match(do.call(c,random_effect_name),random_lev_names)]
 
 
-
 #添加残差效应序号：
 residual_number=length(random_lev_number)+1
 random_total_lev_number=c(random_total_lev_number,rep(residual_number,Trait_n))
+
+
+#for assigning the names of AI-inv matrix
+ai_random_lev_names=c(random_lev_names,"Res")
+ai_random_total_lev_number=random_total_lev_number
+
 
 
 #多个性状循环
@@ -504,37 +518,44 @@ MODEL[(Trait_n+2+Trait_n)+2*Trait_n+1,1]=residual_cov_trait_n
 }
 
 
+if(is.null(kinship_file)&!is.null(relationship_name)){
+
+	
+	kinship_file=paste0(relationship_path,"/",relationship_name)
+
+}
 
 #$VAR_STR
 #定义 $VAR_STR 中的文件名称
-if(is.null(relationship_name)){
+if(is.null(relationship_name)&is.null(kinship_file)){
 stop("Please provide relationship name!")
 }else{
 
-addtive_relationship_name=relationship_name[1]
-if(analysis_model%in%c("GBLUP_AD")){dominance_relationship_name=relationship_name[2]}
-if(analysis_model%in%c("SSBLUP_A")){SSBLUP_G_matrix_name=relationship_name[2]}
+addtive_relationship_name=kinship_file[1]
+if(analysis_model%in%c("GBLUP_AD")){dominance_relationship_name=kinship_file[2]}
+if(analysis_model%in%c("SSBLUP_A")){SSBLUP_G_matrix_name=kinship_file[2]}
 }
 
 if(analysis_model=="PBLUP_A"){
-VAR_STR[1,1]=paste0("$VAR_STR 1 PED ",ped_inbred_number," ASCII   ",relationship_path,"/",addtive_relationship_name)
+VAR_STR[1,1]=paste0("$VAR_STR 1 PED ",ped_inbred_number," ASCII   ",addtive_relationship_name)
 }else if (analysis_model=="PBLUP_AD"){
-VAR_STR[1,1]=paste0("$VAR_STR 1 PED ",ped_inbred_number," ASCII   ",relationship_path,"/",addtive_relationship_name)
-VAR_STR[3,1]=paste0("$VAR_STR 2 COR ASCII     ",relationship_path,"/",dominance_relationship_name)
+VAR_STR[1,1]=paste0("$VAR_STR 1 PED ",ped_inbred_number," ASCII   ",addtive_relationship_name)
+VAR_STR[3,1]=paste0("$VAR_STR 2 COR ASCII     ",dominance_relationship_name)
 }else if (analysis_model=="GBLUP_A"){
-VAR_STR[1,1]=paste0("$VAR_STR 1 COR ASCII     ",relationship_path,"/",addtive_relationship_name)
+VAR_STR[1,1]=paste0("$VAR_STR 1 COR ASCII     ",addtive_relationship_name)
 }else if (analysis_model=="GBLUP_AD"){
-VAR_STR[1,1]=paste0("$VAR_STR 1 COR ASCII     ",relationship_path,"/",addtive_relationship_name)
-VAR_STR[3,1]=paste0("$VAR_STR 2 COR ASCII     ",relationship_path,"/",dominance_relationship_name)
+VAR_STR[1,1]=paste0("$VAR_STR 1 COR ASCII     ",addtive_relationship_name)
+VAR_STR[3,1]=paste0("$VAR_STR 2 COR ASCII     ",dominance_relationship_name)
 }else if (analysis_model=="SSBLUP_A"){
-VAR_STR[1,1]=paste0("$VAR_STR 1 PGMIX 1 ASCII  ",relationship_path,"/",addtive_relationship_name,"    ",
+
+VAR_STR[1,1]=paste0("$VAR_STR 1 PGMIX 1 ASCII  ",addtive_relationship_name,"    ",
                       relationship_path,"/",IND_geno_file_name,"   ",
-				   relationship_path,"/",SSBLUP_G_matrix_name,"  ",
+				   SSBLUP_G_matrix_name,"  ",
 				   SSBLUP_omega,"  G-ADJUST")
 }else if (analysis_model=="User_define"){
 
 for(i in 1:length(relationship_name)){
-VAR_STR[i,1]=paste0("$VAR_STR ",i," COR ASCII     ",relationship_path,"/",relationship_name[i])
+VAR_STR[i,1]=paste0("$VAR_STR ",i," COR ASCII     ",kinship_file[i])
 }}
 
 
@@ -652,7 +673,8 @@ DIR=rbind(COMMENT,"",ANALYSE,"",DATA,"",VARIABLE,"",VAR_STR,"",MODEL,"",SOLUTION
 setwd(output_DIR_path)
 if(is.null(output_DIR_name)){output_DIR_name="Trait.DIR"}
 write.table(DIR,output_DIR_name,quote=F,row.names=F,col.names=F,sep=" ")
-return(list(DIR=union_dir(DIR),random_effect_name=random_effect_name))
+
+return(list(DIR=union_dir(DIR),random_effect_name=random_effect_name,ai_name=list(lev=ai_random_total_lev_number,lev_name=ai_random_lev_names)))
 }
 
 

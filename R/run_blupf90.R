@@ -64,18 +64,67 @@ run_BLUPF90<-function(
 								   BLUPF90_genumeric_name=NULL,
 								   BLUPF90_map_name=NULL,
 								   plot_variance=FALSE,
-								   BLUPF90_software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",
-																system.file("extdata/bin_linux", package = "blupADC"),
-																ifelse(as.character(Sys.info()["sysname"])=="Windows",
-																system.file("extdata/bin_windows", package = "blupADC"),
-																system.file("extdata/bin_mac", package = "blupADC")
-																))
-
-){
+								   BLUPF90_software_path=blupADC_software_path(),
+								   #newly added parameters for the new feature in blupADC
+								   phe_file=NULL,
+								   kinship_file=NULL,
+								   prior_file=NULL
+								   )
+{
 
 cat("R package:blupADC is only the wrapper of blupf90-package in the field of academic research! \n")
 cat("For some very complicated models, a direct use of the blupf90-package is needed ! \n")
 cat("For commercial use of the blupf90-package please contact Ignacy Misztal. Email: ignacy@uga.edu  !\n")
+
+
+ if(length(grep(" ",phe_file))>0){
+	# last_slash <- sub(".*/([^/]+)$", "\\1", my_string)
+	# before_last_slash <- sub("/[^/]*$", "", my_string)
+	stop("phe_file shouldn't contain blank!")
+ }
+
+if(!is.null(phe_file)){
+
+
+last_slash <- sub(".*/([^/]+)$", "\\1", phe_file)
+before_last_slash <- sub("/[^/]*$", "", phe_file)
+
+phe_path=before_last_slash
+phe_name=last_slash
+
+}
+
+
+
+if(!is.null(kinship_file)){
+
+	
+	for(i in 1:length(kinship_file)){
+
+		last_slash <- sub(".*/([^/]+)$", "\\1", kinship_file[i])
+		before_last_slash <- sub("/[^/]*$", "", kinship_file[i])
+
+		relationship_name=c(relationship_name,last_slash)
+		relationship_path=c(relationship_path,before_last_slash)
+	}
+	
+}
+
+
+if(length(relationship_path)<length(relationship_name)){
+relationship_path=rep(relationship_path,length(relationship_name))
+}
+
+
+#assign software path 
+if(is.null(BLUPF90_software_path)){  #if is null, blupADC will use the software from package blupSUP
+
+BLUPF90_software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",
+						   system.file("extdata/bin_linux", package = "blupSUP"),
+							  ifelse(as.character(Sys.info()["sysname"])=="Windows",
+									system.file("extdata/bin_windows", package = "blupSUP"),
+										system.file("extdata/bin_mac", package = "blupSUP")))
+}
 
 cat(paste0("Start the ",analysis_model," analyse of ",length(target_trait_name)," trait model:",paste(target_trait_name,collapse = " & ")," \n"))
 
@@ -92,7 +141,7 @@ cat(paste0("Results are saved in path: ",output_result_path,"\n"))
 file.copy(from=paste0(phe_path,"/",phe_name),to=output_result_path,overwrite=TRUE)
 
 for(i in 1:length(relationship_name)){
-file.copy(from=paste0(relationship_path,"/",relationship_name[i]),to=output_result_path,overwrite=TRUE)
+file.copy(from=paste0(relationship_path[i],"/",relationship_name[i]),to=output_result_path,overwrite=TRUE)
 }
 
 if(!is.null(provided_renf90_par_file_path)&!is.null(provided_renf90_par_file_name)){ #用户提供 blupf90的参数文件
@@ -130,10 +179,19 @@ generate_renum(
 			    provided_BLUPF90_prior_effect_name=provided_BLUPF90_prior_effect_name, #随机效应的名称, 包括Residual
 				BLUPF90_alt_option=BLUPF90_alt_option,
 			    BLUPF90_genumeric_name=BLUPF90_genumeric_name,
-			    BLUPF90_map_name=BLUPF90_map_name)
+			    BLUPF90_map_name=BLUPF90_map_name,
+			    phe_file=phe_file,
+			    kinship_file=kinship_file
+				)
 
 cat("Start running renumf90 module of BLUPF90......\n")
-system2(paste0(BLUPF90_software_path,"/renumf90"),"renum.par",stdout="renumf90.log")
+renum90=system2(paste0(BLUPF90_software_path,"/renumf90"),"renum.par",stdout="renumf90.log")
+
+
+if(renum90 != 0){
+	system(paste0("tail renumf90.log"))
+	stop(paste0("Found errors in running renumf90.par, please check the log file:renumf90.log"))
+}	
 
 if(analysis_model=="User_define"){
 #rename renf90.dat 
@@ -168,16 +226,16 @@ system("ulimit -s unlimited")
 #system2(paste0(BLUPF90_software_path,"/renumf90"),"renum.par",stdout="renumf90.log")
 if(BLUPF90_algorithm=="AI_REML"){
 cat("Start running AI REML module of BLUPF90......\n")
-system2(paste0(BLUPF90_software_path,"/airemlf90"),"renf90.par",stdout="ai_remlf90.log")
+renf90=system2(paste0(BLUPF90_software_path,"/airemlf90"),"renf90.par",stdout="ai_remlf90.log")
 cat("Complete running AI REML module of BLUPF90\n")
 }else if(BLUPF90_algorithm=="EM_REML"){
 cat("Start running EM REML module of BLUPF90......\n")
-system2(paste0(BLUPF90_software_path,"/remlf90"),"renf90.par",stdout="em_remlf90.log")
+renf90=system2(paste0(BLUPF90_software_path,"/remlf90"),"renf90.par",stdout="em_remlf90.log")
 cat("Complete running AI REML module of BLUPF90\n")
 }else if(BLUPF90_algorithm=="BLUP"){
 cat("Start running BLUP module of BLUPF90......\n")
 cat("No need to estimate variace components......\n")
-system2(paste0(BLUPF90_software_path,"/blupf90"),"renf90.par",stdout="blup_remlf90.log")
+renf90=system2(paste0(BLUPF90_software_path,"/blupf90"),"renf90.par",stdout="blup_remlf90.log")
 cat("Complete running BLUP module of BLUPF90\n")
 }else if(BLUPF90_algorithm=="Gibbs"){
 cat("Start running Gibbs module of BLUPF90......\n")
@@ -186,16 +244,25 @@ cat("Please enter the following three papamters in each line! \n")
 cat("1. Number of samples \n")
 cat("2. Length of burn-in \n")
 cat("3. Give n to store every n-th sample? (1 means store all samples) \n")
-system2(paste0(BLUPF90_software_path,"/",gibbs_sampler),"renf90.par",stdout=paste0(gibbs_sampler,".log"))
+renf90=system2(paste0(BLUPF90_software_path,"/",gibbs_sampler),"renf90.par",stdout=paste0(gibbs_sampler,".log"))
 cat(paste0("Using gibbs_sampler: ",gibbs_sampler," to estimate variace components......\n"))
 cat("Complete running Gibbs module of BLUPF90 \n")
 cat("Please enter the following three papamters in each line! \n")
 cat("1. Additional number of Burn-in \n")
 cat("2. Give n to store every n-th sample? (1 means store all samples) \n")
 cat("3. Enter 0 for exiting \n")
-system2(paste0(BLUPF90_software_path,"/postgibbsf90"),"renf90.par",stdout=paste0("postgibbsf90.log"))
+renf90=system2(paste0(BLUPF90_software_path,"/postgibbsf90"),"renf90.par",stdout=paste0("postgibbsf90.log"))
 cat("Complete postgibbsf90 analysis! \n")
 }
+
+
+
+if(renf90 != 0){
+
+	system(paste0("tail renf90.log"))
+	stop(paste0("Found errors in running renf90.par, please check the log file:renf90.log"))
+	
+}	
 
 if(!"Gibbs"%in%BLUPF90_algorithm){
 #计算校正表型

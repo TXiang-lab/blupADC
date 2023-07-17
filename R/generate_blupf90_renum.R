@@ -48,7 +48,10 @@ generate_renum<-function(
 								   provided_BLUPF90_prior_effect_name=NULL, #随机效应的名称, 包括Residual
 								   BLUPF90_alt_option=NULL,
 								   BLUPF90_genumeric_name=NULL,
-								   BLUPF90_map_name=NULL
+								   BLUPF90_map_name=NULL,
+								   #newly added parameters for the new feature in blupADC
+									phe_file=NULL,
+									kinship_file=NULL
 								   ){
 
 Trait_n=length(target_trait_name)
@@ -73,6 +76,8 @@ if(!is.null(covariate_effect_name)){if(length(covariate_effect_name)!=Trait_n){s
 if(!is.null(provided_BLUPF90_prior_file_name)&!is.null(provided_BLUPF90_prior_file_path)&!is.null(provided_BLUPF90_prior_effect_name)){
 given_prior=data.table::fread(paste0(provided_BLUPF90_prior_file_path,"/",provided_BLUPF90_prior_file_name),data.table=F,header=F)
 given_prior=as.matrix(given_prior)
+print(given_prior)
+print(provided_BLUPF90_prior_effect_name)
 }else{
 
 prior=BLUPF90_generate_prior(target_trait_name=target_trait_name,
@@ -82,6 +87,7 @@ prior=BLUPF90_generate_prior(target_trait_name=target_trait_name,
 given_prior=as.matrix(prior)
 
 provided_BLUPF90_prior_effect_name=c(do.call(c,random_effect_name),rep("Residual",length(target_trait_name)))
+
 
 }
 
@@ -457,7 +463,7 @@ file_OPTION_part=rbind(file_OPTION_part,option)
 }
 }
 
-renum_par_file=plyr::rbind.fill.matrix(header_information_part,
+renum_par_file=rbind_fill(header_information_part,
 								 residual_effect_part,
 								 fixed_effect_part,
 								 covariate_effect_part,
@@ -467,6 +473,30 @@ renum_par_file=plyr::rbind.fill.matrix(header_information_part,
 								 SNP_genumeric_file_part_option,
 								 file_OPTION_part)
 utils::write.table(renum_par_file,"renum.par",quote=F,row.names=F,col.names=F)
+}
+
+
+#instead of plyr::rbind.fill.matrix 
+rbind_fill <- function(...) {
+  # get the input matrices as a list
+  matrices <- list(...)
+  
+  # determine the maximum number of columns among the matrices
+  max_cols <- max(sapply(matrices, ncol))
+
+  # create new matrices with the same number of columns
+  matrices_new <- lapply(matrices, function(x) {
+    if (ncol(x) < max_cols) {
+      x_new <- matrix(NA, nrow(x), max_cols)
+      x_new[, 1:ncol(x)] <- x
+      x_new
+    } else {
+      x
+    }
+  })
+
+  # combine the matrices row-wise using do.call and rbind
+  do.call(rbind, matrices_new)
 }
 
 

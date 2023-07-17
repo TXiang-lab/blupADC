@@ -22,4 +22,9 @@ export(cal_blupf90_se_reml)
 export(geno_format)
 export(LR_evaluation)
 export(Hotelling_test)
+export(BLUPpar)
+export(BLUP)
+export(BLUPpar)
+export(CVpredi)
+
 
