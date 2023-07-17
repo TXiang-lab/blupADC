@@ -47,6 +47,10 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 - Support running multiple tasks in DMU and BLUPF90 simultaneously! (2022.05.25)  **see details in Feature 7.1**
 - Encapsulated object-oriented programming in running DMU!(2022.05.30) **see details in Feature 7.2**
 
+### 1.1.0
+- Introduce R6 featues in running Genomic Prediction  **see details in Feature 7.1**
+- Move the example data and software into  another R package, blupSUP, user has to install this package only for once time!
+- User can still use the R function in the previous version of blupADC !
 
 ## GETTING STARTED
 
@@ -61,6 +65,10 @@ install.packages(c("Rcpp", "RcppArmadillo","RcppProgress","data.table","bigmemor
 
  **For commercial use of DMU and BLUPF90,  user must contact the author of DMU and BLUPF90 !!!** 
 
+#### For the latest version of blupADC, user has to install the blupSUP package at first(only for one time), which contains the example data and software(e.g. DMU, BLUPF90, and etc.)!
+```R
+devtools::install_github("TXiang-lab/blupSUP")
+```
 #### Install blupADC via devtools (way1)
 ```R
 devtools::install_github("TXiang-lab/blupADC")
