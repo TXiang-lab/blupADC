@@ -233,7 +233,7 @@ setwd(output_result_path)
 
 #get the system used 
 os_type=as.character(Sys.info()["sysname"])
-
+dmu1=dmuai=0;
 if(os_type!="Windows"){
 
 dmu1= try(system(paste0(DMU_software_path,"/dmu1  release=5.3 < ",output_result_path,"/Trait.DIR"," >  ",paste(target_trait_name,collapse = "_"),".dmu1.lst")), silent = TRUE)
