@@ -2,18 +2,19 @@
 blupADC_software_path<-function(){
 
 #for older version 
-if(packageVersion("blupADC")<"1.1.0"){
-
-software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",system.file("extdata/bin_linux", package = "blupADC"),
-			  ifelse(as.character(Sys.info()["sysname"])=="Windows",system.file("extdata/bin_windows", package = "blupADC"),
-													                   system.file("extdata/bin_mac", package = "blupADC")))
-}else{
+if(requireNamespace("blupSUP", quietly = TRUE)){
 #for new version
 
 
 software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",system.file("extdata/bin_linux", package = "blupSUP"),
 			  ifelse(as.character(Sys.info()["sysname"])=="Windows",system.file("extdata/bin_windows", package = "blupSUP"),
 													                   system.file("extdata/bin_mac", package = "blupSUP")))
+	
+}else if(packageVersion("blupADC")<"1.1.0"){
+
+software_path=ifelse(as.character(Sys.info()["sysname"])=="Linux",system.file("extdata/bin_linux", package = "blupADC"),
+			  ifelse(as.character(Sys.info()["sysname"])=="Windows",system.file("extdata/bin_windows", package = "blupADC"),
+													                   system.file("extdata/bin_mac", package = "blupADC")))
 }
 
 
@@ -25,17 +26,17 @@ return(software_path)
 check_blupADC<-function(){
 
 #for older version 
-if(packageVersion("blupADC")>="1.1.0"){
+#if(packageVersion("blupADC")>="1.1.0"){
 
-	if(!requireNamespace("blupSUP", quietly = TRUE)){
+#	if(!requireNamespace("blupSUP", quietly = TRUE)){
 	
-		cat(paste0('For version of blupADC >= 1.1.0, User has to install package:blupSUP, install_github("TXiang-lab/blupSUP") !','\n'))
-		stop("Please make sure to install the blupSUP package, which only needs to be installed once")
+#		cat(paste0('For version of blupADC >= 1.1.0, User has to install package:blupSUP, install_github("TXiang-lab/blupSUP") !','\n'))
+#		stop("Please make sure to install the blupSUP package, which only needs to be installed once")
 	
-	}
+#	}
 
 
-}
+#}
 
 }
 
