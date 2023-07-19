@@ -125,7 +125,7 @@ format_result=geno_format(
 
 #convert phased VCF data to haplotype format and  haplotype-based numeric format
 library(blupADC)
-data_path=system.file("extdata", package = "blupADC")  #  path of example files 
+data_path=system.file("extdata", package = "blupSUP")  #  path of example files 
 phased=geno_format(
          input_data_path=data_path,      # input data path 
          input_data_name="example.vcf",  # input data name,for vcf data
