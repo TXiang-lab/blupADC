@@ -68,18 +68,16 @@ install.packages(c("Rcpp", "RcppArmadillo","RcppProgress","data.table","bigmemor
 ```R
 devtools::install_github("TXiang-lab/blupSUP")
 ```
-#### Install blupADC via devtools (way1)
+#### Install blupADC via devtools
 ```R
 devtools::install_github("TXiang-lab/blupADC")
 ```
 
-#### Install blupADC  (way2)
+👉 **Note:If the connection with github is not good(such as in China), user can download as below:**  
 
 ```R
 devtools::install_git("https://gitee.com/qsmei/blupADC")
 ```
-
-👉 **Note:If the connection with github is not good(such as in China), user can download as below:**  
 
 ⚠️During installation, if there are some errors like that: ‘trimatl_ind’ was not declared in this scope, ‘class arma::Mat<double>’ has no member named ‘clean’......Please make sure the version of RcppArmadillo over 0.9.870.2.0."
 
