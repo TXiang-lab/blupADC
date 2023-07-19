@@ -48,7 +48,7 @@ Quanshun Mei, Chuanke Fu, Jieling Li, Shuhong Zhao, and Tao Xiang. "blupADC: An 
 - Encapsulated object-oriented programming in running DMU!(2022.05.30) **see details in Feature 7.2**
 
 ### 1.1.0 
-- Introduce R6 featues in running Genomic Prediction  ****  (2023.07.17)
+- Introduce object-oriented programming in running Genomic Prediction (2023.07.17) ([see more details](https://qsmei.netlify.app/post/r6-genomic-predictionselection/blup/)) 
 - Move the example data and software into  another R package, blupSUP, user has to install this package only for once time!
 - User can still use the R function in the previous version of blupADC !
 
