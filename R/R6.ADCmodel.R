@@ -288,7 +288,7 @@ ADCmodel= R6Class("ADCmodel",
 		
 		 if(nTraits>=1){
 
-			 cat(paste0("<ADGmodel::",nTraits," trait",ifelse(nTraits>1,"s",""),"> \n"))
+			 cat(paste0("<ADCmodel::",nTraits," trait",ifelse(nTraits>1,"s",""),"> \n"))
 			
 			#format(formula)
 			
