@@ -73,7 +73,7 @@ devtools::install_github("TXiang-lab/blupSUP")
 devtools::install_github("TXiang-lab/blupADC")
 ```
 
-👉 **Note:If the connection with github is not good(such as in China), user can download as below:**  
+👉 **Note:If the connection with github is not good(e.g. in China), user can download blupSUP and blupADC as below:**  
 
 ```R
 devtools::install_git("https://gitee.com/qsmei/blupSUP") # only for one time!
