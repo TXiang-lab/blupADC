@@ -5,26 +5,28 @@ ADCformula = R6Class("ADCformula",
 		fixed=NULL,
 		covariate=NULL,
 		random=NULL,
+	    	random_reg=NULL,
 		polyno=NULL,
 	initialize=function(fixed=NULL,
-						covariate=NULL,
-						random=NULL,
-						polyno=NULL){
+			    covariate=NULL,
+			    random=NULL,
+			    random_reg=NULL,
+			    polyno=NULL){
 		
 				self$fixed=fixed
 				self$covariate=covariate 
 				self$random=random
+				self$random_reg=random_reg
 				self$polyno=polyno	
 
-		  },
+		             },
 		  
 	print=function(...){}
 		  
 		  ),
 	active=list(
-
-			trait=function(fixed=self$fixed)all.vars(fixed)[1]  #dynamic changing with the value of self$fixed
-														         #user can't modify trait directly
+		    trait=function(fixed=self$fixed)all.vars(fixed)[1]  #dynamic changing with the value of self$fixed
+			   #user can't modify trait directly
 		    )		   
 )
 
@@ -35,14 +37,15 @@ ADCmodel= R6Class("ADCmodel",
 		id_name=NULL,
 		dam_name=NULL,
 		pe_name=NULL,
-	initialize=function(fixed=NULL,
-						covariate=NULL,
-						random=NULL,
-						polyno=NULL,
-						id_name="id",
-						dam_name="dam",
-						pe_name=NULL,
-						formulas=ADCformula$new()
+		initialize=function(fixed=NULL,
+				    covariate=NULL,
+				    random=NULL,
+				    random_reg=NULL,
+			            polyno=NULL,
+				    id_name="id",
+				    dam_name="dam",
+				    pe_name=NULL,
+				    formulas=ADCformula$new()
 						){
 						
 	self$id_name=id_name
@@ -67,6 +70,7 @@ ADCmodel= R6Class("ADCmodel",
 			formulas$fixed=fixed
 			formulas$covariate=covariate 
 			formulas$random=random
+			formulas$random_reg=random_reg
 			formulas$polyno=polyno
 		}
 		print(formulas)
@@ -78,14 +82,15 @@ ADCmodel= R6Class("ADCmodel",
 	},
 		  
 	 add_formula=function(fixed=NULL,
-						  covariate=NULL,
-					       random=NULL,
-					       polyno=NULL){
+			      covariate=NULL,
+			      random=NULL,
+			      random_reg=NULL,
+			      polyno=NULL){
 	 
 	 if("ADCformula"%in%class(fixed)){
 		i_formula=fixed         # R6 didn't support function polymorphism, thus we used the first parameter as the default parameter
 	 }else{
-		i_formula=ADCformula$new(fixed,covariate,random,polyno)
+		i_formula=ADCformula$new(fixed,covariate,random,random_reg,polyno)
 	 }
 
 	if("ADCformula"%in%class(self$formulas)&is.null(self$formulas$fixed)){ #consider that vars is null lmt_vars object
@@ -109,14 +114,15 @@ ADCmodel= R6Class("ADCmodel",
 	} ,
 
 	 add_model=function(fixed=NULL,
-						  covariate=NULL,
-					       random=NULL,
-					       polyno=NULL){
+			    covariate=NULL,
+			    random=NULL,
+			    random_reg=NULL,
+			    polyno=NULL){
 	 
 	 if("ADCformula"%in%class(fixed)){
 		i_formula=fixed         # R6 didn't support function polymorphism, thus we used the first parameter as the default parameter
 	 }else{
-		i_formula=ADCformula$new(fixed,covariate,random,polyno)
+		i_formula=ADCformula$new(fixed,covariate,random,random_reg,polyno)
 	 }
 
 	if("ADCformula"%in%class(self$formulas)&is.null(self$formulas$fixed)){ #consider that vars is null lmt_vars object
@@ -169,6 +175,7 @@ ADCmodel= R6Class("ADCmodel",
 			trait_list=NULL
 			fixed_list=NULL
 			random_list=NULL
+			random_reg_list=NULL
 			covariate_list=NULL
 			
 			for(i in 1:nTraits){
@@ -178,6 +185,7 @@ ADCmodel= R6Class("ADCmodel",
 
 				 i_fixed=list(get_nested(i_self_formula$fixed)$effect_name)
 				 i_random=list(get_nested(i_self_formula$random)$effect_name) 
+				 i_random_reg=list(get_nested(i_self_formula$random_reg)$effect_name) 
 				 i_covariate=list(get_nested(i_self_formula$covariate)$effect_name) 
 				 
 				 
@@ -185,6 +193,7 @@ ADCmodel= R6Class("ADCmodel",
 				 i_print=NULL
 				 fixed_list=c(fixed_list,(i_fixed))
 				 random_list=c(random_list,(i_random))
+				 random_reg_list=c(random_reg_list,(i_random_reg))
 				 covariate_list=c(covariate_list,(i_covariate))
 				 
 				 # i_fixed=get_nested(i_self_formula$fixed)$effect_name 
@@ -214,7 +223,7 @@ ADCmodel= R6Class("ADCmodel",
 				 
 			 }
 
-		return(list(trait_list=trait_list,fixed_list=fixed_list,random_list=random_list,covariate_list=covariate_list))
+		return(list(trait_list=trait_list,fixed_list=fixed_list,random_list=random_list,random_reg_list=random_reg_list,covariate_list=covariate_list))
 
 	},
 
