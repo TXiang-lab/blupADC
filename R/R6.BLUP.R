@@ -162,7 +162,7 @@ BLUP = R6Class("BLUP",
 		vars_se=vars_se$new(),
 		
 	initialize=function(fixed=NULL,covariate=NULL,random=NULL,polyno=NULL,id_name="id",dam_name="dam",pe_name=NULL,formulas=ADCformula$new(),
-						task_type="DMU",pars=NULL){#pars=DMUpar$new(),blupf90_pars=NULL){
+			    task_type="DMU",pars=NULL){#pars=DMUpar$new(),blupf90_pars=NULL){
 	
 				
 	
