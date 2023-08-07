@@ -200,12 +200,12 @@ BLUP = R6Class("BLUP",
 	
 	
 	run=function(dmu_ped_inbred_number=NULL,phe=NULL,ped=NULL,geno=NULL,phe_file=NULL,phe_colnames=NULL,analysis_model=NULL,
-	               genetic_effect="Id",add_pe=FALSE, add_domi=FALSE, missing_value=NULL,
+	               genetic_effect=NULL,add_pe=NULL, add_domi=NULL, missing_value=NULL,
 				iteration_criteria=NULL,kinship_file=NULL,dmu_module=NULL,dmu_algorithm_code=NULL,dmu_prior_file=NULL,residual_cov_trait=NULL, 
 				dmu_integer_n=NULL,output_path=NULL,output_name=NULL,
-				residual_average=TRUE,cal_debv=FALSE, debv_pedigree_file=NULL, 
+				residual_average=NULL,cal_debv=NULL, debv_pedigree_file=NULL, 
 				cal_reliability=FALSE,debv_id=NULL,dmu_software_path=NULL,blupf90_software_path=NULL,show_message=NULL,
-				IND_geno_file_name=NULL,IND_geno=NULL,SSBLUP_omega=NULL,plot_variance=FALSE,task_type=NULL){
+				IND_geno_file_name=NULL,IND_geno=NULL,SSBLUP_omega=NULL,plot_variance=NULL,task_type=NULL){
 	
 				if(!is.null(dmu_ped_inbred_number)){self$pars$dmu_ped_inbred_number=dmu_ped_inbred_number}
 				if(!is.null(phe)){self$pars$phe=phe}
