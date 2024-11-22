@@ -254,7 +254,12 @@ CVpredi = R6Class("CVpredi",
 	},
 
 	predict_sets=function(i=NULL){
-
+		
+		#define the postion of the trait on the phenotype data
+		phe_colnames=self$task$pars$phe_colnames
+		trait_name=self$task$get_effect_list()$trait_list[[1]] # only consider single-trait model 
+		trait_pos=match(trait_name,phe_colnames)
+		
 		if(!is.null(self$dmu_module)){self$task$pars$dmu_module=self$dmu_module}
 		if(!is.null(self$dmu_prior_file)){self$task$pars$dmu_prior_file=self$dmu_prior_file}
 		
@@ -300,7 +305,7 @@ CVpredi = R6Class("CVpredi",
 			i_pos1=match(intersect_ids,test_set[,1])  #assume id in the first column
 			i_pos2=match(intersect_ids,predict_set[,1]) #assume id in the first column
 					
-			test_set_ebv=as.numeric(test_set[i_pos1,6])
+			test_set_ebv=as.numeric(test_set[i_pos1,trait_pos]) #modify 6 as  trait_pos
 			predict_set_ebv=as.numeric(predict_set[i_pos2,2])
 			
 			accuracy=cor(test_set_ebv,predict_set_ebv)
